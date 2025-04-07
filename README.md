@@ -7,35 +7,6 @@ Welcome to the WebVuln- wiki!
 
 Category:
 * Injection
-Skip to content
-Navigation Menu
-mngugi
-WebVuln-
-
-Type / to search
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-Editing Home
- 
-Home
-Write
-Preview
-    
-Edit mode: 
-Markdown
-Welcome to the WebVuln- wiki!
-
-### WebVuln-001
-
-Category:
-* Injection
 
 Vulnerability ID:
 WEBVULN-001
