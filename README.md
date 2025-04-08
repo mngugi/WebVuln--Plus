@@ -1,4 +1,4 @@
-Welcome to the WebVuln- wiki!
+# Welcome to the WebVuln- wiki!
 
 ### WebVuln-001
 
@@ -206,6 +206,8 @@ A web application allows users to ping a host:
 $host = $_GET['host'];
 echo shell_exec("ping -c 1 " . $host);
 ?>
+
+```
 ---
 **Malicious Input:**
 
