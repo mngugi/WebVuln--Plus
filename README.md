@@ -486,3 +486,82 @@ Other Payloads:
 - [OWASP XML Injection Guide](https://owasp.org/www-community/attacks/XML_Injection)
 - [PortSwigger XML Injection](https://portswigger.net/web-security/xml-injection)
 - [OWASP XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
+
+---
+## WEBVULN-008: LDAP Injection
+
+### 🗂️ Category
+Injection
+
+### ⚠️ Vulnerability Overview
+LDAP Injection occurs when untrusted user input is embedded into an LDAP query without proper sanitization. Attackers can manipulate LDAP filters to bypass authentication, escalate privileges, or extract sensitive directory data.
+
+---
+
+### 🧪 Demo / Proof of Concept
+
+**Scenario:**  
+A login form uses LDAP to authenticate:
+
+```java
+String ldapFilter = "(uid=" + user + ")";
+```
+**Malicious Input:**
+
+```
+Username: *)(uid=*
+
+```
+
+**Result:**
+- LDAP filter becomes:
+
+```
+(uid=*)(uid=*)
+
+```
+- This can match all users and allow login bypass or unauthorized access.
+
+**Other Payloads:**
+
+- Authentication Bypass:
+
+```
+admin*)(userPassword=*
+Privilege Escalation:
+```
+```
+*)(|(admin=*))(
+```
+---
+### 🧪 Test Environment
+
+- [bWAPP](http://www.itsecgames.com/)
+- [OWASP WebGoat](https://owasp.org/www-project-webgoat/)
+- Custom apps with OpenLDAP backend
+
+---
+
+### 🔒 Mitigation
+
+- Sanitize and validate all user input before including it in LDAP queries
+- Use parameterized LDAP queries (e.g., with JNDI, .NET DirectoryServices)
+- Apply allowlists for input fields (e.g., usernames, emails)
+- Escape special characters in LDAP queries: `()|&!*=\<>~`
+
+---
+
+### 🛠️ Testing Tools / Techniques
+
+- **Burp Suite**
+- Manual testing with crafted LDAP filter payloads
+- Inspect backend logs for suspicious filter manipulation
+- Use fuzzing to detect filter anomalies
+
+---
+
+### 📚 References
+
+- [OWASP LDAP Injection Guide](https://owasp.org/www-community/attacks/LDAP_Injection)
+- [PortSwigger LDAP Injection](https://portswigger.net/web-security/ldap-injection)
+- [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
