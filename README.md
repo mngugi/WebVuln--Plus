@@ -349,4 +349,73 @@ echo shell_exec("ping -c 1 " . $ip);
 
 
 
+***
+
+## WEBVULN-006: Insecure Direct Object Reference (IDOR)
+
+### 🗂️ Category
+Broken Access Control
+
+### ⚠️ Vulnerability Overview
+IDOR occurs when an application exposes internal object references (like IDs, filenames, or usernames) without proper access control checks. Attackers can manipulate these references to access unauthorized data or functions.
+
+---
+
+### 🧪 Demo / Proof of Concept
+
+**Scenario:**  
+A user profile is accessed via:
+
+---
+`GET /profile?user_id=1001`
+
+
+
+- Changing the `user_id` to another value (e.g., `1002`) reveals another user's profile:
+
+`GET /profile?user_id=1002`
+
+
+**Result:**  
+Sensitive information is disclosed due to missing authorization checks.
+
+---
+
+### 🧪 Test Environment
+
+- [DVWA](http://www.dvwa.co.uk/)
+- [bWAPP](http://www.itsecgames.com/)
+- [OWASP Juice Shop](https://owasp.org/www-project-juice-shop/)
+
+---
+
+### 🔒 Mitigation
+
+- Enforce access control checks server-side for every resource
+- Do not expose predictable object references (use UUIDs or indirect mapping)
+- Avoid relying on client-side authorization
+- Log and monitor unauthorized access attempts
+
+---
+
+### 🛠️ Testing Tools / Techniques
+
+- **Burp Suite** (manual ID tampering)
+- **Postman** or custom scripts for API fuzzing
+- Review server logs for abnormal ID access patterns
+- Automated tools (e.g., **Autorize** Burp plugin)
+
+---
+
+### 📚 References
+
+- [OWASP IDOR Guide](https://owasp.org/www-community/attacks/Insecure_Direct_Object_Reference)
+- [PortSwigger IDOR](https://portswigger.net/web-security/access-control/idor)
+- [OWASP Top 10: Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+
+---
+
+
+
+
 
