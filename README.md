@@ -414,8 +414,75 @@ Sensitive information is disclosed due to missing authorization checks.
 - [OWASP Top 10: Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
 
 ---
+## WEBVULN-007: XML Injection
 
+### 🗂️ Category
+Injection
 
+### ⚠️ Vulnerability Overview
+XML Injection occurs when user input is inserted into an XML document or query without proper sanitization. This can lead to data manipulation, authentication bypass, or even denial of service. It’s commonly seen in SOAP-based services or applications parsing XML.
 
+---
 
+### 🧪 Demo / Proof of Concept
 
+**Scenario:**  
+A login system accepts XML-based input:
+
+```xml
+<user>
+    <username>admin</username>
+    <password>admin</password>
+</user>
+
+```
+---
+
+Result:
+The attacker bypasses authentication if the XML is used in backend XPath or SQL queries without sanitization.
+
+Other Payloads:
+
+```xml
+
+<user><name>John</name><role>admin</role></user>
+
+```
+- Insert additional nodes
+- Modify structure of parsed XML
+- Exploit backend processing logic
+
+---
+
+### 🧪 Test Environment
+
+- [bWAPP](http://www.itsecgames.com/)
+- [OWASP WebGoat](https://owasp.org/www-project-webgoat/)
+- Custom SOAP/XML-based test APIs
+
+---
+
+### 🔒 Mitigation
+
+- Always sanitize and encode user input before inserting into XML
+- Use secure XML parsers with entity resolution disabled
+- Apply schema validation (XSD) for expected structure
+- Avoid string concatenation when building XML
+- Enable logging and anomaly detection for malformed XML inputs
+
+---
+
+### 🛠️ Testing Tools / Techniques
+
+- **Burp Suite** (modify XML requests)
+- **SOAPUI** for testing SOAP/XML APIs
+- Manual injection with crafted XML payloads
+- Look for unauthenticated access, malformed parsing, or logic bypass
+
+---
+
+### 📚 References
+
+- [OWASP XML Injection Guide](https://owasp.org/www-community/attacks/XML_Injection)
+- [PortSwigger XML Injection](https://portswigger.net/web-security/xml-injection)
+- [OWASP XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
