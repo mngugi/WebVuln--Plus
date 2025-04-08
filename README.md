@@ -1,4 +1,4 @@
-# Welcome to the WebVuln- wiki!
+Welcome to the WebVuln- wiki!
 
 ### WebVuln-001
 
@@ -183,6 +183,85 @@ If a logged-in user visits the attacker’s page, the browser sends the request 
 - [OWASP CSRF Page](https://owasp.org/www-community/attacks/csrf)
 - [PortSwigger CSRF Guide](https://portswigger.net/web-security/csrf)
 - [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+
+
+***
+## WEBVULN-004: Remote Code Execution (RCE)
+
+### 🗂️ Category
+Injection / Critical
+
+### ⚠️ Vulnerability Overview
+Remote Code Execution (RCE) allows an attacker to execute arbitrary system-level code on the target server. This is one of the most dangerous vulnerabilities, often leading to full system compromise, lateral movement, and persistence.
+
+---
+
+### 🧪 Demo / Proof of Concept
+
+**Scenario:**  
+A web application allows users to ping a host:
+
+```php
+<?php
+$host = $_GET['host'];
+echo shell_exec("ping -c 1 " . $host);
+?>
+---
+**Malicious Input:**
+
+
+`127.0.0.1; whoami`
+
+**Result:**
+
+The command runs ping, then executes whoami, returning the server's current user.
+
+**Alternative PoC Payloads:**
+
+Linux:
+
+`127.0.0.1; ls /`
+
+Windows:
+
+`127.0.0.1 & dir`
+
+---
+
+### 🧪 Test Environment
+
+- [DVWA](http://www.dvwa.co.uk/)
+- [bWAPP](http://www.itsecgames.com/)
+- [Vulhub – RCE Labs](https://github.com/vulhub/vulhub)
+
+---
+
+### 🔒 Mitigation
+
+- Never pass user input directly to system calls or `eval()` functions
+- Use allowlists to strictly validate and sanitize inputs
+- Avoid dangerous functions: `eval()`, `exec()`, `shell_exec()`, `popen()`, etc.
+- Run applications with least privileges (non-root where possible)
+- Use Web Application Firewalls (WAFs) for added detection and protection
+
+---
+
+### 🛠️ Testing Tools / Techniques
+
+- **Burp Suite Intruder**
+- **Metasploit Framework**
+- **Commix** (for command injection automation)
+- Manual fuzzing with OS-specific payloads
+- Monitor logs and output for signs of command execution
+
+---
+
+### 📚 References
+
+- [OWASP RCE Guide](https://owasp.org/www-community/attacks/Command_Injection)
+- [PortSwigger RCE](https://portswigger.net/web-security/os-command-injection)
+- [GTFOBins](https://gtfobins.github.io/) — post-exploitation techniques
+
 
 
 
