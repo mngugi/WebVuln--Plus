@@ -568,7 +568,7 @@ Privilege Escalation:
 
 
 ***
-## 🛡️ Web Vulnerability Entry: XPath Injection
+## 🛡️ Web Vulnerability Entry: WEBVULN-009 XPath Injection
 
 - **Category:** Injection  
 - **Vulnerability ID:** WEBVULN-009  
@@ -628,5 +628,66 @@ Password: ' or '1'='1
 
 - [OWASP: XML External Entity (XXE) Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
 - [PortSwigger: XPath Injection](https://portswigger.net/web-security/xpath-injection)
+
+---
+## 🛡️ Web Vulnerability Entry: WEBVULN-010  HTML Injection
+
+- **Category:** Injection  
+- **Vulnerability ID:** WEBVULN-010  
+- **Name:** HTML Injection  
+
+---
+
+### 🔍 Description
+
+**HTML Injection** is a type of injection attack where malicious HTML code is inserted into a web page. If the application improperly handles or sanitizes user input, an attacker can manipulate the content or structure of the page — potentially leading to content spoofing, redirection, or even client-side script execution in some cases.
+
+While similar to Cross-Site Scripting (XSS), **HTML Injection** focuses on injecting HTML **without JavaScript execution**, often for defacement, phishing, or UI redressing.
+
+---
+
+### 🧪 Example / Proof of Concept
+
+#### Vulnerable Code (PHP Example):
+```php
+$name = $_GET['name'];
+echo "<p>Welcome, $name!</p>";
+```
+**Attack Payload:**
+
+`<script>alert('Injected!')</script>
+
+**Rendered Result:**
+
+`<p>Welcome, <script>alert('Injected!')</script>!</p>`
+- If output is not properly encoded, this executes a script (XSS), or at minimum injects unwanted HTML.
+
+---
+
+### 🛡️ Mitigation
+
+- **Output Encoding**: Use proper output encoding (e.g., `htmlspecialchars()` in PHP) when displaying user input.
+- **Input Validation**: Reject or sanitize input containing HTML tags unless explicitly intended.
+- **Content Security Policy (CSP)**: Implement CSP headers to mitigate the risk of HTML/JS being misused in the browser.
+- **Framework Defaults**: Use frameworks that automatically escape output (e.g., Django, Rails, React).
+
+---
+
+### 🧰 Testing Tools / Techniques
+
+- **Manual Testing**: Inject simple HTML tags like `<b>`, `<i>`, `<h1>`, or `<img src=x onerror=alert(1)>` to observe behavior.
+- **Burp Suite**: Intercept and modify inputs; view response rendering.
+- **OWASP ZAP**: Perform automated scanning to detect HTML injection vulnerabilities.
+- **Browser DevTools**: Inspect rendered HTML and DOM for unexpected elements.
+
+---
+
+### 📚 References
+
+- [OWASP: HTML Injection](https://owasp.org/www-community/attacks/HTML_Injection)
+- [PortSwigger: HTML Injection](https://portswigger.net/web-security/html-injection)
+
+
+
 
 
