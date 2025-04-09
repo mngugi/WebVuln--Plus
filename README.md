@@ -565,3 +565,68 @@ Privilege Escalation:
 - [OWASP LDAP Injection Guide](https://owasp.org/www-community/attacks/LDAP_Injection)
 - [PortSwigger LDAP Injection](https://portswigger.net/web-security/ldap-injection)
 - [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
+
+
+***
+## 🛡️ Web Vulnerability Entry: XPath Injection
+
+- **Category:** Injection  
+- **Vulnerability ID:** WEBVULN-009  
+- **Name:** XPath Injection  
+
+---
+
+### 🔍 Description
+**XPath Injection** occurs when user-controlled input is unsafely embedded into XPath queries used to retrieve or manipulate data from XML documents. This allows attackers to alter the structure of the query, potentially bypassing authentication, accessing unauthorized data, or triggering denial of service.
+
+---
+
+### 🧪 Example / Proof of Concept
+
+#### Vulnerable Code (PHP Example):
+```php
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$xml = simplexml_load_file('users.xml');
+$result = $xml->xpath("//user[username/text()='$username' and password/text()='$password']");
+```
+---
+
+**Attack Payload:**
+```
+Username: ' or '1'='1
+Password: ' or '1'='1
+
+```
+**Resulting XPath:**
+```
+//user[username/text()='' or '1'='1' and password/text()='' or '1'='1']
+
+```
+- This always evaluates to true, allowing an attacker to bypass authentication.
+
+### 🛡️ Mitigation
+
+- **Input Validation & Escaping**: Always sanitize and escape user input to avoid breaking out of query structure.
+- **Parameterized Queries**: Use libraries that support parameterized XPath expressions to prevent injection.
+- **Avoid XML for Authentication**: Prefer secure, database-backed authentication systems where possible.
+- **Least Privilege**: Ensure XML files and applications accessing them follow the principle of least privilege.
+
+---
+
+### 🧰 Testing Tools / Techniques
+
+- **Manual Testing**: Try injecting XPath payloads into fields used in XML queries.
+- **Burp Suite**: Intercept and modify XML requests.
+- **OWASP ZAP**: Scan for XML/XPath injection points.
+- **FuzzDB**: Use known XPath injection payloads for fuzzing.
+
+---
+
+### 📚 References
+
+- [OWASP: XML External Entity (XXE) Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
+- [PortSwigger: XPath Injection](https://portswigger.net/web-security/xpath-injection)
+
+
