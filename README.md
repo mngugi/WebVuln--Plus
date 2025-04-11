@@ -568,7 +568,7 @@ Privilege Escalation:
 
 
 ***
-## 🛡️ Web Vulnerability Entry: WEBVULN-009 XPath Injection
+## 🛡️ WEBVULN-009: XPath Injection
 
 - **Category:** Injection  
 - **Vulnerability ID:** WEBVULN-009  
@@ -630,7 +630,7 @@ Password: ' or '1'='1
 - [PortSwigger: XPath Injection](https://portswigger.net/web-security/xpath-injection)
 
 ---
-## 🛡️ Web Vulnerability Entry: WEBVULN-010  HTML Injection
+## WEBVULN-010: HTML Injection
 
 - **Category:** Injection  
 - **Vulnerability ID:** WEBVULN-010  
@@ -689,7 +689,7 @@ echo "<p>Welcome, $name!</p>";
 
 ***
 
-## 🛡️ Web Vulnerability Entry: Open Redirect
+## 🛡️ WEBVULN-011: Open Redirect
 
 - **Category:** Validation & Redirects  
 - **Vulnerability ID:** WEBVULN-011  
