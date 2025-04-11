@@ -687,6 +687,62 @@ echo "<p>Welcome, $name!</p>";
 - [OWASP: HTML Injection](https://owasp.org/www-community/attacks/HTML_Injection)
 - [PortSwigger: HTML Injection](https://portswigger.net/web-security/html-injection)
 
+***
+
+## 🛡️ Web Vulnerability Entry: Open Redirect
+
+- **Category:** Validation & Redirects  
+- **Vulnerability ID:** WEBVULN-011  
+- **Name:** Open Redirect
+
+---
+
+### 🔍 Description
+
+**Open Redirect** occurs when a web application allows untrusted input to control the URL to which a user is redirected after clicking a link or submitting a form. This can be exploited by attackers to redirect victims to malicious sites — often used in phishing or malware distribution.
+
+---
+
+### 🧪 Example / Proof of Concept
+
+#### Vulnerable URL:
+
+---
+
+#### Exploit:
+An attacker can send a user the following URL:
+---
+
+
+If the site blindly redirects to `url`, the user is taken to a malicious destination while thinking they're interacting with a trusted domain.
+
+---
+
+### 🛡️ Mitigation
+
+- **Allowlist URLs**: Only allow redirects to trusted domains or specific internal paths.
+- **Validate & Sanitize Input**: Block full URLs and only allow relative paths where possible.
+- **Display Warning Pages**: Inform users when they are being redirected off-site.
+- **Avoid External Redirects**: Where possible, avoid user-controlled redirection entirely.
+
+---
+
+### 🧰 Testing Tools / Techniques
+
+- **Manual Testing**: Modify `redirect`, `url`, or `next` parameters with external links.
+- **Burp Suite**: Intercept requests and test for open redirect behavior.
+- **OWASP ZAP**: Scan for open redirect issues using the automated scanner.
+- **Payloads**:
+
+---
+
+---
+
+### 📚 References
+
+- [OWASP: Open Redirect](https://owasp.org/www-community/attacks/Unvalidated_Redirects_and_Forwards)
+- [PortSwigger: Open Redirect](https://portswigger.net/web-security/open-redirect)
+
 
 
 
