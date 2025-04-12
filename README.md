@@ -743,6 +743,44 @@ If the site blindly redirects to `url`, the user is taken to a malicious destina
 - [OWASP: Open Redirect](https://owasp.org/www-community/attacks/Unvalidated_Redirects_and_Forwards)
 - [PortSwigger: Open Redirect](https://portswigger.net/web-security/open-redirect)
 
+---
+
+## WEBVULN-011: XML External Entity (XXE) Injection
+
+### 🧠 Description
+XXE occurs when an XML input containing a reference to an external entity is processed by a weakly configured XML parser. This can lead to:
+
+- Disclosure of internal files
+- Server-side request forgery (SSRF)
+- Denial of Service (DoS)
+- Remote code execution (in extreme cases)
+
+### 🚨 Example Payload
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE root [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<root>&xxe;</root>
+```
+### 🛡️ Mitigation
+- **Disable External Entities**: Configure your XML parsers to disallow `DOCTYPE` declarations and external entities.
+- **Use Secure Parsers**: Prefer libraries with secure-by-default configurations (e.g., `defusedxml` in Python).
+- **Input Validation**: Validate and sanitize XML input from untrusted sources.
+- **Limit Permissions**: Restrict file system and network access from XML parsers whenever possible.
+
+### 🧰 Testing Tools / Techniques
+- **Manual Payload Injection**: Insert external entity definitions and monitor server behavior.
+- **Burp Suite**: Use the XXE plugin or manually inject XXE payloads in intercepted requests.
+- **OWASP ZAP**: Automated scanners can identify some XXE vulnerabilities.
+- **XXEinjector**: A specialized tool for exploiting XXE vulnerabilities.
+
+### 📚 References
+- [OWASP: XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
+- [PortSwigger: XXE Injection](https://portswigger.net/web-security/xxe)
+
+---
+
 
 
 
