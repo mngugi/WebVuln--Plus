@@ -780,6 +780,132 @@ XXE occurs when an XML input containing a reference to an external entity is pro
 - [PortSwigger: XXE Injection](https://portswigger.net/web-security/xxe)
 
 ---
+***
+
+## WEBVULN-012: Server-Side Includes (SSI) Injection
+
+### 🧠 Description
+SSI injection occurs when user input is embedded in files that are parsed by the web server for Server Side Includes (SSI). If the input is not properly sanitized, attackers can inject SSI directives that get executed by the server, leading to:
+
+- Execution of arbitrary commands
+- Disclosure of sensitive files
+- Unauthorized access or data manipulation
+
+This vulnerability typically affects older or misconfigured servers like Apache with `mod_include` enabled.
+
+### 🚨 Example Payloads
+
+Injecting SSI code into a vulnerable field:
+
+```html
+<!--#exec cmd="ls"-->
+```
+## WEBVULN-012: Server-Side Includes (SSI) Injection
+
+### 🧠 Description
+SSI injection occurs when user input is embedded in files that are parsed by the web server for Server Side Includes (SSI). If the input is not properly sanitized, attackers can inject SSI directives that get executed by the server, leading to:
+
+- Execution of arbitrary commands
+- Disclosure of sensitive files
+- Unauthorized access or data manipulation
+
+This vulnerability typically affects older or misconfigured servers like Apache with `mod_include` enabled.
+
+### 🚨 Example Payloads
+
+Injecting SSI code into a vulnerable field:
+
+```html
+<!--#exec cmd="ls"-->
+```
+---
+### ⚠️ Real-World Impact
+- Gaining access to sensitive system files  
+- Running arbitrary shell commands on the server  
+- Leveraging for further attacks like privilege escalation  
+
+---
+
+### 🛡️ Mitigation
+- **Disable SSI**: If not required, turn off SSI processing in your web server configuration.
+- **Sanitize Input**: Properly validate and sanitize all user input to avoid injection into SSI-parsed files.
+- **Use HTTP Headers**: Set `X-Content-Type-Options: nosniff` and related headers to reduce abuse.
+- **Use Safer Templating**: Avoid legacy templating mechanisms that rely on SSI.
+
+---
+
+### 🧰 Testing Tools / Techniques
+- **Manual Injection**: Inject known SSI payloads (`<!--#exec cmd="id"-->`) and observe the output.
+- **Burp Suite**: Modify requests to test for reflected SSI behavior.
+- **OWASP ZAP**: Scan for potential injection vectors.
+- **Logs**: Check server logs for unexpected command execution patterns.
+
+---
+
+### 📚 References
+- [OWASP: SSI Injection](https://owasp.org/www-community/attacks/Server-Side_Includes_(SSI)_Injection)  
+- [PortSwigger: SSI Injection](https://portswigger.net/web-security/ssrf)  
+- [Apache SSI Guide](https://httpd.apache.org/docs/current/howto/ssi.html)
+---
+***
+## WEBVULN-013: HTTP Response Splitting
+
+### 🧠 Description
+HTTP Response Splitting is a vulnerability that arises when user-supplied data is included in HTTP headers without proper sanitization. By injecting CRLF (carriage return `\r` and line feed `\n`) characters, attackers can manipulate the structure of the HTTP response, potentially:
+
+- Injecting malicious headers
+- Triggering cross-site scripting (XSS)
+- Redirecting users
+- Performing cache poisoning
+
+---
+
+### 💥 Example Payloads
+
+Injected input:
+`%0d%0aSet-Cookie: session=attacker`
+
+`When reflected in a vulnerable header (e.g., `Location`, `Set-Cookie`), this can split the response: `
+
+`HTTP/1.1 302 Found Location: /somepath Set-Cookie: session=attacker `
+
+---
+
+
+---
+
+### ⚠️ Real-World Impact
+- Cookie manipulation
+- HTTP header injection
+- XSS through crafted responses
+- Cache poisoning and phishing
+
+---
+
+### 🛡️ Mitigation
+- **Input Validation**: Strip or encode CR (`\r`) and LF (`\n`) characters from user inputs used in HTTP headers.
+- **Use Frameworks**: Leverage secure web frameworks that automatically sanitize headers.
+- **Avoid Direct Header Manipulation**: Always validate and encode user input before using it in `Location`, `Set-Cookie`, etc.
+- **Security Libraries**: Use libraries with strict header handling.
+
+---
+
+### 🧰 Testing Tools / Techniques
+- **Manual Testing**: Try injecting `%0d%0a` into inputs reflected in headers.
+- **Burp Suite**: Modify HTTP request headers to observe response manipulation.
+- **OWASP ZAP**: Automated detection of header-based injections.
+- **Fuzzing**: Use payloads with CRLF characters in fuzzing tools.
+
+---
+
+### 📚 References
+- [OWASP: HTTP Response Splitting](https://owasp.org/www-community/attacks/HTTP_Response_Splitting)  
+- [PortSwigger: HTTP Response Splitting](https://portswigger.net/web-security/response-splitting)
+
+***
+
+
+
 
 
 
