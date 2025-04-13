@@ -872,9 +872,6 @@ Injected input:
 
 ---
 
-
----
-
 ### ⚠️ Real-World Impact
 - Cookie manipulation
 - HTTP header injection
