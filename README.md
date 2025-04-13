@@ -1,6 +1,5 @@
 
 
-
 # Welcome to the WebVuln- wiki!
 ## PART 1 INJECTIONS EXPLOITS 
 --- 
@@ -10,7 +9,7 @@ Category:
 * Injection
 
 Vulnerability ID:
-WEBVULN-001
+### WEBVULN-001
 
 * Demo/PoC:
 * Scenario:
@@ -21,7 +20,7 @@ A login form with this SQL query behind it:
 SELECT * FROM users WHERE username = '$username' AND password = '$password';
 
 ```
-
+---
 ### Payload:
 Enter this in the username field:
 
@@ -35,7 +34,7 @@ PoC URL (if available):
 You could simulate this using 
 
 `DVWA, bWAPP, or WebGoat.`
-
+---
 ### Mitigation:
 
 > Use prepared statements / parameterized queries (e.g., with mysqli or PDO in PHP)
