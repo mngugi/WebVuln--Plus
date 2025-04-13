@@ -1012,6 +1012,8 @@ if (mysqli_num_rows($result)) {
 }
 ?>
 ```
+
+---
 **🎯 Exploit Example (Boolean-based):**
 ```vbnet
 
@@ -1032,7 +1034,7 @@ Result: Different response (indicating conditional logic success)
 **🎯 Exploit Example (Time-based):**
 ```sql
 
-Input: ' OR IF(1=1, SLEEP(5), 0) -- 
+Input: `' OR IF(1=1, SLEEP(5), 0) -- `
 
 ```
 Response delay indicates SQL injection success.
@@ -1041,6 +1043,7 @@ Response delay indicates SQL injection success.
 
 ✅ Use Parameterized Queries / Prepared Statements
 PHP (mysqli with prepared statements):
+---
 ```php
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
@@ -1063,9 +1066,9 @@ Burp Suite (Repeater/Intruder with boolean and time-based payloads)
 
 - Manual Injection using:
 
-- Boolean-based payloads: ' AND 1=1 --, ' AND 1=2 --
+- Boolean-based payloads:` ' AND 1=1 --, ' AND 1=2 --`
 
-- Time-based payloads: ' OR SLEEP(5) --
+- Time-based payloads:` ' OR SLEEP(5) --`
 ---
 **📚 References**
 - OWASP: Blind SQL Injection
