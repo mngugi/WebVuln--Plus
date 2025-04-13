@@ -1,5 +1,6 @@
 # Welcome to the WebVuln- wiki!
-
+## PART 1 INJECTIONS EXPLOITS 
+--- 
 ### WebVuln-001
 
 Category:
@@ -982,6 +983,96 @@ Manual Fuzzing: Use payloads like ; whoami, && ls, | id, etc.
 - [PayloadsAllTheThings - Command Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Command%20Injection)
 
 
+***
+
+### 🛡️ WEBVULN-015: Blind SQL Injection
+
+**🔹 Category**
+Injection
+
+**🆔 Vulnerability ID**
+
+**WEBVULN-015**
+
+---
+🧪 Demo / Proof of Concept (PoC)
+✅ Example: Vulnerable PHP Code (Login Form)
+
+---
+```php
+
+<?php
+$user = $_GET['user'];
+$query = "SELECT * FROM users WHERE username = '$user'";
+$result = mysqli_query($conn, $query);
+if (mysqli_num_rows($result)) {
+    echo "User exists";
+} else {
+    echo "User not found";
+}
+?>
+```
+**🎯 Exploit Example (Boolean-based):**
+```vbnet
+
+Input: ' OR 1=1 -- 
+Response: "User exists"
+```
+
+**🎯 Exploit Example (Blind Boolean-based):**
+```vbnet
+
+Input: ' AND 1=1 -- 
+Result: Normal response
+Input: ' AND 1=2 -- 
+
+```
+Result: Different response (indicating conditional logic success)
+
+**🎯 Exploit Example (Time-based):**
+```sql
+
+Input: ' OR IF(1=1, SLEEP(5), 0) -- 
+
+```
+Response delay indicates SQL injection success.
+---
+**🛡️ Mitigation**
+
+✅ Use Parameterized Queries / Prepared Statements
+PHP (mysqli with prepared statements):
+```php
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+$stmt->bind_param("s", $user);
+$stmt->execute();
+```
+---
+**✅ Input Validation & Escaping**
+Use whitelisting for input validation.
+
+Escape output using context-aware functions.
+
+**✅ Least Privilege**
+Ensure the database user has limited permissions.
+---
+**🔧 Testing Tools / Techniques**
+Burp Suite (Repeater/Intruder with boolean and time-based payloads)
+
+- SQLMap (automates detection and exploitation)
+
+- Manual Injection using:
+
+- Boolean-based payloads: ' AND 1=1 --, ' AND 1=2 --
+
+- Time-based payloads: ' OR SLEEP(5) --
+---
+**📚 References**
+- OWASP: Blind SQL Injection
+
+- PortSwigger: Blind SQL Injection
+
+- [PayloadsAllTheThings - SQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/SQL%20Injection)
 
 
 
