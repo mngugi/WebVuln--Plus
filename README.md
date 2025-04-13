@@ -186,7 +186,6 @@ If a logged-in user visits the attacker’s page, the browser sends the request 
 - [PortSwigger CSRF Guide](https://portswigger.net/web-security/csrf)
 - [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 
-
 ***
 ## WEBVULN-004: Remote Code Execution (RCE)
 
@@ -351,7 +350,6 @@ echo shell_exec("ping -c 1 " . $ip);
 - [GTFOBins](https://gtfobins.github.io/) — for command abuse post-exploitation
 
 
-
 ***
 
 ## WEBVULN-006: Insecure Direct Object Reference (IDOR)
@@ -371,8 +369,6 @@ A user profile is accessed via:
 
 ---
 `GET /profile?user_id=1001`
-
-
 
 - Changing the `user_id` to another value (e.g., `1002`) reveals another user's profile:
 
@@ -715,7 +711,6 @@ echo "<p>Welcome, $name!</p>";
 #### Exploit:
 An attacker can send a user the following URL:
 ---
-
 
 If the site blindly redirects to `url`, the user is taken to a malicious destination while thinking they're interacting with a trusted domain.
 
