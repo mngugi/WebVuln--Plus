@@ -1,7 +1,6 @@
 # Welcome to the WebVuln- wiki!
 
 ### WebVuln-001
----
 
 Category:
 * Injection
@@ -902,7 +901,85 @@ Injected input:
 
 ***
 
+### 🛡️ WEBVULN-014: OS Command Injection
 
+🔹 Category
+Injection
+
+### 🆔 Vulnerability ID
+WEBVULN-014
+
+🧪 Demo / Proof of Concept (PoC)
+✅ Example 1: Vulnerable Python Code (using os.system)
+```python
+
+import os
+user_input = input("Enter filename: ")
+os.system(f"ls {user_input}")
+
+```
+Exploit:
+
+
+`Input: ; whoami`
+Result: Executes `ls ; whoami`
+
+✅ Example 2: Vulnerable PHP Code
+```php
+
+<?php
+$cmd = $_GET['cmd'];
+system("ping -c 1 " . $cmd);
+?>
+
+```
+**Exploit:**
+
+
+`URL: http://example.com/vuln.php?cmd=127.0.0.1;id`
+`Result: Executes `ping -c 1 127.0.0.1;id``
+
+**🛡️ Mitigation**
+
+**✅ Safe Coding Practices**
+- Avoid directly using user input in system-level commands.
+
+- Use whitelisting, parameterized functions, or safe APIs.
+
+- In Python, prefer subprocess.run() with list-based arguments and shell=False.
+
+Example Fix (Python):
+```
+import subprocess
+user_input = input("Enter filename: ")
+subprocess.run(["ls", user_input], shell=False)
+```
+Example Fix (PHP):
+```php
+
+<?php
+$allowed = ['127.0.0.1', 'localhost'];
+$target = $_GET['cmd'];
+if (in_array($target, $allowed)) {
+    system("ping -c 1 " . escapeshellarg($target));
+}
+?>
+```
+🔧 Testing Tools / Techniques
+- Burp Suite (Intruder, Repeater)
+
+- OWASP ZAP
+
+- Commix – Automated command injection tool
+
+Manual Fuzzing: Use payloads like ; whoami, && ls, | id, etc.
+
+**📚 References**
+- OWASP: Command Injection
+
+- PortSwigger: OS command injection
+
+- [PayloadsAllTheThings - Command Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Command%20Injection)
 
 
 
