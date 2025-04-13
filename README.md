@@ -44,7 +44,7 @@ You could simulate this using
 > Whitelist input and validate strictly
 
 > Disable detailed SQL error messages in production
-
+---
 Testing Tools/Techniques:
 
 * sqlmap
@@ -136,7 +136,6 @@ Cross-Site Request Forgery (CSRF) tricks a logged-in user into executing unwante
 A vulnerable banking app allows fund transfers via a simple GET request:
 
 `http://vulnerable-bank.com/transfer?amount=1000&to=attacker_account`
-
 
 If the user is authenticated, this request will succeed.
 
@@ -291,6 +290,7 @@ echo shell_exec("ping -c 1 " . $ip);
 ?>
 
 ```
+---
 
 **Malicious Input:**
 
