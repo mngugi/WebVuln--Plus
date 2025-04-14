@@ -1231,3 +1231,102 @@ session_regenerate_id(true);
 - [PortSwigger: Session Fixation](https://portswigger.net/web-security/authentication/session-fixation)
 
 
+---
+**🧪 Hands-On: Session Fixation Demo**
+
+**🧰 Requirements**
+- Python 3
+
+- Flask
+
+- Browser
+
+- Burp Suite (optional, for analysis)
+
+---
+**🚧 Vulnerable Flask App (for demo/testing)**
+
+```python
+# session_fixation_vuln.py
+from flask import Flask, session, request, redirect, url_for, make_response
+
+app = Flask(__name__)
+app.secret_key = "super_secret_key"
+
+@app.route('/')
+def index():
+    user = session.get('user')
+    return f"👤 Logged in as: {user}" if user else "🔓 Not logged in"
+
+@app.route('/set_session')
+def set_session():
+    session_id = request.args.get("sessid")
+    resp = make_response(redirect(url_for('login')))
+    if session_id:
+        resp.set_cookie('session', session_id)
+    return resp
+
+@app.route('/login')
+def login():
+    session['user'] = "admin"
+    return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+```
+**🧪 Exploit Steps**
+
+- Attacker sends victim a crafted link:
+
+```bash
+
+http://localhost:5000/set_session?sessid=attacksessionid
+
+```
+- Victim clicks link and logs in at /login
+
+- Session ID is reused from attacker: attacksessionid
+
+- Attacker accesses / with the same session ID
+
+```nginx
+
+curl -b "session=attacksessionid" http://localhost:5000/
+
+```
+
+**🎯 Gets access to the authenticated session!**
+
+**🛡️ Fix (in Flask)**
+-Replace this line inside /login route:
+
+```python
+
+session['user'] = "admin"
+
+```
+- With a secure version that regenerates the session:
+
+```python
+
+from flask import session
+session.clear()
+session['user'] = "admin"
+Optionally rotate the session cookie with:
+```
+
+```python
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+```
+---
+
+**🧪 Analyze with Burp Suite**
+- Intercept login requests.
+
+- Compare session cookies before and after login.
+
+- If session ID doesn’t change → 🔥 Vulnerable to fixation!
