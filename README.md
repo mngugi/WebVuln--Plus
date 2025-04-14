@@ -1150,3 +1150,84 @@ def greet():
 
 - [PayloadsAllTheThings - SSTI](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection)
 
+***
+## PART II 
+### Broken Authentication and Session Management
+
+###🛡️ WEBVULN-017: Broken Authentication and Session Management (Session Fixation)
+🔹 Category
+- Authentication & Session Management
+
+**🆔 Vulnerability ID**
+**WEBVULN-017**
+
+**🧪 Demo / Proof of Concept (PoC)**
+
+---
+**✅ What is Session Fixation?**
+
+Session Fixation is a vulnerability where an attacker sets or predicts a user's session ID before they authenticate. If the session is not regenerated upon login, the attacker can hijack it once the victim logs in.
+
+**✅ Example: Vulnerable PHP Logic**
+```php
+
+<?php
+session_id($_GET['sessid']);
+session_start();
+// ... user logs in ...
+?>
+```
+**🎯 Attack Flow:**
+Attacker sends victim a link:
+`https://example.com/login.php?sessid=abc123`
+
+- Victim logs in with session ID abc123
+
+- Attacker reuses the same session ID to impersonate the victim
+
+**🛡️ Mitigation**
+**✅ Regenerate Session ID After Login**
+```php
+
+<?php
+session_start();
+// after successful authentication
+session_regenerate_id(true);
+```
+---
+
+### ✅ Set Secure Session Attributes
+
+- Use `HttpOnly`, `Secure`, and `SameSite` cookie flags
+- Set short session expiration times
+- Avoid exposing `session_id` via URLs
+
+---
+
+### 🔧 Testing Tools / Techniques
+
+- **Burp Suite**:
+  - Intercept and replay requests with fixed session IDs
+  - Check for `Set-Cookie` header before and after login
+- **OWASP ZAP**
+- Manual analysis of session behavior
+
+---
+
+### 🔍 Indicators of Vulnerability
+
+| Behavior                                      | Risk                        |
+|-----------------------------------------------|-----------------------------|
+| Session ID remains the same before/after login | High risk of session fixation |
+| Session ID exposed in URL                     | High risk of hijacking      |
+| No use of `session_regenerate_id()`           | Poor session handling       |
+
+---
+
+### 📚 References
+
+- [OWASP: Session Fixation](https://owasp.org/www-community/attacks/Session_fixation)
+- [OWASP Top 10 - Broken Authentication](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/)
+- [PortSwigger: Session Fixation](https://portswigger.net/web-security/authentication/session-fixation)
+
+
