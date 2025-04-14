@@ -1332,21 +1332,23 @@ def make_session_permanent():
 - If session ID doesn’t change → 🔥 Vulnerable to fixation!
 
 ***
-**🛡️ WEBVULN-018: Brute Force Attack**
+### 🛡️ WEBVULN-018: Brute Force Attack
+
 🔹 Category
 
 Authentication
 
 **🆔 Vulnerability ID**
 **WEBVULN-018**
-
+---
 **🧪 Demo / Proof of Concept (PoC)**
 
 **✅ What is a Brute Force Attack?**
 
 - A Brute Force Attack is an automated method to guess credentials (usernames, passwords, PINs, tokens) by trying many combinations until access is granted.
-
+---
 **✅ Vulnerable PHP Login Example**
+
 ```php
 
 <?php
@@ -1359,17 +1361,18 @@ if ($user == "admin" && $pass == "123456") {
     echo "Invalid credentials";
 }
 ```
+---
 **🎯 Attack Using Hydra (Example)**
 ```bash
 
 `hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
 
 ```
--l: login/username
+- l: login/username
 
--P: password list
+- P: password list
 
--V: verbose output
+- V: verbose output
 
 ---
 
