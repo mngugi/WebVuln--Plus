@@ -1,6 +1,9 @@
 
 
 # Welcome to the WebVuln- wiki!
+
+* Documenting 100+ web vulnerabilities with testing tools and mitigations.
+
 ## PART 1 INJECTIONS EXPLOITS 
 --- 
 ### WebVuln-001
