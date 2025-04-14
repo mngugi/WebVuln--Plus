@@ -1330,3 +1330,87 @@ def make_session_permanent():
 - Compare session cookies before and after login.
 
 - If session ID doesn’t change → 🔥 Vulnerable to fixation!
+
+***
+**🛡️ WEBVULN-018: Brute Force Attack**
+🔹 Category
+
+Authentication
+
+**🆔 Vulnerability ID**
+**WEBVULN-018**
+
+**🧪 Demo / Proof of Concept (PoC)**
+
+**✅ What is a Brute Force Attack?**
+
+- A Brute Force Attack is an automated method to guess credentials (usernames, passwords, PINs, tokens) by trying many combinations until access is granted.
+
+**✅ Vulnerable PHP Login Example**
+```php
+
+<?php
+$user = $_POST['username'];
+$pass = $_POST['password'];
+
+if ($user == "admin" && $pass == "123456") {
+    echo "Login successful";
+} else {
+    echo "Invalid credentials";
+}
+```
+**🎯 Attack Using Hydra (Example)**
+```bash
+
+`hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
+-l: login/username
+
+-P: password list
+
+-V: verbose output
+
+---
+
+### 🛡️ Mitigation
+
+#### ✅ Account Lockout or Rate Limiting
+- Temporarily block accounts after multiple failed logins (e.g., 5 tries)
+- Use exponential back-off for delays
+
+#### ✅ CAPTCHA or Bot Protection
+- Use CAPTCHA to prevent automated logins
+- Use WAFs or bot detection services
+
+#### ✅ 2FA / MFA
+- Enforce two-factor authentication to reduce the risk of credential stuffing
+
+#### ✅ Logging & Monitoring
+- Log failed login attempts
+- Alert administrators on unusual behavior
+
+---
+
+### 🔧 Testing Tools / Techniques
+
+- **Hydra**
+- **Burp Suite Intruder**
+- **OWASP ZAP**
+- Manual login testing with predictable passwords
+
+---
+
+### 🔍 Indicators of Vulnerability
+
+| Behavior                              | Risk                         |
+|---------------------------------------|------------------------------|
+| No delay or lockout after failures    | High risk of brute force     |
+| Common usernames/passwords accepted   | Poor credential hygiene      |
+| No CAPTCHA or rate limiting           | Susceptible to automation    |
+
+---
+
+### 📚 References
+
+- [OWASP: Brute Force Attack](https://owasp.org/www-community/attacks/Brute_force_attack)
+- [OWASP Top 10 - Broken Authentication](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/)
+- [Hydra GitHub](https://github.com/vanhauser-thc/thc-hydra)
