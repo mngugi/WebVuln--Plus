@@ -36,7 +36,7 @@ Password can be anything. Result? Bypasses authentication.
 PoC URL (if available):
 You could simulate this using 
 
-`DVWA, bWAPP, or WebGoat.`
+- DVWA, bWAPP, or WebGoat.
 ---
 ### Mitigation:
 
@@ -1363,6 +1363,8 @@ if ($user == "admin" && $pass == "123456") {
 ```bash
 
 `hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
+
+```
 -l: login/username
 
 -P: password list
