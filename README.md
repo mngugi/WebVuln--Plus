@@ -1,68 +1,72 @@
-# Welcome to the WebVuln- wiki!
 
-* Documenting 100+ web vulnerabilities with testing tools and mitigations.
 
-## PART 1 INJECTION EXPLOITS 
---- 
-### WebVuln-001
+# 🌐 Welcome to the WebVuln- Wiki!
 
-Category:
-* Injection
+- Documenting **100+ web vulnerabilities** with testing tools and mitigation strategies.
 
-Vulnerability ID:
-### WEBVULN-001
+---
 
-* Demo/PoC:
-* Scenario:
-A login form with this SQL query behind it:
+## 🧨 PART 1: INJECTION EXPLOITS
+
+---
+
+### 🔹 WebVuln-001: SQL Injection
+
+**Category:**  
+Injection
+
+**Vulnerability ID:**  
+`WEBVULN-001`
+
+---
+
+### 🧪 Demo / Proof of Concept (PoC)
+
+#### 📌 Scenario:
+A login form vulnerable to SQL Injection uses the following query:
 
 ```sql
-
 SELECT * FROM users WHERE username = '$username' AND password = '$password';
-
 ```
+
+
+Password can be anything.
+
+✅ **Effect:**  
+Bypasses authentication by always evaluating the WHERE clause as true.
+
 ---
-### Payload:
-Enter this in the username field:
 
-```sql
+🌐 **PoC Platforms:**  
+You can simulate this vulnerability using:
 
-' OR '1'='1
-```
-Password can be anything. Result? Bypasses authentication.
+- DVWA
+- bWAPP
+- WebGoat
 
-PoC URL (if available):
-You could simulate this using 
-
-- DVWA, bWAPP, or WebGoat.
 ---
-### Mitigation:
 
-> Use prepared statements / parameterized queries (e.g., with mysqli or PDO in PHP)
+🛡️ **Mitigation**  
+✅ Use prepared statements / parameterized queries (e.g., `mysqli`, `PDO` in PHP)  
+✅ Use ORM frameworks that handle escaping automatically  
+✅ Enforce strict input validation and whitelisting  
+✅ Disable detailed SQL error messages in production environments
 
-> Employ ORM frameworks that escape inputs automatically
-
-> Whitelist input and validate strictly
-
-> Disable detailed SQL error messages in production
 ---
-Testing Tools/Techniques:
 
-* sqlmap
+🔧 **Testing Tools / Techniques**  
+- sqlmap  
+- Burp Suite (Community / Pro)  
+- OWASP ZAP  
+- Manual testing using known payloads
 
-* Burp Suite (Community/Pro)
+---
 
-* Manual testing with payloads
+📚 **References**  
+- OWASP SQL Injection  
+- PortSwigger: SQL Injection  
+- OWASP Cheat Sheet: SQL Injection Prevention
 
-* OWASP ZAP
-
-### References:
-
-* OWASP SQLi Page
-
-* PortSwigger SQLi
-
-* OWASP Cheat Sheet: SQL Injection Prevention
 
 
 ***
@@ -1330,23 +1334,21 @@ def make_session_permanent():
 - If session ID doesn’t change → 🔥 Vulnerable to fixation!
 
 ***
-### 🛡️ WEBVULN-018: Brute Force Attack
-
+**🛡️ WEBVULN-018: Brute Force Attack**
 🔹 Category
 
 Authentication
 
 **🆔 Vulnerability ID**
 **WEBVULN-018**
----
+
 **🧪 Demo / Proof of Concept (PoC)**
 
 **✅ What is a Brute Force Attack?**
 
 - A Brute Force Attack is an automated method to guess credentials (usernames, passwords, PINs, tokens) by trying many combinations until access is granted.
----
-**✅ Vulnerable PHP Login Example**
 
+**✅ Vulnerable PHP Login Example**
 ```php
 
 <?php
@@ -1359,18 +1361,15 @@ if ($user == "admin" && $pass == "123456") {
     echo "Invalid credentials";
 }
 ```
----
 **🎯 Attack Using Hydra (Example)**
 ```bash
 
 `hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
+-l: login/username
 
-```
-- l: login/username
+-P: password list
 
-- P: password list
-
-- V: verbose output
+-V: verbose output
 
 ---
 
