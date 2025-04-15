@@ -1365,6 +1365,8 @@ if ($user == "admin" && $pass == "123456") {
 ```bash
 
 `hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
+
+```
 -l: login/username
 
 -P: password list
