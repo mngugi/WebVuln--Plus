@@ -1,5 +1,3 @@
-
-
 # Welcome to the WebVuln- wiki!
 
 * Documenting 100+ web vulnerabilities with testing tools and mitigations.
