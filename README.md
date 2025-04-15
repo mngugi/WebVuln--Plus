@@ -748,7 +748,7 @@ If the site blindly redirects to `url`, the user is taken to a malicious destina
 
 ---
 
-## WEBVULN-011: XML External Entity (XXE) Injection
+## WEBVULN-012: XML External Entity (XXE) Injection
 
 ### 🧠 Description
 XXE occurs when an XML input containing a reference to an external entity is processed by a weakly configured XML parser. This can lead to:
@@ -785,25 +785,8 @@ XXE occurs when an XML input containing a reference to an external entity is pro
 ---
 ***
 
-## WEBVULN-012: Server-Side Includes (SSI) Injection
 
-### 🧠 Description
-SSI injection occurs when user input is embedded in files that are parsed by the web server for Server Side Includes (SSI). If the input is not properly sanitized, attackers can inject SSI directives that get executed by the server, leading to:
-
-- Execution of arbitrary commands
-- Disclosure of sensitive files
-- Unauthorized access or data manipulation
-
-This vulnerability typically affects older or misconfigured servers like Apache with `mod_include` enabled.
-
-### 🚨 Example Payloads
-
-Injecting SSI code into a vulnerable field:
-
-```html
-<!--#exec cmd="ls"-->
-```
-## WEBVULN-012: Server-Side Includes (SSI) Injection
+## WEBVULN-013: Server-Side Includes (SSI) Injection
 
 ### 🧠 Description
 SSI injection occurs when user input is embedded in files that are parsed by the web server for Server Side Includes (SSI). If the input is not properly sanitized, attackers can inject SSI directives that get executed by the server, leading to:
@@ -851,7 +834,7 @@ Injecting SSI code into a vulnerable field:
 - [Apache SSI Guide](https://httpd.apache.org/docs/current/howto/ssi.html)
 ---
 ***
-## WEBVULN-013: HTTP Response Splitting
+## WEBVULN-014: HTTP Response Splitting
 
 ### 🧠 Description
 HTTP Response Splitting is a vulnerability that arises when user-supplied data is included in HTTP headers without proper sanitization. By injecting CRLF (carriage return `\r` and line feed `\n`) characters, attackers can manipulate the structure of the HTTP response, potentially:
@@ -904,13 +887,13 @@ Injected input:
 
 ***
 
-### 🛡️ WEBVULN-014: OS Command Injection
+### 🛡️ WEBVULN-015: OS Command Injection
 
 🔹 Category
 Injection
 
 ### 🆔 Vulnerability ID
-WEBVULN-014
+**WEBVULN-015**
 
 🧪 Demo / Proof of Concept (PoC)
 ✅ Example 1: Vulnerable Python Code (using os.system)
@@ -987,14 +970,14 @@ Manual Fuzzing: Use payloads like ; whoami, && ls, | id, etc.
 
 ***
 
-### 🛡️ WEBVULN-015: Blind SQL Injection
+### 🛡️ WEBVULN-016: Blind SQL Injection
 
 **🔹 Category**
 Injection
 
 **🆔 Vulnerability ID**
 
-**WEBVULN-015**
+**WEBVULN-016**
 
 ---
 🧪 Demo / Proof of Concept (PoC)
@@ -1075,12 +1058,12 @@ Burp Suite (Repeater/Intruder with boolean and time-based payloads)
 
 ***
 
-### 🛡️ WEBVULN-016: Server-Side Template Injection (SSTI)
+### 🛡️ WEBVULN-017: Server-Side Template Injection (SSTI)
 🔹 Category
 Injection
 
 **🆔 Vulnerability ID**
-### WEBVULN-016
+### WEBVULN-017
 
 **🧪 Demo / Proof of Concept (PoC)**
 
@@ -1156,12 +1139,12 @@ def greet():
 ## PART II 
 ### Broken Authentication and Session Management
 
-###🛡️ WEBVULN-017: Broken Authentication and Session Management (Session Fixation)
+###🛡️ WEBVULN-018: Broken Authentication and Session Management (Session Fixation)
 🔹 Category
 - Authentication & Session Management
 
 **🆔 Vulnerability ID**
-**WEBVULN-017**
+**WEBVULN-018**
 
 **🧪 Demo / Proof of Concept (PoC)**
 
@@ -1334,13 +1317,13 @@ def make_session_permanent():
 - If session ID doesn’t change → 🔥 Vulnerable to fixation!
 
 ***
-**🛡️ WEBVULN-018: Brute Force Attack**
+**🛡️ WEBVULN-019: Brute Force Attack**
 🔹 Category
 
 Authentication
 
 **🆔 Vulnerability ID**
-**WEBVULN-018**
+**WEBVULN-019**
 
 **🧪 Demo / Proof of Concept (PoC)**
 
@@ -1420,13 +1403,13 @@ if ($user == "admin" && $pass == "123456") {
 
 ***
 
-# 🌐 WebVuln-019: Session Hijacking
+# 🌐 WebVuln-020: Session Hijacking
 
 **Category:**  
 Session Management
 
 **Vulnerability ID:**  
-`WEBVULN-019`
+**WEBVULN-020**
 
 ---
 
@@ -1489,13 +1472,13 @@ You can simulate this vulnerability using:
 - OWASP Cheat Sheet: Secure Session Management
 
 ***
-# 🌐 WebVuln-020: Password Cracking
+# 🌐 WebVuln-021: Password Cracking
 
 **Category:**  
 Authentication
 
 **Vulnerability ID:**  
-`WEBVULN-020`
+**WEBVULN-021**
 
 ---
 
@@ -1607,13 +1590,13 @@ You can simulate this vulnerability using:
   Store sensitive data like passwords using strong encryption methods, such as AES-256.
 
   ***
-  # 🌐 WebVuln-23: Credential Reuse
+  # 🌐 WebVuln-022: Credential Reuse
 
 **Category:**  
 Authentication and Session Management
 
 **Vulnerability ID:**  
-`WEBVULN-023`
+**WEBVULN-022**
 
 ---
 
@@ -1729,13 +1712,13 @@ To mitigate the risk of credential reuse, consider the following best practices:
 - OWASP Cheat Sheet: Secure Storage of Passwords
 
 ***
-# 🌐 WebVuln-022: Insecure Authentication
+# 🌐 WebVuln-023: Insecure Authentication
 
 **Category:**  
 Authentication
 
 **Vulnerability ID:**  
-`WEBVULN-022`
+**`WEBVULN-023`**
 
 ---
 
