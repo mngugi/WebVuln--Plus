@@ -1781,13 +1781,13 @@ You can simulate this vulnerability using:
 - OWASP Top 10 - A2: Broken Authentication
 
 ***
-# 🌐 WebVuln-022: Cookie Theft
+# 🌐 WebVuln-024: Cookie Theft
 
 **Category:**  
 Session Management
 
 **Vulnerability ID:**  
-`WEBVULN-022`
+`WEBVULN-024`
 
 ---
 
