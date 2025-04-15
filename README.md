@@ -1606,6 +1606,112 @@ You can simulate this vulnerability using:
 - ✅ **Encrypt Sensitive Data**  
   Store sensitive data like passwords using strong encryption methods, such as AES-256.
 
+  ***
+  # 🌐 WebVuln-23: Credential Reuse
+
+**Category:**  
+Authentication and Session Management
+
+**Vulnerability ID:**  
+`WEBVULN-023`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+Credential reuse happens when a user uses the same password across multiple services. An attacker who gains access to one service may use the same credentials to gain unauthorized access to other services (e.g., using breached credentials from a data leak).
+
+### 🔑 Example:
+- If a user’s password is found in a data breach (e.g., via a service like Have I Been Pwned), an attacker can use the same password on other platforms to try and break into the user’s accounts on different sites.
+
+---
+
+## 💥 Payload:
+
+- **Credential List:**  
+  User credentials (e.g., username and password) from one service can be reused to attempt login to other platforms that the user might have an account with.
+
+---
+
+### ✅ Effect
+
+- **Unauthorized Access:**  
+  Attackers can access multiple services or systems if a user has reused the same credentials across different sites.
+
+- **Account Takeover:**  
+  Attackers can take over user accounts in multiple platforms without needing to bypass individual authentication mechanisms.
+
+---
+
+## 🌐 PoC Platforms
+
+Simulate this vulnerability by using the following:
+
+- **Have I Been Pwned** (to check if credentials were part of a breach)
+- **Credential Stuffing Attack Simulation:**  
+  Use tools like **Sentry MBA** or **Snipr** to simulate credential stuffing attacks.
+
+---
+
+## 🛡️ Mitigation
+
+To mitigate the risk of credential reuse, consider the following best practices:
+
+- ✅ **Use Unique Passwords:**  
+  Encourage users to use different passwords for every service. Password managers can help users store unique passwords securely.
+
+- ✅ **Implement Two-Factor Authentication (2FA):**  
+  Even if credentials are reused, 2FA will prevent unauthorized access, as attackers would need the second factor (e.g., an SMS code or authentication app code).
+
+- ✅ **Monitor for Breaches:**  
+  Use services like **Have I Been Pwned** to monitor for any breaches of your system’s users. Notify users to change their passwords if their credentials are exposed in any breach.
+
+- ✅ **Password Policies:**  
+  Enforce strong password policies (e.g., minimum length, special characters, etc.) to ensure users create hard-to-guess passwords.
+
+- ✅ **Account Lockout & Rate Limiting:**  
+  To protect against credential stuffing, implement rate-limiting, CAPTCHA challenges, and account lockouts after multiple failed login attempts.
+
+---
+
+## 🔧 Testing Tools / Techniques
+
+- **Burp Suite:**  
+  Use the Intruder feature to attempt credential stuffing with known breached passwords.
+
+- **OWASP ZAP:**  
+  Use ZAP to simulate attacks that test for weak or reused passwords across multiple services.
+
+- **Have I Been Pwned API:**  
+  Use the API to check if the user’s credentials have been part of a known data breach.
+
+- **Hydra:**  
+  Use Hydra for brute-force or credential-stuffing attacks if the target allows for automated login attempts.
+
+- **Manual Testing:**  
+  Test for weak or reused passwords by attempting logins with breached credentials or default password lists.
+
+---
+
+## 📚 References
+
+- **OWASP: Password Management Cheat Sheet**  
+  Link: [OWASP Password Management](https://cheatsheetseries.owasp.org/cheatsheets/Password_Management_Cheat_Sheet.html)
+
+- **OWASP Top 10 - A2: Broken Authentication**  
+  Link: [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
+- **Have I Been Pwned:**  
+  Link: [Have I Been Pwned](https://haveibeenpwned.com/)
+
+- **PortSwigger: Credential Stuffing Attacks**  
+  Link: [PortSwigger Credential Stuffing](https://portswigger.net/research/credential-stuffing)
+
+- **OWASP Cheat Sheet: Secure Password Storage**  
+  Link: [OWASP Secure Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
+
+
 ---
 
 ## 🔧 Testing Tools / Techniques
