@@ -1489,3 +1489,70 @@ You can simulate this vulnerability using:
 - OWASP Cheat Sheet: Secure Session Management
 
 ***
+# 🌐 WebVuln-020: Password Cracking
+
+**Category:**  
+Authentication
+
+**Vulnerability ID:**  
+`WEBVULN-020`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+An attacker tries to guess or crack a user’s password by using techniques such as brute force, dictionary attacks, or rainbow tables.
+
+---
+
+### 🧩 Payload:
+- **Brute Force Attack**: An attacker systematically checks all possible combinations of characters for a password.
+- **Dictionary Attack**: The attacker uses a precompiled list of common passwords or dictionary words to attempt login.
+- **Rainbow Table Attack**: The attacker uses precomputed hash values to quickly compare with password hashes in the database.
+
+---
+
+### ✅ Effect:
+- **Account Compromise**: Successful password cracking allows an attacker to gain unauthorized access to a user’s account.
+
+---
+
+## 🌐 PoC Platforms:
+You can simulate this vulnerability using:
+
+- DVWA
+- bWAPP
+- WebGoat
+
+---
+
+## 🛡️ Mitigation
+- ✅ **Enforce Strong Password Policies**  
+  Require a mix of upper and lower case letters, numbers, and special characters.
+  
+- ✅ **Limit Login Attempts**  
+  Implement account lockout or CAPTCHA after a predefined number of failed login attempts.
+
+- ✅ **Use Salted Password Hashes**  
+  Salt passwords before hashing to prevent the use of rainbow tables.
+
+- ✅ **Enforce Multi-Factor Authentication (MFA)**  
+  Require an additional form of authentication beyond just the password.
+
+---
+
+## 🔧 Testing Tools / Techniques
+- Hydra (for brute force and dictionary attacks)
+- Burp Suite Intruder (for automated password cracking)
+- John the Ripper (for cracking password hashes)
+- OWASP ZAP (for vulnerability scanning and brute force testing)
+
+---
+
+## 📚 References
+- OWASP: Password Cracking  
+- PortSwigger: Password Cracking  
+- OWASP Cheat Sheet: Secure Authentication
+
+***
