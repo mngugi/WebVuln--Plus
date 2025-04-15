@@ -1556,3 +1556,68 @@ You can simulate this vulnerability using:
 - OWASP Cheat Sheet: Secure Authentication
 
 ***
+# 🌐 WebVuln-021: Weak Password Storage
+
+**Category:**  
+Authentication
+
+**Vulnerability ID:**  
+`WEBVULN-021`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+A system stores passwords in an insecure manner, such as in plain text or using weak encryption/hashing algorithms.
+
+---
+
+### 🧩 Payload:
+- **Plain Text Storage**: The password is stored directly in the database without encryption or hashing.
+- **Weak Hashing Algorithm**: Storing passwords using weak algorithms like MD5 or SHA1, which are vulnerable to collision or brute force attacks.
+
+---
+
+### ✅ Effect:
+- **Exposure of User Credentials**: If the database is compromised, attackers can easily recover and misuse passwords if stored in an insecure manner.
+
+---
+
+## 🌐 PoC Platforms:
+You can simulate this vulnerability using:
+
+- DVWA
+- bWAPP
+- WebGoat
+
+---
+
+## 🛡️ Mitigation
+- ✅ **Use Strong Hashing Algorithms**  
+  Hash passwords with strong algorithms like bcrypt, Argon2, or PBKDF2.
+  
+- ✅ **Use Salted Hashes**  
+  Add a unique salt to each password before hashing to prevent rainbow table attacks.
+
+- ✅ **Use Key Stretching**  
+  Employ key stretching techniques (e.g., bcrypt) to increase the time needed to compute password hashes.
+
+- ✅ **Encrypt Sensitive Data**  
+  Store sensitive data like passwords using strong encryption methods, such as AES-256.
+
+---
+
+## 🔧 Testing Tools / Techniques
+- Burp Suite (to intercept login requests and test password storage)
+- John the Ripper (to test password hash strength)
+- Hashcat (for cracking weakly hashed passwords)
+- OWASP ZAP (to test for weak password storage vulnerabilities)
+
+---
+
+## 📚 References
+- OWASP: Password Storage Cheat Sheet  
+- OWASP Top 10 - A2: Broken Authentication  
+- PortSwigger: Password Storage Vulnerabilities  
+- OWASP Cheat Sheet: Secure Storage of Passwords
