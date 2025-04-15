@@ -1365,7 +1365,6 @@ if ($user == "admin" && $pass == "123456") {
 ```bash
 
 `hydra -l admin -P /usr/share/wordlists/rockyou.txt http://target.com/login.php -V`
-
 ```
 -l: login/username
 
@@ -1418,3 +1417,75 @@ if ($user == "admin" && $pass == "123456") {
 - [OWASP: Brute Force Attack](https://owasp.org/www-community/attacks/Brute_force_attack)
 - [OWASP Top 10 - Broken Authentication](https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/)
 - [Hydra GitHub](https://github.com/vanhauser-thc/thc-hydra)
+
+***
+
+# 🌐 WebVuln-019: Session Hijacking
+
+**Category:**  
+Session Management
+
+**Vulnerability ID:**  
+`WEBVULN-019`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+A session ID is transmitted via an insecure channel or is predictable, allowing an attacker to steal or guess the session ID.
+
+---
+
+### 🧩 Payload:
+- **Stealing Session ID via sniffing**  
+   If an attacker has access to the network traffic (e.g., via a man-in-the-middle attack), they can capture the session cookie or token.
+
+- **Session Fixation Attack**  
+   An attacker may force a user to use a predetermined session ID by embedding it in a URL, request parameter, or via other means.
+
+---
+
+### ✅ Effect:
+- **Session hijacking** allows attackers to impersonate a legitimate user and gain unauthorized access to sensitive data or functionality.
+
+---
+
+## 🌐 PoC Platforms:
+You can simulate this vulnerability using:
+
+- DVWA
+- bWAPP
+- WebGoat
+
+---
+
+## 🛡️ Mitigation
+- ✅ **Use Secure HTTP-only Cookies**  
+  Ensure cookies are marked with `HttpOnly` and `Secure` flags.
+  
+- ✅ **Use TLS/SSL**  
+  Encrypt all communication channels to prevent sniffing of session tokens.
+
+- ✅ **Implement Session Expiry and Regeneration**  
+  Regularly regenerate session IDs after login and set an appropriate session timeout.
+
+- ✅ **Enforce IP and User-Agent Binding**  
+  Validate session IDs against IP addresses and user-agent strings.
+
+---
+
+## 🔧 Testing Tools / Techniques
+- Burp Suite (for session token interception)
+- Wireshark (for sniffing network traffic)
+- OWASP ZAP (for vulnerability scanning)
+- Manual testing with session hijacking techniques
+
+---
+
+## 📚 References
+- OWASP: Session Hijacking  
+- PortSwigger: Session Hijacking  
+- OWASP Cheat Sheet: Secure Session Management
+
+***
