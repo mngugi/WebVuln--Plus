@@ -1621,3 +1621,74 @@ You can simulate this vulnerability using:
 - OWASP Top 10 - A2: Broken Authentication  
 - PortSwigger: Password Storage Vulnerabilities  
 - OWASP Cheat Sheet: Secure Storage of Passwords
+
+***
+# 🌐 WebVuln-022: Insecure Authentication
+
+**Category:**  
+Authentication
+
+**Vulnerability ID:**  
+`WEBVULN-022`
+
+---
+
+## 🧪 Demo / Proof of Concept (PoC)
+
+### 📌 Scenario:
+A web application fails to securely authenticate users, allowing unauthorized access or weak user verification. This can occur through improper implementation of authentication mechanisms, such as insecure session management or missing authentication mechanisms.
+
+---
+
+### 🧩 Payload:
+- **Missing Session Expiry**: A session is not terminated after user logout or after a certain period of inactivity.
+- **Weak Password Policies**: Allowing users to create easily guessable passwords (e.g., "password123").
+- **Bypassing Authentication**: An attacker finds ways to bypass authentication, such as manipulating URL parameters or accessing sensitive endpoints without proper checks.
+
+---
+
+### ✅ Effect:
+- **Unauthorized Access**: Attackers can gain access to restricted areas or accounts without proper authentication.
+- **Session Hijacking**: If authentication tokens are poorly managed or transmitted insecurely, they can be hijacked.
+
+---
+
+## 🌐 PoC Platforms:
+You can simulate this vulnerability using:
+
+- DVWA
+- bWAPP
+- WebGoat
+
+---
+
+## 🛡️ Mitigation
+- ✅ **Implement Secure Authentication Protocols**  
+  Use strong authentication mechanisms like OAuth2, OpenID Connect, or multi-factor authentication (MFA).
+  
+- ✅ **Enforce Strong Password Policies**  
+  Require strong passwords with a mix of letters, numbers, and special characters.
+
+- ✅ **Use Secure Session Management**  
+  Ensure that sessions are securely managed, with proper expiry, regeneration after login, and timeout mechanisms.
+
+- ✅ **Implement CAPTCHA and Rate Limiting**  
+  Use CAPTCHA and rate limiting to prevent automated login attempts and brute force attacks.
+
+---
+
+## 🔧 Testing Tools / Techniques
+- Burp Suite (to intercept and test authentication flows)
+- OWASP ZAP (for scanning insecure authentication mechanisms)
+- Hydra (for testing login forms with common usernames and passwords)
+- Manual testing of login and session management mechanisms
+
+---
+
+## 📚 References
+- OWASP: Insecure Authentication  
+- PortSwigger: Insecure Authentication  
+- OWASP Cheat Sheet: Authentication  
+- OWASP Top 10 - A2: Broken Authentication
+
+***
