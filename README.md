@@ -1952,3 +1952,70 @@ A login form submits credentials over HTTP or via a weak cipher suite in TLS. An
 - [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)
 - [CWE-326: Inadequate Encryption Strength](https://cwe.mitre.org/data/definitions/326.html)
 - [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/)
+
+***
+### WEBVULN-026: Insecure Direct Object Reference (IDOR)
+
+---
+
+#### 📂 Category:
+Broken Access Control
+
+---
+
+#### 🐞 Vulnerability:
+Insecure Direct Object Reference (IDOR)
+
+---
+
+#### 🔍 Description:
+Insecure Direct Object Reference (IDOR) occurs when an application provides direct access to objects (such as files, database records, or URLs) based on user-supplied input without proper access control checks. An attacker can manipulate input parameters to gain unauthorized access to data or actions.
+
+**Example Scenarios**:
+- Accessing another user’s account data by changing a user ID in the URL.
+- Downloading restricted files by altering file path or ID.
+- Viewing or editing other users’ invoices, tickets, or orders.
+
+---
+
+#### 💣 Demo / Proof of Concept:
+
+**Scenario**:  
+A user accesses their profile using this URL:
+
+By modifying the `id` parameter to `1002`, they can view another user's profile:
+
+
+**Tools Used**:
+- Burp Suite Repeater or Intruder
+- Postman
+- Custom Python scripts for parameter fuzzing
+
+---
+
+#### 🛡️ Mitigation:
+
+- Enforce strict access controls on the server side.
+- Never rely on client-side checks for authorization.
+- Use indirect references such as UUIDs or securely mapped tokens.
+- Implement object-level permission checks for every request.
+- Log access violations and monitor unusual access patterns.
+
+---
+
+#### 🧪 Testing Tools / Techniques:
+
+- Manual testing with Burp Suite or Postman
+- OWASP ZAP with forced browsing
+- Fuzzing predictable parameters and observing responses
+- Review logs for unauthorized access attempts
+
+---
+
+#### 📚 References:
+
+- [OWASP IDOR Guide](https://owasp.org/www-community/attacks/Indirect_Object_Reference)
+- [OWASP Broken Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Broken_Access_Control_Cheat_Sheet.html)
+- [CWE-639: Authorization Bypass Through User-Controlled Key](https://cwe.mitre.org/data/definitions/639.html)
+- [CWE-862: Missing Authorization](https://cwe.mitre.org/data/definitions/862.html)
+
