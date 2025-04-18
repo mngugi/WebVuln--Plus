@@ -1888,3 +1888,66 @@ The following tools and techniques can be used to test for and exploit cookie th
 
 
 ***
+## PART III Sensitive Data Exposure
+***
+Sensitive Data Exposure
+---
+### 🛡️ WEBVULN-025: Session Fixation
+
+---
+
+#### 📂 Category:
+**Session Management**
+
+---
+
+#### 🐞 Vulnerability:
+**Session Fixation**
+
+---
+
+#### 🔍 Description:
+Session Fixation is a vulnerability where an attacker sets or predicts a valid session ID for a user before they log in. After the user logs in with the pre-set session ID, the attacker can hijack the session and impersonate the user.
+
+---
+
+#### 💣 Demo / Proof of Concept:
+
+**Scenario:**
+1. Attacker obtains or sets a session ID (e.g., `PHPSESSID=123456`).
+2. Attacker sends the victim a link:  
+   `https://example.com/login?PHPSESSID=123456`
+3. Victim logs in using that session.
+4. Attacker now uses the same session ID to access the victim's authenticated session.
+
+---
+
+#### 🛡️ Mitigation:
+
+- **Regenerate the session ID after login** using `session_regenerate_id()` (PHP) or the equivalent in other frameworks.
+- Set `HttpOnly`, `Secure`, and `SameSite` flags on session cookies.
+- Never accept session IDs via URL (GET parameters).
+- Invalidate old sessions properly during login and logout.
+
+---
+
+#### 🧪 Testing Tools / Techniques:
+
+- **Manual Testing:**
+  - Manipulate session IDs via query strings or cookies before login.
+  - Observe if the session ID remains unchanged after authentication.
+- **Tools:**
+  - [Burp Suite](https://portswigger.net/burp)
+  - OWASP ZAP
+  - Postman (to craft and resend login requests with fixed session IDs)
+
+---
+
+#### 📚 References:
+
+- [OWASP Session Fixation](https://owasp.org/www-community/attacks/Session_fixation)
+- [OWASP Cheat Sheet - Session Management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
+- [CWE-384: Session Fixation](https://cwe.mitre.org/data/definitions/384.html)
+
+
+
