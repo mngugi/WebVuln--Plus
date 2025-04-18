@@ -1892,62 +1892,63 @@ The following tools and techniques can be used to test for and exploit cookie th
 ***
 Sensitive Data Exposure
 ---
-### 🛡️ WEBVULN-025: Session Fixation
+### WEBVULN-025: Inadequate Encryption
 
 ---
 
 #### 📂 Category:
-**Session Management**
+Cryptographic Issues
 
 ---
 
 #### 🐞 Vulnerability:
-**Session Fixation**
+Inadequate Encryption
 
 ---
 
 #### 🔍 Description:
-Session Fixation is a vulnerability where an attacker sets or predicts a valid session ID for a user before they log in. After the user logs in with the pre-set session ID, the attacker can hijack the session and impersonate the user.
+Inadequate encryption refers to the use of weak, outdated, or improperly implemented cryptographic algorithms, libraries, or protocols. This allows attackers to potentially decrypt, alter, or impersonate data and communications. Common scenarios include:
+- Use of outdated SSL/TLS versions (e.g., SSLv3, TLS 1.0).
+- Weak encryption algorithms (e.g., RC4, DES, MD5).
+- Poor key management (e.g., hardcoded or reused keys).
+- Missing encryption for sensitive data at rest or in transit.
 
 ---
 
 #### 💣 Demo / Proof of Concept:
 
-**Scenario:**
-1. Attacker obtains or sets a session ID (e.g., `PHPSESSID=123456`).
-2. Attacker sends the victim a link:  
-   `https://example.com/login?PHPSESSID=123456`
-3. Victim logs in using that session.
-4. Attacker now uses the same session ID to access the victim's authenticated session.
+**Scenario**:  
+A login form submits credentials over HTTP or via a weak cipher suite in TLS. An attacker on the same network captures traffic using a packet sniffer and extracts login credentials.
+
+**Example Attack Tools**:
+- `Wireshark` for traffic sniffing.
+- `mitmproxy` for interception and SSL stripping.
+- `testssl.sh` for detecting weak TLS configurations.
 
 ---
 
 #### 🛡️ Mitigation:
 
-- **Regenerate the session ID after login** using `session_regenerate_id()` (PHP) or the equivalent in other frameworks.
-- Set `HttpOnly`, `Secure`, and `SameSite` flags on session cookies.
-- Never accept session IDs via URL (GET parameters).
-- Invalidate old sessions properly during login and logout.
+- Enforce HTTPS using TLS 1.2 or higher (preferably TLS 1.3).
+- Disable weak ciphers and insecure protocol versions in server configuration.
+- Use strong algorithms (e.g., AES-GCM, SHA-256, RSA-2048+).
+- Implement proper key management (e.g., key rotation, secure storage).
+- Use HSTS to prevent protocol downgrade attacks.
 
 ---
 
 #### 🧪 Testing Tools / Techniques:
 
-- **Manual Testing:**
-  - Manipulate session IDs via query strings or cookies before login.
-  - Observe if the session ID remains unchanged after authentication.
-- **Tools:**
-  - [Burp Suite](https://portswigger.net/burp)
-  - OWASP ZAP
-  - Postman (to craft and resend login requests with fixed session IDs)
+- **testssl.sh**
+- **Qualys SSL Labs** (https://www.ssllabs.com/ssltest/)
+- `nmap --script ssl-enum-ciphers -p 443 <target>`
+- `openssl s_client -connect <host>:443 -cipher LOW`
 
 ---
 
 #### 📚 References:
 
-- [OWASP Session Fixation](https://owasp.org/www-community/attacks/Session_fixation)
-- [OWASP Cheat Sheet - Session Management](https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html)
-- [CWE-384: Session Fixation](https://cwe.mitre.org/data/definitions/384.html)
-
-
-
+- [OWASP Transport Layer Protection Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html)
+- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)
+- [CWE-326: Inadequate Encryption Strength](https://cwe.mitre.org/data/definitions/326.html)
+- [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/)
