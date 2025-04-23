@@ -2258,4 +2258,79 @@ Cross-Origin-Resource-Policy: same-origin
 - [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
 - [Mozilla Developer Docs: Security Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
 - [OWASP Cheat Sheet: HTTP Headers](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
+
+***
+## WEBVULN-030: Insecure File Handling
+
+**Category:** Insecure File Upload / Access Control
+
+**Vulnerability:** Insecure File Handling
+
+**Description:**
+Insecure file handling occurs when applications improperly process, upload, or serve files. This includes weak validation of uploaded file types, poor access controls on file storage, and unsafe file execution. These flaws can lead to arbitrary code execution, path traversal, denial of service, or sensitive file disclosure.
+
+Common insecure practices:
+- Allowing upload of executable files (e.g., `.php`, `.exe`, `.sh`)
+- Using user input in file paths without sanitization
+- Storing uploaded files in publicly accessible directories
+- Not scanning or validating file content
+- Serving files based on MIME type without proper checks
+
+---
+
+### 🐚 Risk Example
+
+```http
+POST /upload HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="file"; filename="shell.php"
+Content-Type: application/x-php
+
+<?php system($_GET['cmd']); ?>
+------WebKitFormBoundary--
+```
+
+Then accessing:
+```text
+https://example.com/uploads/shell.php?cmd=whoami
+```
+
+If the server executes the PHP file, this results in **remote code execution**.
+
+---
+
+### 🛡️ Mitigation
+
+- Restrict allowed file types by MIME type and extension (e.g., images only).
+- Rename uploaded files and store them with randomized, non-user-controllable names.
+- Use file storage outside of the web root or protect directories with `.htaccess` or server rules.
+- Never serve uploaded files directly without access checks.
+- Validate file content (magic numbers) in addition to extensions.
+- Scan files with antivirus/malware tools before storing.
+- Use a dedicated file upload handler or service (e.g., S3 + signed URLs).
+- Apply server-side file size limits and sanitize file names.
+- Disable script execution in upload directories.
+
+---
+
+### 🧪 Testing Tools/Techniques
+
+- Attempt to upload files with extensions like `.php`, `.jsp`, `.exe`, `.aspx`
+- Try path traversal using `../` in filenames or download paths
+- Upload files with fake extensions or mismatched MIME types
+- Use tools like:
+  - `Burp Suite`
+  - `Upload Scanner`
+  - `OWASP ZAP`
+- Manually inspect upload directory structure and permissions
+
+---
+
+### 📚 References
+
+- [OWASP File Upload Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/File_Upload_Cheat_Sheet.html)
+- [OWASP Testing Guide: Testing for File Upload](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/10-Input_Validation_Testing/06-Testing_for_File_Upload/)
+- [OWASP Path Traversal](https://owasp.org/www-community/attacks/Path_Traversal)
 ***
