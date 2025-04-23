@@ -2180,3 +2180,82 @@ This file is stored unencrypted on disk and is readable by anyone with file acce
 - [OWASP Mobile Top 10: M2 - Insecure Data Storage](https://owasp.org/www-project-mobile-top-10/2016-risks/m2-insecure-data-storage)
 - [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)
 - [NIST SP 800-57 Part 1: Key Management Guidelines](https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-5/final)
+
+***
+## WEBVULN-029: Missing Security Headers
+
+**Category:** Security Misconfiguration
+
+**Vulnerability:** Missing Security Headers
+
+**Description:**
+Missing security headers in HTTP responses can leave web applications vulnerable to a wide range of attacks, including clickjacking, XSS, MIME sniffing, and more. Security headers are part of defense-in-depth and provide essential protection by instructing browsers how to behave when interacting with your site.
+
+Common missing headers and their impact:
+- `Content-Security-Policy`: Prevents XSS by controlling sources of scripts, styles, etc.
+- `X-Frame-Options`: Protects against clickjacking by preventing framing.
+- `X-Content-Type-Options`: Stops MIME-sniffing attacks.
+- `Strict-Transport-Security`: Enforces HTTPS connections.
+- `Referrer-Policy`: Controls the amount of referrer information sent.
+- `Permissions-Policy`: Restricts use of browser features (e.g., camera, microphone).
+- `Cross-Origin-Embedder-Policy`, `Cross-Origin-Resource-Policy`, and `Cross-Origin-Opener-Policy`: Provide protections against cross-origin attacks.
+
+---
+
+### 📄 Risk Example
+
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+<!-- No security headers present -->
+```
+
+This allows an attacker to:
+- Inject scripts (`XSS`)
+- Embed the site in an `<iframe>` (`clickjacking`)
+- Trick the browser into interpreting data incorrectly (`MIME sniffing`)
+
+---
+
+### 🛡️ Mitigation
+
+- Set the following headers on all HTTP responses:
+
+```http
+Content-Security-Policy: default-src 'self';
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Referrer-Policy: no-referrer
+Permissions-Policy: geolocation=(), camera=()
+Cross-Origin-Embedder-Policy: require-corp
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+```
+
+- Use a web server or middleware (e.g., Nginx, Apache, Express.js Helmet) to enforce headers globally.
+- Regularly test for header presence using security scanners.
+- Customize CSP rules according to your app’s needs (avoid overly permissive values like `unsafe-inline`).
+
+---
+
+### 🧪 Testing Tools/Techniques
+
+- Use online scanners:
+  - [SecurityHeaders.com](https://securityheaders.com/)
+  - [Mozilla Observatory](https://observatory.mozilla.org/)
+- Use command-line tools:
+  - `curl -I https://yourdomain.com`
+  - `nmap --script http-security-headers`
+- Analyze browser DevTools > Network > Headers tab
+- Automate checks using CI/CD security tools or SAST scanners
+
+---
+
+### 📚 References
+
+- [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)
+- [Mozilla Developer Docs: Security Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+- [OWASP Cheat Sheet: HTTP Headers](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
+***
