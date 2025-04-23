@@ -1,5 +1,6 @@
 
 
+
 # 🌐 Welcome to the WebVuln- Wiki!
 
 - Documenting **100+ web vulnerabilities** with testing tools and mitigation strategies.
@@ -2056,57 +2057,60 @@ int() argument must be a string, a bytes-like object or a number, not 'NoneType'
 Publicly accessible backup:
 `https://example.com/backup.zip`
 
-**Mitigation:**
+### 📟 Verbose Error Example
 
-Disable detailed error messages in production.
+```http
+GET /api/user?id=notanumber HTTP/1.1
 
-Use environment variables securely and restrict access to internal files like .env, .git/, config/, etc.
+HTTP/1.1 500 Internal Server Error
+Content-Type: text/html
 
-Ensure cloud storage buckets are private by default.
+Exception: TypeError at /api/user
+int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+```
 
-Apply proper access control and input validation.
+---
 
-Scan and monitor endpoints for sensitive file exposure.
+### 💾 Publicly Accessible Backup
 
-Implement logging and alerting mechanisms for unusual data access patterns.
+```text
+https://example.com/backup.zip
+```
 
-Run content security audits regularly.
+---
 
-**Testing Tools/Techniques:**
+### 🛡️ Mitigation
 
-Manual inspection of URLs and hidden directories
+- Disable detailed error messages in production.
+- Use environment variables securely and restrict access to internal files like `.env`, `.git/`, `config/`, etc.
+- Ensure cloud storage buckets are private by default.
+- Apply proper access control and input validation.
+- Scan and monitor endpoints for sensitive file exposure.
+- Implement logging and alerting mechanisms for unusual data access patterns.
+- Run content security audits regularly.
 
-Directory brute-forcing tools like:
+---
 
-dirsearch
+### 🧪 Testing Tools/Techniques
 
-gobuster
+- Manual inspection of URLs and hidden directories
+- Directory brute-forcing tools like:
+  - `dirsearch`
+  - `gobuster`
+  - `ffuf`
+- Inspect HTTP responses for stack traces and detailed errors
+- Use recon tools to find open cloud buckets or backup files:
+  - `AWSBucketDump`
+  - `S3Scanner`
+- Check for known leaks using tools like:
+  - `truffleHog`
+  - `GitLeaks`
 
-ffuf
+---
 
-Inspect HTTP responses for stack traces and detailed errors
+### 📚 References
 
-Use recon tools to find open cloud buckets or backup files:
-
-AWSBucketDump, S3Scanner
-
-Check for known leaks using tools like:
-
-truffleHog
-
-GitLeaks
-
-**References:**
-
-OWASP: Information Leakage
-
-OWASP Testing Guide: Testing for Information Leakage
-
-GitHub - truffleHog
-
-GitHub - GitLeaks
-
-
-
-
-
+- [OWASP: Information Leakage](https://owasp.org/www-community/Improper_Information_Leakage)
+- [OWASP Testing Guide: Testing for Information Leakage](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/01-Information_Gathering/01-Testing_for_Information_Leakage.html)
+- [GitHub - truffleHog](https://github.com/trufflesecurity/trufflehog)
+- [GitHub - GitLeaks](https://github.com/gitleaks/gitleaks)
