@@ -2019,3 +2019,94 @@ By modifying the `id` parameter to `1002`, they can view another user's profile:
 - [CWE-639: Authorization Bypass Through User-Controlled Key](https://cwe.mitre.org/data/definitions/639.html)
 - [CWE-862: Missing Authorization](https://cwe.mitre.org/data/definitions/862.html)
 
+***
+## WEBVULN-027: Data Leakage
+
+**Category:** Information Disclosure
+
+**Vulnerability:** Data Leakage
+
+**Description:**
+Data leakage refers to the unintended or unauthorized exposure of sensitive information, such as application configuration details, environment variables, internal API keys, credentials, stack traces, internal IPs, source code, or PII (Personally Identifiable Information). This often occurs due to misconfigurations, verbose error messages, improper access controls, or unfiltered user input being echoed back to the client.
+
+Common causes include:
+- Verbose error handling in production environments
+- Exposing `.git/`, `.env`, `backup/`, or similar directories/files
+- Debug features being enabled in production
+- Improperly configured cloud storage (e.g., public S3 buckets)
+- Misconfigured API responses
+
+**Demo/Proof of Concept:**
+1. Accessing exposed `.env` file:
+`https://example.com/.env`
+May reveal:
+DB_PASSWORD=SuperSecret123 API_KEY=abcd1234efgh5678
+
+
+2. Verbose error:
+```http
+GET /api/user?id=notanumber HTTP/1.1
+
+HTTP/1.1 500 Internal Server Error
+Content-Type: text/html
+
+Exception: TypeError at /api/user
+int() argument must be a string, a bytes-like object or a number, not 'NoneType'
+
+Publicly accessible backup:
+`https://example.com/backup.zip`
+
+**Mitigation:**
+
+Disable detailed error messages in production.
+
+Use environment variables securely and restrict access to internal files like .env, .git/, config/, etc.
+
+Ensure cloud storage buckets are private by default.
+
+Apply proper access control and input validation.
+
+Scan and monitor endpoints for sensitive file exposure.
+
+Implement logging and alerting mechanisms for unusual data access patterns.
+
+Run content security audits regularly.
+
+**Testing Tools/Techniques:**
+
+Manual inspection of URLs and hidden directories
+
+Directory brute-forcing tools like:
+
+dirsearch
+
+gobuster
+
+ffuf
+
+Inspect HTTP responses for stack traces and detailed errors
+
+Use recon tools to find open cloud buckets or backup files:
+
+AWSBucketDump, S3Scanner
+
+Check for known leaks using tools like:
+
+truffleHog
+
+GitLeaks
+
+**References:**
+
+OWASP: Information Leakage
+
+OWASP Testing Guide: Testing for Information Leakage
+
+GitHub - truffleHog
+
+GitHub - GitLeaks
+
+
+
+
+
