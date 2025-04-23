@@ -2114,3 +2114,69 @@ https://example.com/backup.zip
 - [OWASP Testing Guide: Testing for Information Leakage](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/01-Information_Gathering/01-Testing_for_Information_Leakage.html)
 - [GitHub - truffleHog](https://github.com/trufflesecurity/trufflehog)
 - [GitHub - GitLeaks](https://github.com/gitleaks/gitleaks)
+
+***
+## WEBVULN-028: Unencrypted Data Storage
+
+**Category:** Insecure Data Storage
+
+**Vulnerability:** Unencrypted Data Storage
+
+**Description:**
+Unencrypted data storage occurs when sensitive information such as passwords, access tokens, personally identifiable information (PII), or financial records is stored in plaintext — whether in databases, local files, cookies, or logs — without adequate encryption mechanisms in place. This poses a serious security risk in case of data breaches, physical device theft, or server compromise.
+
+Common causes include:
+- Developers storing credentials or tokens in plaintext for debugging or simplicity.
+- Misconfigured database storage lacking field-level encryption.
+- Client-side storage of tokens or secrets in localStorage/sessionStorage.
+- Logs capturing sensitive inputs or responses in readable form.
+
+---
+
+### 💣 Risk Example
+
+```text
+users.db
+--------------
+username: johndoe
+password: hunter2
+email: johndoe@example.com
+card_number: 4111111111111111
+cvv: 123
+```
+
+This file is stored unencrypted on disk and is readable by anyone with file access.
+
+---
+
+### 🛡️ Mitigation
+
+- Use strong encryption (AES-256 or better) for storing sensitive data at rest.
+- Store cryptographic keys securely (e.g., in HSMs or dedicated key management services).
+- Hash passwords using secure algorithms like `bcrypt`, `argon2`, or `PBKDF2`.
+- Avoid storing unnecessary sensitive data; follow data minimization principles.
+- Avoid storing secrets in client-side localStorage/sessionStorage.
+- Regularly audit stored data and review access control policies.
+- Ensure backups are also encrypted and securely stored.
+- Sanitize logs to remove or mask sensitive data.
+
+---
+
+### 🧪 Testing Tools/Techniques
+
+- Inspect backend database storage for plaintext entries.
+- Search project directories for `.db`, `.log`, `.bak`, or `.json` files with sensitive data.
+- Review app logs for exposed passwords, tokens, or payment info.
+- Use mobile app assessment tools to scan local data storage:
+  - `MobSF`
+  - `Frida`
+  - `Objection`
+- Review browser dev tools for client-side secrets in localStorage or cookies.
+
+---
+
+### 📚 References
+
+- [OWASP Mobile Top 10: M2 - Insecure Data Storage](https://owasp.org/www-project-mobile-top-10/2016-risks/m2-insecure-data-storage)
+- [OWASP Cryptographic Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html)
+- [NIST SP 800-57 Part 1: Key Management Guidelines](https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-5/final)
