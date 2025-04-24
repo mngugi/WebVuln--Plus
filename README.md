@@ -26,7 +26,7 @@ Each vulnerability is documented in a consistent format:
 - ...
 - WEBVULN-030: Insecure File Handling
 
-*Full list available in the markdown documentation.*
+
 
 ---
 
@@ -4826,4 +4826,87 @@ Password: (empty)
 - Rapid7: [Default Credentials Cheat Sheet](https://www.rapid7.com/db/default-creds)
 - NIST SP 800-63: [Digital Identity Guidelines](https://pages.nist.gov/800-63-3/)
 
+***
+
+# WEBVULN-032: Directory Listing
+
 ---
+
+## 🏷️ Category:
+Information Disclosure
+
+---
+
+## 🐞 Vulnerability:
+Enabled Directory Listing
+
+---
+
+## 📖 Description:
+
+Directory listing is a web server misconfiguration where the contents of a directory are exposed if no `index.html` (or equivalent) file is present. This allows attackers to browse directories, view files, download backups, scripts, or credentials unintentionally left on the server.
+
+It often reveals sensitive files such as:
+
+- `.env`, `.git/`, config files
+- Backup archives like `backup.zip`, `site.bak`
+- Development files, test scripts, or credentials
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+Request:
+
+```
+GET /uploads/ HTTP/1.1
+Host: vulnerable-site.com
+```
+
+Response:
+
+```html
+Index of /uploads/
+
+[To Parent Directory]
+ config.php
+ db_backup.sql
+ test.php
+ users.csv
+```
+
+---
+
+## 🛡️ Mitigation:
+
+- Disable directory listing in the web server configuration:
+
+  - **Apache**: `Options -Indexes`
+  - **Nginx**: `autoindex off;`
+  - **IIS**: Disable "Directory Browsing" in IIS settings
+
+- Use `.htaccess` to block access to sensitive folders
+- Place a default `index.html` in public directories
+- Move non-public files outside the web root
+- Use proper file permissions to restrict access
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Manual browsing to common directories (`/uploads/`, `/files/`, `/backup/`)
+- Use automated directory brute-forcing tools:
+  - `dirsearch`
+  - `gobuster`
+  - `ffuf`
+- Observe HTTP responses for lack of `403` on folders
+- Review server configurations and permissions
+
+---
+
+## 🔗 References:
+
+- OWASP: [Directory Listing](https://owasp.org/www-community/attacks/Directory_Listing)
+- Apache Docs: [mod_autoindex](https://httpd.apache.org/docs/current/mod/mod_autoindex.html)
+- Nginx Docs: [autoindex Module](https://nginx.org/en/docs/http/ngx_http_autoindex_module.html)
+
