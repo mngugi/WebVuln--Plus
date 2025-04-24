@@ -5174,4 +5174,90 @@ In this case, a regular user can access admin data simply by modifying the user 
 - OWASP: [Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Access_Control_Cheat_Sheet.html)
 
 ***
+# WEBVULN-036: Information Disclosure
 
+---
+
+## 🏷️ Category:
+Information Disclosure
+
+---
+
+## 🐞 Vulnerability:
+Unintended Information Disclosure
+
+---
+
+## 📖 Description:
+
+Information disclosure vulnerabilities occur when an application unintentionally exposes sensitive data to unauthorized users. This may include technical details, internal files, system paths, credentials, or user data.
+
+Common causes include:
+
+- Stack traces and error messages in production
+- Exposed `.git/`, `.env`, `debug.log`, or `config.php` files
+- Sensitive data in comments, JavaScript files, or hidden form fields
+- Verbose HTTP headers or debug APIs
+- Disclosure via metadata in uploaded files (e.g., EXIF, DOCX info)
+
+This information can aid in further exploitation such as privilege escalation, enumeration, or targeted attacks.
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+**Example 1: Stack trace in response**
+
+```
+GET /api/user?id=abc HTTP/1.1
+
+Response:
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+at /var/www/html/api/user.py line 42
+```
+
+**Example 2: Exposed environment file**
+
+```
+https://example.com/.env
+
+Response:
+APP_KEY=base64:abc123
+DB_PASSWORD=supersecret
+```
+
+---
+
+## 🛡️ Mitigation:
+
+- Disable verbose error messages in production
+- Block access to sensitive files and directories via web server config
+- Strip metadata from uploaded documents and images
+- Avoid leaving sensitive data in comments, frontend code, or hidden inputs
+- Sanitize server responses to avoid leaking stack traces or paths
+- Use content security headers to prevent unintended information leaks
+- Run regular audits and leak detection scans on deployed assets
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Manual browsing for `.env`, `.git/`, `debug.log`, `backup.zip`, etc.
+- Check for detailed error messages in responses
+- Inspect source code, JS files, and HTML comments
+- Use recon tools like:
+  - `dirsearch`, `gobuster`, `ffuf`
+  - `truffleHog`, `GitLeaks`
+- Shodan/Censys searches for open metadata or files
+- Analyze file metadata with `exiftool`
+
+---
+
+## 🔗 References:
+
+- OWASP: [Information Leakage](https://owasp.org/www-community/Information_Leakage)
+- OWASP Testing Guide: [Testing for Information Leakage](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/01-Testing_for_Information_Leakage.html)
+- GitHub: [truffleHog](https://github.com/trufflesecurity/trufflehog)
+- GitHub: [GitLeaks](https://github.com/gitleaks/gitleaks)
+
+***
