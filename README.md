@@ -2,6 +2,87 @@
 
 
 # 🌐 Welcome to the WebVuln- Wiki!
+# WebVuln-
+
+**WebVuln-** is a structured and practical documentation project focused on common web vulnerabilities. It includes detailed explanations, proof-of-concept demos, mitigations, testing tools, and references — making it a valuable resource for security researchers, developers, and learners.
+
+---
+
+## 📁 Structure
+
+Each vulnerability is documented in a consistent format:
+
+- **Category**
+- **Vulnerability ID**
+- **Description**
+- **Demo / Proof of Concept**
+- **Mitigation**
+- **Testing Tools / Techniques**
+- **References**
+
+---
+
+## ✅ Completed Entries
+
+- WEBVULN-001: SQL Injection
+- WEBVULN-002: Cross-Site Scripting (XSS)
+- ...
+- WEBVULN-030: Insecure File Handling
+
+*Full list available in the markdown documentation.*
+
+---
+
+## 📚 Goals
+
+- Document the top 100 web vulnerabilities
+- Provide reproducible PoCs and demos
+- Help learners understand how to identify and mitigate each issue
+- Build a reference base for secure development and testing
+
+---
+
+## 🧪 Tools & Techniques Covered
+
+- `burpsuite`, `zap`, `ffuf`, `dirsearch`, `sqlmap`, `xsstrike`
+- Manual testing techniques
+- Secure coding and configuration patterns
+- Source code review tips
+
+---
+
+## 🚀 How to Use
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/mngugi/WebVuln-.git
+   cd WebVuln-
+   ```
+
+2. Browse through markdown files grouped by vulnerability ID:
+
+   ```bash
+   less vulnerabilities/WEBVULN-001.md
+   ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! You can help by:
+
+- Adding new vulnerability entries
+- Improving existing content or formatting
+- Suggesting tools or examples
+
+Fork the repo and open a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
 
 - Documenting **100+ web vulnerabilities** with testing tools and mitigation strategies.
 
