@@ -5090,5 +5090,88 @@ curl http://example.com:8080
 - OWASP: [Testing for Network Infrastructure Misconfiguration](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/03-Testing_for_Network_Infrastructure_Misconfiguration.html)
 - Nmap Docs: [https://nmap.org/book/inst-windows.html](https://nmap.org/book/inst-windows.html)
 - SANS: [Secure Network Design](https://www.sans.org/white-papers/secure-network-design/)
+
+***
+# WEBVULN-035: Improper Access Control
+
+---
+
+## 🏷️ Category:
+Access Control
+
+---
+
+## 🐞 Vulnerability:
+Improper or Broken Access Control
+
+---
+
+## 📖 Description:
+
+Improper access control occurs when a web application fails to properly restrict what authenticated users can do or see. This allows attackers to access unauthorized data or actions by manipulating URLs, parameters, or tokens.
+
+Common examples include:
+
+- Accessing admin functions as a regular user
+- Changing user ID in URL to view/edit other users’ data
+- Unauthorized access to hidden or unlinked endpoints
+- Performing actions outside intended roles (e.g., escalation from user to admin)
+
+Improper access control is consistently ranked as one of the most critical web vulnerabilities (e.g., OWASP Top 10 A01:2021).
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+```
+Request:
+GET /api/users/1001/profile HTTP/1.1
+Authorization: Bearer user-token
+
+Response:
+{
+  "id": 1001,
+  "username": "admin",
+  "email": "admin@example.com"
+}
+```
+
+In this case, a regular user can access admin data simply by modifying the user ID in the URL.
+
+---
+
+## 🛡️ Mitigation:
+
+- Enforce **role-based access control (RBAC)** or attribute-based access control (ABAC)
+- Never rely on client-side validation or UI restrictions alone
+- Validate all access permissions server-side
+- Use secure session management and token scopes
+- Deny access by default; explicitly allow actions per role
+- Avoid exposing internal object references (use indirect IDs or UUIDs)
+- Perform access control checks for **every** sensitive action
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Manual privilege escalation attempts (IDOR testing)
+- Intercept and modify requests using:
+  - Burp Suite
+  - Postman
+- Test hidden parameters or functions (e.g., `?is_admin=true`)
+- Check for horizontal (same-level) and vertical (privilege-level) escalation
+- Use tools like:
+  - `AuthMatrix` (Burp extension)
+  - `AccessControlTestingProject`
+
+---
+
+## 🔗 References:
+
+- OWASP Top 10: [Broken Access Control (A01:2021)](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- CWE-284: [Improper Access Control](https://cwe.mitre.org/data/definitions/284.html)
+- PortSwigger: [Access control vulnerabilities](https://portswigger.net/web-security/access-control)
+- OWASP: [Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Access_Control_Cheat_Sheet.html)
+
 ***
 
