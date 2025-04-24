@@ -4910,3 +4910,185 @@ Index of /uploads/
 - Apache Docs: [mod_autoindex](https://httpd.apache.org/docs/current/mod/mod_autoindex.html)
 - Nginx Docs: [autoindex Module](https://nginx.org/en/docs/http/ngx_http_autoindex_module.html)
 
+***
+# WEBVULN-033: Unprotected API Endpoints
+
+---
+
+## 🏷️ Category:
+Access Control / API Security
+
+---
+
+## 🐞 Vulnerability:
+Unprotected or Poorly Protected API Endpoints
+
+---
+
+## 📖 Description:
+
+APIs often expose backend functionality directly, but when authentication and authorization are missing or weak, attackers can exploit these endpoints to access, modify, or delete sensitive data.
+
+Unprotected APIs are frequently overlooked during testing and may lack:
+
+- Authentication (public access)
+- Authorization checks (user role validation)
+- Rate limiting (brute-force protection)
+- Input validation (injection vectors)
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+Unauthenticated request:
+
+```
+GET /api/users HTTP/1.1
+Host: vulnerable-site.com
+```
+
+Response:
+
+```json
+[
+  { "id": 1, "username": "admin", "email": "admin@example.com" },
+  { "id": 2, "username": "jdoe", "email": "john@example.com" }
+]
+```
+
+Another common issue:
+
+```
+DELETE /api/users/1 HTTP/1.1
+Host: vulnerable-site.com
+Authorization: Bearer <user-token>
+```
+
+Response: `200 OK` – Admin account deleted without proper permission check.
+
+---
+
+## 🛡️ Mitigation:
+
+- Require strong authentication for all API endpoints
+- Enforce role-based access control (RBAC) and permission checks
+- Implement input validation and output encoding
+- Apply rate limiting, IP throttling, and CAPTCHA mechanisms
+- Use API gateways to manage traffic and security
+- Avoid exposing internal API routes or test/debug endpoints in production
+- Log and monitor API access patterns
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Manual endpoint fuzzing using:
+  - `curl`
+  - Postman
+  - Burp Suite
+- Automated API scanning tools:
+  - `OWASP ZAP`
+  - `Nikto`
+  - `APIsec`
+- Check API documentation vs implementation for unlisted or hidden endpoints
+- Attempt privilege escalation (e.g., regular user accessing admin resources)
+- Replay requests with manipulated tokens or none at all
+
+---
+
+## 🔗 References:
+
+- OWASP API Top 10: [Broken Object Level Authorization](https://owasp.org/API-Security/editions/2023/en/0xa1-broken-object-level-authorization/)
+- OWASP: [API Security Project](https://owasp.org/www-project-api-security/)
+- PortSwigger: [Testing API endpoints](https://portswigger.net/web-security/api)
+
+***
+# WEBVULN-034: Open Ports and Services
+
+---
+
+## 🏷️ Category:
+Infrastructure Misconfiguration
+
+---
+
+## 🐞 Vulnerability:
+Exposed/Open Ports and Services
+
+---
+
+## 📖 Description:
+
+When unnecessary ports and services are left open on a server, attackers can identify and exploit them to gain unauthorized access, extract data, or pivot further into a network.
+
+Common exposures include:
+
+- Admin interfaces (e.g., :8080, :8000, :3306)
+- Development ports (e.g., :5000 Flask, :3000 Node.js)
+- Debug or remote access services (e.g., Telnet, RDP, SSH)
+- Databases (MySQL, MongoDB) exposed without authentication
+
+Such services are often left running after development or during misconfigured deployments.
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+Scan a target with Nmap:
+
+```
+nmap -Pn -p- example.com
+```
+
+Output:
+
+```
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+3306/tcp open  mysql
+8080/tcp open  http-proxy
+```
+
+Direct access attempt:
+
+```
+curl http://example.com:8080
+# Access to unprotected admin panel
+```
+
+---
+
+## 🛡️ Mitigation:
+
+- Close all non-essential ports
+- Use firewalls (e.g., iptables, ufw) to restrict access
+- Restrict internal services to private IPs or local loopback
+- Implement authentication and encryption (e.g., SSH keys, TLS)
+- Regularly scan infrastructure for exposed services
+- Use jump hosts and VPNs to access internal services
+- Set up alerts for unusual network exposure
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Port scanning:
+  - `nmap`
+  - `masscan`
+  - `rustscan`
+- Banner grabbing with `netcat` or `telnet`
+- Check cloud provider firewall/security group rules
+- Shodan or Censys lookup for external exposure
+- Monitor for new or unexpected services with:
+  - `nagios`, `zabbix`, `osquery`
+
+---
+
+## 🔗 References:
+
+- OWASP: [Testing for Network Infrastructure Misconfiguration](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/07-Input_Validation_Testing/03-Testing_for_Network_Infrastructure_Misconfiguration.html)
+- Nmap Docs: [https://nmap.org/book/inst-windows.html](https://nmap.org/book/inst-windows.html)
+- SANS: [Secure Network Design](https://www.sans.org/white-papers/secure-network-design/)
+***
+
