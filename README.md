@@ -5517,4 +5517,95 @@ If the victim is logged in to vulnerable-site.com, this script will steal privat
 
 ***
 
+# WEBVULN-039: HTTP Security Headers Misconfigurations
 
+---
+
+## 🏷️ Category:
+Security Misconfiguration
+
+---
+
+## 🐞 Vulnerability:
+Missing or Misconfigured HTTP Security Headers
+
+---
+
+## 📖 Description:
+
+HTTP security headers help protect web applications from a wide range of attacks, including XSS, clickjacking, and data injection. When these headers are missing or improperly configured, browsers cannot enforce critical security policies, leaving the application vulnerable.
+
+Commonly missing or misconfigured headers include:
+
+- `Content-Security-Policy` (CSP)
+- `X-Content-Type-Options`
+- `X-Frame-Options`
+- `Strict-Transport-Security` (HSTS)
+- `Referrer-Policy`
+- `Permissions-Policy`
+- `Cross-Origin-Resource-Policy`
+
+---
+
+## 💥 Demo / Proof of Concept:
+
+Check HTTP response headers:
+
+```
+HTTP/1.1 200 OK
+Content-Type: text/html
+Server: Apache/2.4.41
+```
+
+Missing:
+
+- `Content-Security-Policy`
+- `Strict-Transport-Security`
+- `X-Frame-Options`
+- `X-Content-Type-Options`
+
+Consequence: site is susceptible to clickjacking, MIME-sniffing, and XSS via unsafe inline scripts.
+
+---
+
+## 🛡️ Mitigation:
+
+Set appropriate security headers in your web server or app framework configuration:
+
+```http
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Content-Security-Policy: default-src 'self'
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Referrer-Policy: no-referrer
+Permissions-Policy: camera=(), microphone=(), geolocation=()
+```
+
+- Use CSP to control resources the browser is allowed to load
+- Enable HSTS to enforce HTTPS communication
+- Prevent clickjacking with `X-Frame-Options`
+- Avoid MIME-type sniffing with `X-Content-Type-Options`
+
+---
+
+## 🧪 Testing Tools / Techniques:
+
+- Use browser dev tools to inspect response headers
+- Online scanners:
+  - [securityheaders.com](https://securityheaders.com/)
+  - [Mozilla Observatory](https://observatory.mozilla.org/)
+- CLI tools:
+  - `curl -I https://target.com`
+  - `Nikto`
+  - `testssl.sh`
+
+---
+
+## 🔗 References:
+
+- OWASP: [HTTP Headers Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html)
+- Mozilla: [HTTP Headers Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+- Scott Helme: [SecurityHeaders.com](https://securityheaders.com/)
+- OWASP Secure Headers Project: [https://owasp.org/www-project-secure-headers/](https://owasp.org/www-project-secure-headers/)
+
+***
