@@ -2394,7 +2394,10 @@ If the server executes the PHP file, this results in **remote code execution**.
 - Apply server-side file size limits and sanitize file names.
 - Disable script execution in upload directories.
 
+
 ---
+
+
 
 ### 🧪 Testing Tools/Techniques
 
