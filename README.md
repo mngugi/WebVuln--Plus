@@ -5525,3 +5525,70 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 - OWASP Secure Headers Project: [https://owasp.org/www-project-secure-headers/](https://owasp.org/www-project-secure-headers/)
 
 ***
+## PART V
+## XML Related Vulnerabilities:
+
+***
+# Web Vulnerability Entry
+
+## 🏷️ Category
+
+Injection
+
+## 🆔 Vulnerability ID
+
+WEBVULN-040
+
+## 🐞 Vulnerability
+
+**XML External Entity (XXE) Injection**
+
+## 📝 Description
+
+XXE occurs when an application processes XML input that allows external entity references to be resolved within the XML document.  
+If improperly configured XML parsers are used, attackers can exploit XXE to:
+
+- Access sensitive files on the server (e.g., `/etc/passwd`)
+- Perform server-side request forgery (SSRF)
+- Conduct denial-of-service (DoS) attacks
+- Leak internal network information
+
+XXE vulnerabilities arise mainly due to insecure default configurations in XML parsers that allow the resolution of external entities.
+
+---
+
+## 🧪 Demo / Proof of Concept
+
+Example vulnerable XML input:
+
+```xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [  
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<foo>&xxe;</foo>
+```
+## 🛡️ Mitigation
+- Disable external entity resolution in XML parsers.
+- Use less complex data formats like JSON when possible.
+- Validate and sanitize XML input strictly.
+- Use secure libraries and parser configurations:
+  - In Java: `factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);`
+  - In Python (lxml): `resolve_entities=False`
+- Keep libraries and dependencies updated.
+
+## 🧪 Testing Tools / Techniques
+- Burp Suite (with "XXE Injection" payloads)
+- OWASP ZAP
+- Manual testing with crafted XML payloads
+- Automated scanning using Nuclei templates
+- Review XML parser configurations in source code
+
+## 📚 References
+- [OWASP XXE Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
+- [PortSwigger - XXE Exploitation](https://portswigger.net/web-security/xxe)
+- [CWE-611: Improper Restriction of XML External Entity Reference ('XXE')](https://cwe.mitre.org/data/definitions/611.html)
+- [OWASP Top 10 2021 - A05: Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/)
+
+***
+
