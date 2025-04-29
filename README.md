@@ -2479,8 +2479,6 @@ You can simulate this vulnerability using:
 - PortSwigger: SQL Injection  
 - OWASP Cheat Sheet: SQL Injection Prevention
 
-
-
 ***
 
 ## WEBVULN-002: Cross-Site Scripting (XSS)
@@ -2564,7 +2562,6 @@ An attacker can embed this into an image or hidden form on a malicious website:
 
 ```
 ### Result:
-
 
 If a logged-in user visits the attacker’s page, the browser sends the request with session cookies — and funds get transferred without the user’s knowledge.
 
@@ -2706,7 +2703,6 @@ echo shell_exec("ping -c 1 " . $ip);
 ?>
 
 ```
----
 
 **Malicious Input:**
 
