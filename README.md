@@ -5699,5 +5699,50 @@ This attack relies on exploiting XML parsers that fail to limit entity expansion
 - OWASP Billion Laughs Attack
 - CWE-770: Allocation of Resources Without Limits or Throttling
 - OWASP Top 10 2021 - A06: Vulnerable and Outdated Components
+
 ***
+## PART VI
+---
+## Broken Access Control
+***
+## 🛡️ WebVuln #43: Inadequate Authorization
+
+### 🗂️ Category
+Access Control
+
+### 🐞 Vulnerability
+Inadequate Authorization
+
+### 📖 Description
+Inadequate authorization occurs when an application fails to properly verify whether a user has the necessary permissions to access a resource or perform an action. This often results in privilege escalation, horizontal or vertical access control bypass, or unauthorized access to sensitive data.
+
+Unlike authentication, which verifies identity, **authorization** ensures that an authenticated user has the right permissions. Failing to enforce authorization checks leads to critical security flaws.
+
+### 💣 Demo / Proof of Concept
+1. A user with a "basic" account manually modifies a URL or request to access `/admin/dashboard`.
+2. The server does not check the user's role or permissions and grants access.
+3. The user can now view or manipulate administrative data without authorization.
+
+### 🛡️ Mitigation
+- Enforce **role-based access control (RBAC)** and validate authorization on the server side.
+- Never rely on client-side controls (e.g., hidden fields or JavaScript checks) for access decisions.
+- Use centralized authorization middleware for consistent policy enforcement.
+- Validate all requests against a permission matrix (user-role-action-resource).
+- Perform **least privilege principle** by default.
+- Log and monitor access attempts for sensitive endpoints.
+
+### 🧪 Testing Tools / Techniques
+- Manual testing by manipulating request paths or parameters (e.g., changing `/user/123` to `/user/124`).
+- Burp Suite (Repeater and Intruder).
+- OWASP ZAP with access control testing add-ons.
+- Review of server-side code logic and authorization checks.
+- Automated scanning using tools like Nuclei and Postman collections.
+
+### 📚 References
+- [OWASP Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Access_Control_Cheat_Sheet.html)
+- [CWE-285: Improper Authorization](https://cwe.mitre.org/data/definitions/285.html)
+- [OWASP Top 10 - A01:2021 Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- [PortSwigger - Access Control Vulnerabilities](https://portswigger.net/web-security/access-control)
+***
+
 
