@@ -5871,4 +5871,44 @@ The vulnerability arises when access controls are not consistently enforced on s
 - [PortSwigger - Forced Browsing](https://portswigger.net/web-security/access-control/forced-browsing)
 
 ***
+## 🛡️ WebVuln #47: Missing Function Level Access Control
+
+### 🗂️ Category
+Access Control
+
+### 🐞 Vulnerability
+Missing Function Level Access Control
+
+### 📖 Description
+Missing Function Level Access Control occurs when an application exposes functionality (usually via endpoints or routes) that should be restricted to certain users but fails to enforce access controls. Even if the UI hides these functions, an attacker can invoke them directly by crafting requests to backend endpoints.
+
+This often leads to unauthorized access to sensitive operations such as administrative actions, user management, or system configurations.
+
+### 💣 Demo / Proof of Concept
+1. A regular user inspects the web application and notices no "Delete User" button in the UI.
+2. They observe admin actions using tools like Burp Suite, noting a `POST /admin/delete_user?id=123`.
+3. The user crafts the same request manually.
+4. If the server does not check their role, the deletion is processed despite lacking permission.
+
+### 🛡️ Mitigation
+- Enforce **server-side authorization checks** for every function and endpoint.
+- Do not rely solely on client-side controls (like hiding buttons or links).
+- Implement **role-based or attribute-based access control** consistently.
+- Use a centralized access control mechanism to avoid fragmented logic.
+- Regularly audit endpoints for unprotected functionality.
+
+### 🧪 Testing Tools / Techniques
+- Burp Suite (Repeater to replay admin functions as a low-privilege user).
+- OWASP ZAP for automated access control testing.
+- Review application routes and APIs for missing access checks.
+- Manual browsing of hidden or undocumented admin URLs.
+- Code review of backend logic for authorization enforcement.
+
+### 📚 References
+- [OWASP Top 10 - A01:2021 Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- [OWASP Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Access_Control_Cheat_Sheet.html)
+- [CWE-285: Improper Authorization](https://cwe.mitre.org/data/definitions/285.html)
+- [PortSwigger - Access Control Vulnerabilities](https://portswigger.net/web-security/access-control)
+
+***
 
