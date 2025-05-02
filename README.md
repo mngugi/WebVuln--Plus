@@ -5744,5 +5744,48 @@ Unlike authentication, which verifies identity, **authorization** ensures that a
 - [OWASP Top 10 - A01:2021 Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
 - [PortSwigger - Access Control Vulnerabilities](https://portswigger.net/web-security/access-control)
 ***
+## 🛡️ WebVuln #44: Privilege Escalation
+
+### 🗂️ Category
+Access Control
+
+### 🐞 Vulnerability
+Privilege Escalation
+
+### 📖 Description
+Privilege escalation occurs when a user gains unauthorized access to resources or functions that are normally restricted to users with higher privileges. It can be classified into two types:
+
+- **Vertical Privilege Escalation**: A lower-privileged user gains access to admin-level or system-level functionalities.
+- **Horizontal Privilege Escalation**: A user accesses resources or data belonging to another user with the same privilege level.
+
+This vulnerability often results from insecure direct object references (IDOR), missing authorization checks, misconfigured roles, or flaws in session management.
+
+### 💣 Demo / Proof of Concept
+1. A regular user notices that accessing `/admin/settings` returns a 403 error.
+2. By manipulating cookies, JWT tokens, or session variables (e.g., setting `role=admin`), the user gains admin access.
+3. The server fails to validate the user's actual privileges, granting elevated access.
+
+### 🛡️ Mitigation
+- Enforce **strict server-side role validation** for every protected action or resource.
+- Implement **least privilege principles** by default.
+- Sanitize and secure all tokens, cookies, and session data.
+- Avoid trusting client-side input for privilege decisions.
+- Apply consistent access control policies across all services and endpoints.
+- Regularly audit role configurations and permission mappings.
+- Log and alert on suspicious privilege changes or access attempts.
+
+### 🧪 Testing Tools / Techniques
+- Manual inspection of role-based functionality (e.g., URL tampering).
+- Burp Suite (modifying session data or cookies).
+- OWASP ZAP (access control testing).
+- Fuzzing APIs and endpoints for privilege bypass.
+- Code review focused on role checks and access validation.
+
+### 📚 References
+- [OWASP Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- [CWE-269: Improper Privilege Management](https://cwe.mitre.org/data/definitions/269.html)
+- [PortSwigger - Privilege Escalation](https://portswigger.net/web-security/access-control/privilege-escalation)
+- [OWASP Access Control Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Access_Control_Cheat_Sheet.html)
+***
 
 
