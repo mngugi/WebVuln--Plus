@@ -5830,5 +5830,45 @@ IDOR vulnerabilities are commonly exploited through URL manipulation, query para
 
 ***
 
+## 🛡️ WebVuln #46: Forceful Browsing
 
+### 🗂️ Category
+Access Control
+
+### 🐞 Vulnerability
+Forceful Browsing
+
+### 📖 Description
+Forceful browsing is a technique where an attacker manually guesses or manipulates URLs or file paths to access resources they are not authorized to view. This can include administrative interfaces, unlinked pages, or sensitive files that are not properly protected by authentication and authorization mechanisms.
+
+The vulnerability arises when access controls are not consistently enforced on server-side resources, allowing attackers to bypass navigation controls and access restricted content directly.
+
+### 💣 Demo / Proof of Concept
+1. A user with a basic account accesses:  
+   `https://example.com/user/dashboard`
+2. They attempt to access:  
+   `https://example.com/admin/dashboard` or `https://example.com/config/backup.zip`
+3. If the server does not check authorization properly, access may be granted.
+
+### 🛡️ Mitigation
+- Enforce **strict access control checks** on the server side for every resource.
+- Do not rely solely on security-through-obscurity (e.g., hidden URLs).
+- Use **role-based access control (RBAC)** or **attribute-based access control (ABAC)**.
+- Keep sensitive files out of the web root.
+- Implement proper error handling (e.g., return 403 instead of 404 when access is denied).
+
+### 🧪 Testing Tools / Techniques
+- Manual URL manipulation and path traversal testing.
+- Burp Suite (using Intruder or Content Discovery features).
+- OWASP ZAP (Forced Browsing plugin).
+- Tools like Dirb, Dirbuster, Gobuster, or Ffuf for brute-forcing directories and files.
+- Review server-side access control logic and route protection.
+
+### 📚 References
+- [OWASP Forced Browsing](https://owasp.org/www-community/attacks/Forced_browsing)
+- [CWE-552: Files or Directories Accessible to External Parties](https://cwe.mitre.org/data/definitions/552.html)
+- [OWASP Top 10 - A01:2021 Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- [PortSwigger - Forced Browsing](https://portswigger.net/web-security/access-control/forced-browsing)
+
+***
 
