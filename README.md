@@ -6017,4 +6017,54 @@ Attackers exploit this vulnerability to manipulate data such as user roles, pric
 - [CWE-472: External Control of Assumed-Immutable Web Parameter](https://cwe.mitre.org/data/definitions/472.html)
 - [PortSwigger: Parameter Tampering](https://portswigger.net/web-security/parameter-tampering)
 ***
+## 🛡️ WebVuln #50: Object Injection
 
+### 🗂️ Category
+Code Injection / Deserialization / Application Logic
+
+### 🐞 Vulnerability
+Object Injection
+
+### 📖 Description
+Object Injection is a vulnerability that occurs when user input is passed to the `unserialize()` function or equivalent in a language like PHP without proper validation. It allows an attacker to inject arbitrary objects into the application context, potentially triggering magic methods such as `__wakeup()`, `__destruct()`, or `__toString()` that lead to code execution, file manipulation, or application logic corruption.
+
+The vulnerability arises due to poor input sanitization and the dynamic nature of object deserialization.
+
+### 💣 Demo / Proof of Concept
+
+1. A PHP application unserializes data from a user-supplied cookie:
+
+    ```php
+    $user = unserialize($_COOKIE['user']);
+    ```
+
+2. The attacker crafts a payload using a gadget chain to call a dangerous method:
+
+    ```php
+    O:4:"User":1:{s:8:"username";s:5:"admin";}
+    ```
+
+3. If a magic method like `__destruct()` or `__wakeup()` in the class `User` performs file operations, the attacker may achieve Remote Code Execution (RCE), arbitrary file deletion, or privilege escalation.
+
+### 🛡️ Mitigation
+- Never unserialize user-controlled input.
+- Use safe serialization formats like JSON where applicable.
+- Implement a class allowlist for deserialization.
+- Avoid magic methods in classes that are ever serialized or deserialized.
+- Use hardened libraries and wrappers that enforce safe deserialization.
+- Apply input validation before any deserialization operation.
+- Keep codebase and third-party packages updated to avoid gadget chain exploits.
+
+### 🧪 Testing Tools / Techniques
+- Manual payload crafting using tools like `PHPGGC` (PHP Generic Gadget Chains).
+- Static code analysis to detect unsafe use of `unserialize()` or similar methods.
+- Burp Suite to modify serialized objects in transit.
+- Fuzzing with known serialization payloads.
+- Review of classes with magic methods that could be triggered by injected objects.
+
+### 📚 References
+- [OWASP PHP Object Injection](https://owasp.org/www-community/vulnerabilities/PHP_Object_Injection)
+- [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)
+- [PHPGGC GitHub](https://github.com/ambionics/phpggc)
+- [PortSwigger - Object Injection](https://portswigger.net/kb/issues/00300300_php-object-injection)
+***
