@@ -5971,3 +5971,50 @@ This vulnerability is especially critical in languages like Java, PHP, Python, a
 - [PortSwigger - Deserialization Vulnerabilities](https://portswigger.net/web-security/deserialization)
 - [ysoserial GitHub](https://github.com/frohoff/ysoserial)
 ***
+## 🛡️ WebVuln #49: Data Tampering
+
+### 🗂️ Category
+Input Validation / Integrity Violation
+
+### 🐞 Vulnerability
+Data Tampering
+
+### 📖 Description
+Data tampering refers to the unauthorized alteration of data as it flows between a client and server or while it is stored. This may involve modifying URL parameters, hidden form fields, cookies, or any data transmitted over the network without proper validation or integrity checks.
+
+Attackers exploit this vulnerability to manipulate data such as user roles, pricing, permissions, or sensitive identifiers to gain unauthorized access or cause logical flaws in the system.
+
+### 💣 Demo / Proof of Concept
+
+1. A shopping cart stores item prices in hidden form fields:
+    ```html
+    <input type="hidden" name="price" value="100">
+    ```
+
+2. An attacker intercepts the request using a proxy like Burp Suite and changes the price to:
+    ```html
+    <input type="hidden" name="price" value="1">
+    ```
+
+3. If the server accepts this data without revalidation, the attacker purchases an item for 1 unit of currency.
+
+### 🛡️ Mitigation
+- Never trust data from the client-side. Always revalidate critical data on the server.
+- Use session storage or server-side calculations for sensitive data like pricing and roles.
+- Apply integrity checks (e.g., HMAC, digital signatures) for critical client-submitted data.
+- Use HTTPS to prevent interception and tampering in transit.
+- Implement input validation and type checking on all user inputs.
+
+### 🧪 Testing Tools / Techniques
+- Burp Suite for intercepting and modifying client-server communication.
+- OWASP ZAP for automated detection of parameter manipulation.
+- Manual testing by altering request parameters, cookies, and hidden fields.
+- Source code review to check if data validation is done on the server side.
+
+### 📚 References
+- [OWASP Data Validation](https://owasp.org/www-community/Input_Validation)
+- [OWASP Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
+- [CWE-472: External Control of Assumed-Immutable Web Parameter](https://cwe.mitre.org/data/definitions/472.html)
+- [PortSwigger: Parameter Tampering](https://portswigger.net/web-security/parameter-tampering)
+***
+
