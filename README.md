@@ -5913,7 +5913,7 @@ This often leads to unauthorized access to sensitive operations such as administ
 ***
 ## PART VII 
 ---
-INSECURE DESERIALIZATION 
+## INSECURE DESERIALIZATION 
 
 ***
 ## 🛡️ WebVuln #48: Remote Code Execution via Insecure Deserialization
