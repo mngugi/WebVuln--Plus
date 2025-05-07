@@ -6068,7 +6068,7 @@ The vulnerability arises due to poor input sanitization and the dynamic nature o
 - [PHPGGC GitHub](https://github.com/ambionics/phpggc)
 - [PortSwigger - Object Injection](https://portswigger.net/kb/issues/00300300_php-object-injection)
 ***
-PART VIII
+## PART VIII
 
 ## API Security Issues
 
@@ -6099,7 +6099,7 @@ Authorization: Bearer <user-token>
 
 ```
 
-🛡️ Mitigation  
+## 🛡️ Mitigation  
 - Enforce authentication on all API endpoints.  
 - Implement role-based access control (RBAC) and object-level authorization.  
 - Validate and sanitize all incoming data (even from authenticated users).  
@@ -6109,7 +6109,7 @@ Authorization: Bearer <user-token>
 - Document APIs properly and apply security-first design principles.  
 - Regularly conduct security reviews and penetration tests.  
 
-🧪 Testing Tools / Techniques  
+## 🧪 Testing Tools / Techniques  
 - Burp Suite (API scanning and fuzzing)  
 - OWASP ZAP (automated scanning)  
 - Postman or Insomnia (manual testing)  
