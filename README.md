@@ -6068,3 +6068,61 @@ The vulnerability arises due to poor input sanitization and the dynamic nature o
 - [PHPGGC GitHub](https://github.com/ambionics/phpggc)
 - [PortSwigger - Object Injection](https://portswigger.net/kb/issues/00300300_php-object-injection)
 ***
+PART VIII
+
+## API Security Issues
+
+---
+# 🕷️ WEBVULN-051: Insecure API Endpoints
+
+## 📝 Description
+Insecure API endpoints refer to exposed application interfaces that lack proper authentication, authorization, input validation, or rate limiting. These vulnerabilities often allow attackers to gain unauthorized access to sensitive data or manipulate backend systems by abusing weak or misconfigured API implementations.
+
+In modern web applications and microservices, APIs serve as the backbone of data exchange. Poorly secured endpoints can lead to data breaches, privilege escalation, and remote code execution.
+
+---
+
+## 💥 Demo / Proof of Concept
+
+**Example 1: Missing Authentication**
+```http
+GET /api/user/profile HTTP/1.1
+Host: vulnerable-app.com
+```
+---
+An attacker sends this request and receives another user's profile data due to missing authentication checks.
+
+Example 2: Broken Object Level Authorization
+```
+GET /api/admin/users/123 HTTP/1.1
+Authorization: Bearer <user-token>
+
+```
+
+🛡️ Mitigation  
+- Enforce authentication on all API endpoints.  
+- Implement role-based access control (RBAC) and object-level authorization.  
+- Validate and sanitize all incoming data (even from authenticated users).  
+- Disable or restrict verbose error messages to avoid exposing internal logic.  
+- Use rate limiting and throttling to prevent brute-force attacks.  
+- Implement API gateways or WAFs to apply consistent security policies.  
+- Document APIs properly and apply security-first design principles.  
+- Regularly conduct security reviews and penetration tests.  
+
+🧪 Testing Tools / Techniques  
+- Burp Suite (API scanning and fuzzing)  
+- OWASP ZAP (automated scanning)  
+- Postman or Insomnia (manual testing)  
+- fuzzapi or APIsec (API-specific fuzzing tools)  
+- Review OpenAPI/Swagger specs for insecure configurations  
+- Static and dynamic code analysis for endpoint behavior  
+
+📚 References  
+- OWASP API Security Top 10  
+- PortSwigger – Insecure APIs  
+- CWE-287: Improper Authentication  
+- CWE-285: Improper Authorization  
+- API Security Testing Guide  
+
+---
+
