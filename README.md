@@ -6117,7 +6117,7 @@ Authorization: Bearer <user-token>
 - Review OpenAPI/Swagger specs for insecure configurations  
 - Static and dynamic code analysis for endpoint behavior  
 
-📚 References  
+## 📚 References  
 - OWASP API Security Top 10  
 - PortSwigger – Insecure APIs  
 - CWE-287: Improper Authentication  
