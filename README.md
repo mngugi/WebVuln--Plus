@@ -6186,6 +6186,69 @@ grep -r 'api_key' .
 - [Mozilla Developer Network – API Security](https://developer.mozilla.org/en-US/docs/Web/Security)
 
 ***
+# WEBVULN-053: Lack of Rate Limiting
+
+## Category  
+API Security / Authorization
+
+## Vulnerability  
+**Lack of Rate Limiting**
+
+## Description  
+Lack of rate limiting allows attackers to send an unlimited number of requests to a server without restrictions. This can lead to brute-force attacks, credential stuffing, resource exhaustion (DoS), and abuse of API functionality. Without rate limiting, malicious actors can automate requests and overwhelm the system or exploit sensitive operations (e.g., login, password reset, form submissions).
+
+Typical attack scenarios include:
+- Repeated login attempts to brute-force credentials
+- Spamming account creation or form submission endpoints
+- Scraping large volumes of data from APIs
+- Abusing paid APIs without constraints
+
+## Demo / Proof of Concept  
+
+Example of a brute-force attack script against a login endpoint without rate limits:
+
+```python
+import requests
+
+url = "https://example.com/api/login"
+user = "victim@example.com"
+
+with open("common_passwords.txt") as f:
+    for password in f:
+        response = requests.post(url, json={"email": user, "password": password})
+        print(f"Trying {password} → {response.status_code}")
+```
+
+Expected behavior without rate limiting:
+- The server responds to all attempts without any delay, lockout, or CAPTCHA.
+- An attacker can try thousands of passwords in a short time.
+
+## Mitigation  
+
+- **Implement server-side rate limiting** using tools like:
+  - NGINX `limit_req`
+  - Express middleware like `express-rate-limit`
+  - API gateways with built-in rate control
+- **Use CAPTCHA** or challenge-response tests on sensitive operations (e.g., login, password reset)
+- **Account lockout policies**: Temporarily lock or slow down login attempts after several failed tries
+- **Throttling based on IP address or user account**
+- **Monitor and log** repeated requests to sensitive endpoints
+- **Use WAF (Web Application Firewall)** to block or flag high-frequency requests
+
+## Testing Tools / Techniques
+
+- **Burp Suite Intruder** – Automate request floods to test for rate limits.
+- **OWASP ZAP** – Passive and active scan plugins for detecting lack of throttling.
+- **Manual testing** – Repeatedly submit requests and observe for any response delays, block messages, or error codes.
+- **Custom scripts** – Write Python or Bash scripts to simulate high-frequency requests.
+
+## References
+
+- [OWASP API Security Top 10 – API4:2019 – Lack of Resources & Rate Limiting](https://owasp.org/www-project-api-security/2019/#api4-lack-of-resources--rate-limiting)
+- [OWASP Cheat Sheet – Brute Force Protection](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#brute-force-protection)
+- [Express-rate-limit GitHub Repo](https://github.com/nfriedly/express-rate-limit)
+- [Cloudflare Rate Limiting](https://developers.cloudflare.com/rate-limiting/)
+***
 
 
 
