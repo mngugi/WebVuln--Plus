@@ -6249,6 +6249,100 @@ Expected behavior without rate limiting:
 - [Express-rate-limit GitHub Repo](https://github.com/nfriedly/express-rate-limit)
 - [Cloudflare Rate Limiting](https://developers.cloudflare.com/rate-limiting/)
 ***
+# WEBVULN-054: Inadequate Input Validation
+
+## Category  
+Input Validation / Data Sanitization
+
+## Vulnerability  
+**Inadequate Input Validation**
+
+## Description  
+Inadequate input validation occurs when an application fails to properly check and sanitize user-supplied data before processing it. This opens the door to a wide range of vulnerabilities, including:
+
+- SQL Injection
+- Cross-Site Scripting (XSS)
+- Command Injection
+- Path Traversal
+- Buffer Overflow (in native code contexts)
+
+Validation flaws typically arise when developers:
+- Trust client-side validation without re-validating on the server
+- Allow overly permissive inputs (e.g., no length, format, or type checks)
+- Concatenate inputs directly into commands, queries, or file paths
+
+## Demo / Proof of Concept  
+
+### Example 1: XSS due to lack of HTML sanitization
+
+```html
+<input type="text" name="comment" />
+```
+
+Server blindly reflects user input:
+
+```html
+<p>You said: [user_input]</p>
+```
+
+Input:  
+```html
+<script>alert('XSS');</script>
+```
+
+### Example 2: SQL Injection
+
+```python
+username = request.GET['user']
+query = f"SELECT * FROM users WHERE username = '{username}'"
+```
+
+Input:  
+```
+' OR 1=1 --
+```
+
+Result: Full user table dump if not sanitized.
+
+## Mitigation  
+
+- **Validate input on both client and server sides**  
+  - Type checks (e.g., integer, string, boolean)  
+  - Length limits  
+  - Whitelist acceptable values and patterns  
+  - Reject anything not strictly expected
+
+- **Sanitize inputs** before rendering or processing:
+  - Use libraries like `DOMPurify` for HTML
+  - Use parameterized queries / prepared statements for SQL
+  - Escape special characters properly in shell commands and file paths
+
+- **Use strict content types and encoding**
+  - Set response headers like `Content-Type`, `X-Content-Type-Options`, and `Content-Security-Policy`
+
+- **Avoid dynamic execution of user input**
+
+- **Leverage validation libraries/frameworks**:
+  - Joi (Node.js)
+  - Cerberus (Python)
+  - Hibernate Validator (Java)
+
+## Testing Tools / Techniques
+
+- **Burp Suite / OWASP ZAP** – Actively fuzz input fields with malicious payloads.
+- **Fuzzing tools** – Use tools like `wfuzz`, `ffuf`, or custom scripts to test for injection points.
+- **Static Code Analysis** – Identify lack of input validation in source code.
+- **Manual testing** – Try inputs like:
+  - `' OR 1=1 --`
+  - `<script>alert(1)</script>`
+  - `../../etc/passwd`
+
+## References
+
+- [OWASP Top 10 – A03:2021 – Injection](https://owasp.org/Top10/A03_2021-Injection/)
+- [OWASP Input Validation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html)
+- [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XSS_Prevention_Cheat_Sheet.html)
+- [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
 
 
 
