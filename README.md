@@ -6117,7 +6117,7 @@ Authorization: Bearer <user-token>
 - Review OpenAPI/Swagger specs for insecure configurations  
 - Static and dynamic code analysis for endpoint behavior  
 
-## 📚 References  
+📚 References  
 - OWASP API Security Top 10  
 - PortSwigger – Insecure APIs  
 - CWE-287: Improper Authentication  
@@ -6125,4 +6125,67 @@ Authorization: Bearer <user-token>
 - API Security Testing Guide  
 
 ---
+# WEBVULN-052: API Key Exposure
+
+## Category  
+Sensitive Data Exposure
+
+## Vulnerability  
+**API Key Exposure**
+
+## Description  
+API key exposure occurs when secret keys used to authenticate or authorize access to APIs are accidentally embedded in client-side code or publicly accessible repositories. Once an API key is exposed, malicious actors can abuse the service, resulting in data leaks, quota exhaustion, unexpected charges, or unauthorized access.
+
+Common sources of exposure include:
+- Hardcoding API keys in frontend JavaScript or mobile apps
+- Committing secrets to version control (e.g., GitHub)
+- Client-side error messages revealing keys in stack traces or URLs
+
+## Demo / Proof of Concept  
+Example of an exposed key in JavaScript code:
+
+```javascript
+const apiKey = "AIzaSyD1-fake-exposed-key-1234567890";
+fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=New+York&key=${apiKey}`)
+  .then(response => response.json())
+  .then(data => console.log(data));
+```
+
+Or an exposed key in a public GitHub repo:
+
+```bash
+git clone https://github.com/example-org/vulnerable-project.git
+cd vulnerable-project
+grep -r 'api_key' .
+```
+
+## Mitigation  
+
+- **Do not hardcode secrets** in client-side code (e.g., JavaScript, Android/iOS apps).
+- **Use environment variables** or secure secrets managers to inject keys at runtime on the server side.
+- **Proxy requests**: Route client requests through your backend and keep API keys hidden from the frontend.
+- **Restrict API key usage** by:
+  - IP address
+  - Referrer/domain
+  - Quotas and scopes
+- **Enable monitoring** and **rotate keys** regularly.
+- **Scan your codebase** and Git history for accidental exposure using tools like `truffleHog`, `gitleaks`, or `GitGuardian`.
+
+## Testing Tools / Techniques
+
+- **GitGuardian** – Detects API keys and secrets in codebases and Git history.
+- **truffleHog** – Searches through Git repositories for high entropy strings.
+- **gitleaks** – Scans repositories for secrets and keys.
+- **Manual Code Review** – Search for `key`, `apiKey`, `token`, or similar patterns in source code.
+
+## References
+
+- [OWASP API Security Top 10 – API3:2019 – Excessive Data Exposure](https://owasp.org/www-project-api-security/2019/#api3-excessive-data-exposure)
+- [Google Cloud – Best Practices for API Key Security](https://cloud.google.com/docs/authentication/api-keys)
+- [GitGuardian Blog – API Key Leaks](https://blog.gitguardian.com/tag/api-keys/)
+- [Mozilla Developer Network – API Security](https://developer.mozilla.org/en-US/docs/Web/Security)
+
+***
+
+
 
