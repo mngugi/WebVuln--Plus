@@ -6628,3 +6628,92 @@ Common insecure SSL/TLS configuration issues include:
 - [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
 - [RFC 7525 - Recommendations for Secure Use of TLS and DTLS](https://datatracker.ietf.org/doc/html/rfc7525)
 ***
+# WEBVULN-058: Insecure Communication Protocols
+
+## Category  
+Transport Layer Security / Network Protocols
+
+## Vulnerability  
+**Insecure Communication Protocols**
+
+## Description  
+Insecure communication protocols are protocols that transmit data in plaintext or use outdated cryptographic mechanisms, making them vulnerable to eavesdropping, manipulation, or impersonation attacks. These protocols fail to provide confidentiality, integrity, or authenticity guarantees, especially over untrusted networks such as the internet or public Wi-Fi.
+
+Examples of insecure protocols include:
+- **HTTP** (instead of HTTPS)
+- **FTP** (instead of SFTP or FTPS)
+- **Telnet** (instead of SSH)
+- **SMTP/IMAP/POP3 without STARTTLS**
+- **LDAP without LDAPS**
+- **SNMPv1/v2c** (use SNMPv3 instead)
+- **RDP without TLS**
+
+Consequences include:
+- Credential theft
+- Session hijacking
+- Sensitive data disclosure
+- Traffic tampering via MITM attacks
+
+## Demo / Proof of Concept
+
+### Scenario: Credential sniffing via Telnet
+
+1. A system administrator connects to a remote server using Telnet:
+    ```bash
+    telnet 192.168.1.10
+    ```
+
+2. An attacker intercepts the traffic using Wireshark or `tcpdump`.
+
+3. Login credentials are transmitted in cleartext:
+    ```
+    login: admin
+    password: root123
+    ```
+
+4. Attacker now has access to the target system using stolen credentials.
+
+## Mitigation
+
+- **Avoid plaintext protocols altogether**:
+  - Replace:
+    - HTTP → **HTTPS**
+    - FTP → **SFTP** or **FTPS**
+    - Telnet → **SSH**
+    - LDAP → **LDAPS**
+    - SNMPv1/v2c → **SNMPv3**
+    - RDP → **RDP with TLS/NLA**
+
+- **Enforce TLS encryption for all application-layer protocols**:
+  - SMTP, IMAP, POP3 should use **STARTTLS**
+  - Reject non-secure connections or upgrade them automatically
+
+- **Use VPNs or secure tunnels (e.g., SSH tunnels) when TLS isn't available**
+
+- **Disable insecure protocols and ports at the firewall or server configuration level**
+
+- **Educate developers and sysadmins** to use secure alternatives by default
+
+- **Implement HSTS and certificate pinning in web apps**
+
+- **Monitor for deprecated protocol usage** using IDS/IPS tools
+
+## Testing Tools / Techniques
+
+- **Wireshark / tcpdump** – Packet sniffing and traffic inspection
+- **nmap** – Detect open ports and service banners:
+    ```bash
+    nmap -sV -p- target.com
+    ```
+- **sslscan / testssl.sh** – Inspect secure vs insecure services
+- **Burp Suite / ZAP** – Detects use of HTTP or unsecured APIs
+- **Security headers scanners** – Check for HTTPS enforcement (e.g., HSTS)
+
+## References
+
+- [OWASP Secure Communication Guidelines](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html)
+- [NIST SP 800-52r2 – Guidelines for TLS](https://csrc.nist.gov/publications/detail/sp/800-52/rev-2/final)
+- [Mozilla SSL Configuration](https://infosec.mozilla.org/guidelines/web_security#transport-layer-security-tls)
+- [SSL Labs Test](https://www.ssllabs.com/ssltest/)
+- [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
+***
