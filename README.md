@@ -6717,3 +6717,91 @@ Consequences include:
 - [SSL Labs Test](https://www.ssllabs.com/ssltest/)
 - [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
 ***
+# WEBVULN-059: Verbose Nginx Error Messages
+
+## Category  
+Information Disclosure / Server Misconfiguration
+
+## Vulnerability  
+**Verbose Nginx Error Messages**
+
+## Description  
+When Nginx is not properly configured to suppress detailed error output, it may leak sensitive server-side information through verbose error messages. These messages can reveal software versions, internal directory paths, technologies used (e.g., PHP-FPM, upstream services), and configuration details that aid attackers in fingerprinting and targeted exploitation.
+
+Examples of common leakages:
+- Nginx version info in `Server:` header or error pages
+- Full paths in 404, 502, 503, or 504 responses (e.g., `/var/www/html/index.php`)
+- Exposure of upstream services (e.g., FastCGI, PHP-FPM, proxy_pass IPs)
+- Default error pages revealing server behavior
+
+## Demo / Proof of Concept
+
+### Scenario: Nginx returns detailed 502 Bad Gateway error
+
+1. Client accesses a broken PHP page:
+    ```
+    https://example.com/broken.php
+    ```
+
+2. Nginx returns:
+    ```
+    502 Bad Gateway
+    nginx/1.20.1
+    ```
+
+3. In some misconfigurations, it may also leak:
+    ```
+    connect() failed (111: Connection refused) while connecting to upstream,
+    client: 192.168.1.5, server: example.com, request: "GET /broken.php HTTP/1.1",
+    upstream: "fastcgi://127.0.0.1:9000",
+    ```
+
+4. An attacker now knows:
+    - Server runs nginx/1.20.1
+    - PHP-FPM is on localhost:9000
+    - Internal IP ranges
+
+## Mitigation
+
+- **Suppress server version exposure**:
+    ```nginx
+    server_tokens off;
+    ```
+
+- **Customize or hide error pages**:
+    ```nginx
+    error_page 403 404 500 502 503 504 /custom_error.html;
+    location = /custom_error.html {
+        root /var/www/html;
+        internal;
+    }
+    ```
+
+- **Disable automatic directory indexing**:
+    ```nginx
+    autoindex off;
+    ```
+
+- **Set minimal logging in production**:
+    ```nginx
+    error_log /var/log/nginx/error.log warn;
+    ```
+
+- **Use a WAF or reverse proxy to filter error content before exposure to end-users**
+
+- **Regularly review logs and sanitize output before deployment**
+
+## Testing Tools / Techniques
+
+- Manual browsing and forced error conditions (e.g., access `/nonexistent`)
+- `curl -I https://target.com` – Inspect headers and server tokens
+- `nikto`, `whatweb`, `wappalyzer` – Fingerprinting tools
+- Browser dev tools – Check status codes and response bodies
+
+## References
+
+- [OWASP Error Handling and Logging](https://owasp.org/www-project-secure-headers/)
+- [Nginx Documentation – server_tokens](https://nginx.org/en/docs/http/ngx_http_core_module.html#server_tokens)
+- [Nginx Custom Error Pages](https://nginx.org/en/docs/http/ngx_http_core_module.html#error_page)
+- [CIS NGINX Benchmark](https://www.cisecurity.org/benchmark/nginx)
+***
