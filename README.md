@@ -6447,4 +6447,95 @@ username=admin&password=secret123
 - [Bettercap MITM Framework](https://www.bettercap.org/)
 
 ***
+# WEBVULN-056: Insufficient Transport Layer Security
+
+## Category  
+Transport Layer Security / Configuration Weakness
+
+## Vulnerability  
+**Insufficient Transport Layer Security**
+
+## Description  
+Insufficient Transport Layer Security occurs when a web application fails to properly secure data in transit using strong encryption standards. This vulnerability leaves sensitive information—such as login credentials, tokens, and personal user data—susceptible to eavesdropping, tampering, or Man-in-the-Middle (MITM) attacks.
+
+Common causes of insufficient TLS include:
+- Using **HTTP** instead of **HTTPS**
+- Supporting **outdated protocols** like SSLv2, SSLv3, TLS 1.0 or 1.1
+- Using **weak cipher suites** or key exchange algorithms (e.g., RC4, 3DES, NULL ciphers)
+- Expired, self-signed, or mismatched TLS certificates
+- Lack of **HTTP Strict Transport Security (HSTS)** enforcement
+- Allowing **mixed content** (HTTP resources on HTTPS pages)
+
+## Demo / Proof of Concept
+
+### Scenario: Application uses TLS 1.0 with weak ciphers
+
+1. Run an SSL scan using `nmap` or `sslscan`:
+    ```bash
+    nmap --script ssl-enum-ciphers -p 443 example.com
+    ```
+
+2. Output reveals:
+    ```
+    SSLv3 supported
+    TLSv1.0 supported
+    Weak cipher: DES-CBC3-SHA
+    ```
+
+3. Attacker leverages this weak configuration to:
+   - Perform a downgrade attack
+   - Decrypt captured sessions using tools like `sslsplit` or `BEAST attack` techniques
+
+### Tools to Test:
+- `nmap --script ssl-enum-ciphers`
+- `testssl.sh`
+- `ssllabs.com` TLS analysis
+- `openssl s_client -connect example.com:443 -tls1`
+
+## Mitigation
+
+- **Enforce strong TLS configurations**:
+  - Only support TLS 1.2 and 1.3
+  - Disable SSLv2, SSLv3, TLS 1.0, and TLS 1.1 in the web server configuration
+  - Example for Apache:
+    ```apache
+    SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
+    SSLCipherSuite HIGH:!aNULL:!MD5:!3DES:!RC4
+    ```
+
+- **Enable HTTP Strict Transport Security (HSTS)**:
+  ```http
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  ```
+
+- **Use a valid TLS certificate from a trusted Certificate Authority (CA)**:
+  - Avoid expired or self-signed certs
+  - Enable automatic renewal (e.g., via Let's Encrypt + certbot)
+
+- **Eliminate mixed content**:
+  - Ensure all assets (images, scripts, stylesheets) are loaded over HTTPS
+
+- **Set secure flags on cookies**:
+  ```http
+  Set-Cookie: session=xyz; Secure; HttpOnly; SameSite=Strict
+  ```
+
+- **Regularly test your TLS configuration** using external tools and adjust as needed
+
+## Testing Tools / Techniques
+
+- **SSL Labs SSL Test** – Comprehensive public scanner: https://www.ssllabs.com/ssltest/
+- **testssl.sh** – CLI TLS scanner for supported ciphers and protocol versions
+- **nmap ssl-enum-ciphers** – Port scan + TLS inspection
+- **Burp Suite / OWASP ZAP** – Detects insecure transport issues in app traffic
+- **Wireshark** – Identify unencrypted or weakly encrypted traffic
+
+## References
+
+- [OWASP Transport Layer Protection Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html)
+- [Mozilla SSL Configuration Guidelines](https://infosec.mozilla.org/guidelines/web_security#transport-layer-security-tls)
+- [SSL Labs Test](https://www.ssllabs.com/ssltest/)
+- [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
+- [RFC 8996 - Deprecating TLS 1.0 and 1.1](https://datatracker.ietf.org/doc/html/rfc8996)
+***
 
