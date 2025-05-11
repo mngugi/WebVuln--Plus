@@ -6538,4 +6538,93 @@ Common causes of insufficient TLS include:
 - [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
 - [RFC 8996 - Deprecating TLS 1.0 and 1.1](https://datatracker.ietf.org/doc/html/rfc8996)
 ***
+# WEBVULN-057: Insecure SSL/TLS Configuration
 
+## Category  
+Transport Layer Security / Misconfiguration
+
+## Vulnerability  
+**Insecure SSL/TLS Configuration**
+
+## Description  
+Insecure SSL/TLS configuration refers to improper setup of secure communication protocols, which can undermine the confidentiality and integrity of data transmitted between clients and servers. Even when TLS is used, weak or outdated configurations can leave an application vulnerable to exploits such as protocol downgrade attacks, cipher suite attacks, or man-in-the-middle (MITM) interception.
+
+Common insecure SSL/TLS configuration issues include:
+- Enabling outdated protocols (SSLv2, SSLv3, TLS 1.0/1.1)
+- Allowing weak or deprecated cipher suites (e.g., RC4, DES, NULL, EXPORT)
+- Missing or misconfigured server certificate chains
+- Lack of support for Forward Secrecy (FS)
+- Self-signed, expired, or mismatched certificates
+- Not enforcing HTTPS via HSTS headers
+
+## Demo / Proof of Concept
+
+### Scenario: Server supports weak ciphers and deprecated TLS versions
+
+1. Run a TLS scan using `testssl.sh`:
+    ```bash
+    ./testssl.sh https://example.com
+    ```
+
+2. Output shows:
+    ```
+    SSLv3 offered (deprecated)
+    TLS 1.0/1.1 supported
+    Weak cipher: RC4-SHA
+    No Forward Secrecy with common browsers
+    ```
+
+3. Implications:
+    - Vulnerable to BEAST, POODLE, or downgrade attacks
+    - Possible passive decryption of traffic
+    - Fails modern browser security standards
+
+## Mitigation
+
+- **Disable deprecated protocols**:
+  - Configure your server to only support TLS 1.2 and 1.3
+  - Example (Apache):
+    ```apache
+    SSLProtocol -all +TLSv1.2 +TLSv1.3
+    ```
+
+- **Use strong cipher suites**:
+  - Avoid RC4, 3DES, EXPORT, NULL, and MD5-based ciphers
+  - Example (Nginx):
+    ```nginx
+    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+    ssl_prefer_server_ciphers on;
+    ```
+
+- **Implement HTTP Strict Transport Security (HSTS)**:
+    ```http
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    ```
+
+- **Enable Perfect Forward Secrecy (PFS)**:
+  - Use key exchange algorithms such as ECDHE or DHE
+
+- **Use valid, trusted TLS certificates**:
+  - Issued by a reputable CA (e.g., Let's Encrypt, DigiCert)
+  - Renew certificates before expiration
+  - Ensure full certificate chain is served
+
+- **Test regularly and patch server libraries**:
+  - Keep OpenSSL, nginx, Apache, and Java-based servers up to date
+
+## Testing Tools / Techniques
+
+- **testssl.sh** – Full-featured TLS scanner for protocol and cipher issues
+- **SSL Labs** – Online test for TLS configuration grading
+- **nmap --script ssl-enum-ciphers** – Quick cipher and protocol scan
+- **openssl s_client** – Manual TLS handshake and cert inspection
+- **Burp Suite / OWASP ZAP** – Identifies weak TLS usage in web traffic
+
+## References
+
+- [OWASP SSL/TLS Best Practices](https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration.html)
+- [SSL Labs Best Practices Guide](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices)
+- [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/)
+- [testssl.sh GitHub](https://github.com/drwetter/testssl.sh)
+- [RFC 7525 - Recommendations for Secure Use of TLS and DTLS](https://datatracker.ietf.org/doc/html/rfc7525)
+***
