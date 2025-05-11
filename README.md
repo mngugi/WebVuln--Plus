@@ -6344,5 +6344,107 @@ Result: Full user table dump if not sanitized.
 - [OWASP XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XSS_Prevention_Cheat_Sheet.html)
 - [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
 
+***
+## PART IX
+---
+INSECURE COMMUNICATION
+---
+# WEBVULN-055: Man-in-the-Middle (MITM) Attack
 
+## Category  
+Transport Layer Security / Network Attack
+
+## Vulnerability  
+**Man-in-the-Middle (MITM) Attack**
+
+## Description  
+A Man-in-the-Middle (MITM) attack occurs when an attacker secretly intercepts and possibly alters communication between two parties without their knowledge. This typically happens when data is transmitted over an insecure or improperly secured network, such as public Wi-Fi or websites lacking proper TLS encryption.
+
+In the context of web applications, MITM attacks can lead to:
+- Credential theft (e.g., login usernames and passwords)
+- Session hijacking
+- Data tampering in transit
+- Unauthorized access to sensitive user or application data
+
+MITM attacks can exploit:
+- Plain HTTP (instead of HTTPS)
+- Expired or invalid TLS certificates
+- Downgrade attacks (e.g., forcing fallback to insecure protocols)
+- Weak or misconfigured encryption algorithms
+- Rogue access points or compromised routers
+
+## Demo / Proof of Concept
+
+### Scenario: Capturing login credentials on insecure HTTP
+
+1. A user visits `http://example.com/login` on public Wi-Fi.
+2. The attacker intercepts traffic using a tool like `Wireshark` or `mitmproxy`.
+3. When the user submits login credentials, the attacker sees:
+
+```
+POST /login HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=secret123
+```
+
+### Tools commonly used for MITM attacks:
+- `ettercap`
+- `mitmproxy`
+- `Wireshark`
+- `Bettercap`
+- `dsniff`
+
+## Mitigation  
+
+- **Enforce HTTPS (TLS) across the entire application**
+  - Use HSTS (HTTP Strict Transport Security) headers:
+    ```
+    Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+    ```
+  - Redirect all HTTP requests to HTTPS
+  - Disable TLS versions below 1.2 (avoid SSLv2, SSLv3, TLS 1.0/1.1)
+  - Use a valid certificate from a trusted CA
+
+- **Secure API communication**
+  - Enforce HTTPS on all REST/GraphQL endpoints
+  - Validate TLS certificates on client-side (e.g., mobile apps)
+  - Use certificate pinning where feasible
+
+- **Avoid mixed content**
+  - Ensure all embedded resources (scripts, images, etc.) are loaded over HTTPS
+
+- **Use secure cookies**
+  - Set cookies with `Secure` and `HttpOnly` flags:
+    ```http
+    Set-Cookie: sessionid=xyz; Secure; HttpOnly; SameSite=Strict
+    ```
+
+- **Educate users to avoid public Wi-Fi for sensitive tasks**  
+  - Or encourage the use of a VPN when accessing your platform remotely
+
+- **Use DNS security extensions (DNSSEC)**  
+  - To prevent DNS spoofing that could enable MITM setups
+
+- **Monitor and log TLS errors**
+  - Detect downgrade attempts or invalid cert usage in real time
+
+## Testing Tools / Techniques
+
+- **mitmproxy** – Intercept and inspect HTTP/HTTPS traffic
+- **Wireshark** – Analyze unencrypted traffic over insecure networks
+- **SSL Labs** – Analyze TLS configuration of your site: https://www.ssllabs.com/ssltest/
+- **Burp Suite** – Identify insecure transmission of sensitive data
+- **nmap + ssl-enum-ciphers** – Check supported TLS/SSL versions and ciphers
+
+## References
+
+- [OWASP Transport Layer Protection Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html)
+- [OWASP Man-in-the-Middle Attack](https://owasp.org/www-community/attacks/Man-in-the-middle)
+- [Mozilla TLS Configuration Guidelines](https://infosec.mozilla.org/guidelines/web_security#transport-layer-security-tls)
+- [SSL Labs Test Tool](https://www.ssllabs.com/ssltest/)
+- [Bettercap MITM Framework](https://www.bettercap.org/)
+
+***
 
