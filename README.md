@@ -6805,3 +6805,99 @@ Examples of common leakages:
 - [Nginx Custom Error Pages](https://nginx.org/en/docs/http/ngx_http_core_module.html#error_page)
 - [CIS NGINX Benchmark](https://www.cisecurity.org/benchmark/nginx)
 ***
+PART X 
+---
+
+## Client Side Vulnerabilities
+
+---
+# WEBVULN-060: DOM-Based Cross-Site Scripting (XSS)
+
+## Category  
+Cross-Site Scripting (XSS) / Client-Side Vulnerabilities
+
+## Vulnerability  
+**DOM-Based Cross-Site Scripting (XSS)**
+
+## Description  
+DOM-Based XSS is a type of Cross-Site Scripting where the vulnerability exists in the client-side code rather than the server-side. It occurs when JavaScript on a page processes data from untrusted sources (e.g., `document.URL`, `location.hash`, `document.referrer`, etc.) and dynamically updates the DOM without proper sanitization or escaping.
+
+Unlike reflected or stored XSS, the payload is never processed by the server, making it harder to detect with traditional server-side filters or logs.
+
+Common sources:
+- `document.location`
+- `document.URL`
+- `document.referrer`
+- `window.name`
+- `location.hash`
+
+Common sinks:
+- `innerHTML`
+- `document.write()`
+- `eval()`
+- `setTimeout()` / `setInterval()` (with string arguments)
+- `window.location`
+
+## Demo / Proof of Concept
+
+### Vulnerable Code (Client-Side)
+```html
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const user = params.get("user");
+  document.getElementById("greeting").innerHTML = "Hello " + user;
+</script>
+```
+
+### Malicious URL
+```
+https://example.com/page.html?user=<img src=x onerror=alert('XSS')>
+```
+
+### Result
+- The malicious input is inserted into the DOM via `innerHTML`, causing script execution in the victim's browser.
+
+## Mitigation
+
+- **Avoid using unsafe DOM APIs with untrusted input**:
+  - Prefer `textContent` over `innerHTML`
+  - Avoid `eval()`, `document.write()`, etc.
+
+- **Sanitize input before inserting into the DOM**:
+  - Use a trusted client-side sanitization library like [DOMPurify](https://github.com/cure53/DOMPurify)
+    ```javascript
+    const clean = DOMPurify.sanitize(user);
+    document.getElementById("greeting").innerHTML = "Hello " + clean;
+    ```
+
+- **Use secure JavaScript frameworks**:
+  - Frameworks like React, Vue, and Angular automatically escape data bindings
+
+- **Content Security Policy (CSP)**:
+  - Implement a strict CSP to restrict inline scripts and reduce XSS impact:
+    ```http
+    Content-Security-Policy: default-src 'self'; script-src 'self'
+    ```
+
+- **Validate input types, lengths, and characters even on the client-side**
+
+- **Regular code audits and automated testing**
+
+## Testing Tools / Techniques
+
+- Manual testing with payloads in URL, hash, or referrer
+- Browser dev tools – observe DOM manipulation
+- **Burp Suite** – DOM XSS scanner and Repeater tool
+- **OWASP ZAP** – Passive scanner and fuzzing
+- **DOM Invader** (from PortSwigger) – Browser extension for detecting DOM XSS sinks/sources
+
+## References
+
+- [OWASP DOM Based XSS](https://owasp.org/www-community/attacks/DOM_Based_XSS)
+- [DOMPurify GitHub](https://github.com/cure53/DOMPurify)
+- [PortSwigger XSS Guide](https://portswigger.net/web-security/cross-site-scripting/dom-based)
+- [Content Security Policy (CSP) Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+- [Google Web Fundamentals: XSS Prevention](https://developers.google.com/web/fundamentals/security/csp)
+
+***
+
