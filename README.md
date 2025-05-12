@@ -7193,5 +7193,103 @@ It exploits trust in the UI and browser rendering, not necessarily a code-level 
 - [MDN: CSP frame-ancestors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors)
 - [PortSwigger – Clickjacking](https://portswigger.net/web-security/clickjacking)
 ***
+# WEBVULN-064: HTML5 Security Issues
+
+## Category  
+Client-Side Security / HTML5 Features Misuse
+
+## Vulnerability  
+**HTML5 Security Issues**
+
+## Description  
+HTML5 introduced powerful features such as local storage, session storage, WebSockets, Web Workers, and cross-origin resource sharing (CORS). While these features enhance web applications, improper implementation can introduce serious security vulnerabilities.
+
+Common security issues with HTML5 include:
+
+- **LocalStorage/SessionStorage abuse**: Storing sensitive data insecurely on the client.
+- **Cross-Origin Messaging (`postMessage`) misuse**: Sending data across origins without validating message origin.
+- **WebSocket vulnerabilities**: Lack of authentication and encryption.
+- **Client-side database abuse (IndexedDB, WebSQL)**: Storing confidential data with no access control.
+- **Geolocation API misuse**: Leaking users’ real-time location without consent.
+- **Web Workers and Service Workers**: Background scripts can be exploited for persistence or abuse.
+- **Form Autofill Hijacking**: Exploiting HTML5 form enhancements to steal user input.
+
+These issues arise not from HTML5 itself, but from insecure or careless usage of its APIs.
+
+## Demo / Proof of Concept
+
+### Scenario: Storing sensitive data in localStorage
+
+```javascript
+// Storing sensitive user info
+localStorage.setItem("authToken", "Bearer eyJhbGciOi...");
+
+// Attacker accesses it via XSS
+alert(localStorage.getItem("authToken"));
+```
+
+### Scenario: Insecure postMessage usage
+
+```javascript
+// Vulnerable receiver
+window.addEventListener("message", function(event) {
+    eval(event.data); // Dangerous
+});
+```
+
+### Scenario: Autofill data capture via hidden fields
+
+```html
+<form>
+  <input name="email" autocomplete="email">
+  <input name="password" autocomplete="current-password" type="password">
+  <iframe src="https://attacker.com/steal" style="display:none;"></iframe>
+</form>
+```
+
+## Mitigation
+
+- **Avoid storing sensitive data in localStorage/sessionStorage**:
+  - Use short-lived, secure, HttpOnly cookies for authentication data.
+
+- **Always validate origin in `postMessage` receivers**:
+  ```javascript
+  window.addEventListener("message", function(event) {
+      if (event.origin !== "https://trusted.example.com") return;
+      // Handle message securely
+  });
+  ```
+
+- **Use secure WebSocket connections (`wss://`) and implement authentication**.
+
+- **Avoid using client-side storage for secrets** (e.g., tokens, keys).
+
+- **Prompt for user consent when using geolocation and minimize precision**.
+
+- **Apply strong CSP and input sanitization to prevent XSS attacks that target HTML5 features.**
+
+- **Limit permissions and usage of Service Workers to trusted paths and origins.**
+
+- **Disable form autofill for sensitive data inputs unless absolutely necessary**:
+  ```html
+  <input autocomplete="off">
+  ```
+
+## Testing Tools / Techniques
+
+- **Manual Code Review** – Look for use of localStorage, `postMessage`, `eval`, etc.
+- **Browser DevTools** – Inspect localStorage/sessionStorage, Service Workers
+- **Burp Suite / OWASP ZAP** – Fuzz HTML5 endpoints, look for misused WebSocket or CORS
+- **DOM Invader** – Inspect DOM-based vulnerabilities involving HTML5 features
+- **Static Analysis Tools** – Identify risky API usage in JS
+
+## References
+
+- [OWASP HTML5 Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html)
+- [MDN Web Docs – Web Storage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+- [MDN – Using Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API)
+- [Google Web Fundamentals – Security](https://developers.google.com/web/fundamentals/security)
+- [PortSwigger – HTML5 Security Issues](https://portswigger.net/web-security/html5)
+***
 
 
