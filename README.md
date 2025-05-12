@@ -7092,5 +7092,106 @@ Consequences include:
 - [MDN: Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
 - [Google Web Fundamentals – Caching Best Practices](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)
 ***
+# WEBVULN-063: Clickjacking
+
+## Category  
+User Interface (UI) Redressing / Client-Side Attacks
+
+## Vulnerability  
+**Clickjacking**
+
+## Description  
+Clickjacking is a UI redressing attack where an attacker tricks a user into clicking on something different from what the user perceives, by loading a legitimate web application inside an invisible or disguised frame. The attacker overlays malicious elements to hijack clicks or actions meant for the legitimate site.
+
+Clickjacking can lead to:
+- Unintended transactions (e.g., fund transfers, purchases)
+- Disclosure of sensitive data (if inputs are exposed)
+- Enabling camera/mic access
+- Hijacking authentication or authorization actions
+
+It exploits trust in the UI and browser rendering, not necessarily a code-level vulnerability.
+
+## Demo / Proof of Concept
+
+### Scenario: Framing a banking website
+
+1. Attacker creates a malicious page:
+    ```html
+    <style>
+      iframe {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+      }
+      button {
+        z-index: 20;
+        position: relative;
+      }
+    </style>
+
+    <button>Click to win a prize!</button>
+    <iframe src="https://bank.example.com/transfer?amount=1000&to=attacker"></iframe>
+    ```
+
+2. Victim clicks the "prize" button but is actually clicking the hidden bank button inside the iframe.
+
+3. A transfer occurs without the user realizing what they clicked.
+
+## Mitigation
+
+- **Implement X-Frame-Options header**:
+    ```http
+    X-Frame-Options: DENY
+    ```
+    or
+    ```http
+    X-Frame-Options: SAMEORIGIN
+    ```
+
+- **Use Content Security Policy (CSP) frame-ancestors directive**:
+    ```http
+    Content-Security-Policy: frame-ancestors 'self';
+    ```
+
+- **Apply frame-busting JavaScript (less reliable than headers)**:
+    ```javascript
+    if (top !== self) {
+        top.location = self.location;
+    }
+    ```
+
+- **Avoid exposing sensitive UI actions on publicly accessible endpoints without user confirmation or CSRF protection**
+
+- **Use UI design best practices** like requiring re-authentication for critical actions, and not allowing important functions to be triggered by a single click
+
+## Testing Tools / Techniques
+
+- **Manual Testing**:
+  - Create a test page embedding target site in an `<iframe>`
+  - Attempt click overlays
+
+- **Browser DevTools** – Inspect response headers (`X-Frame-Options`, `CSP`)
+
+- **Burp Suite** – Clickjacking plugin
+
+- **OWASP Clickjacking Defense Cheat Sheet** – Validate proper header use
+
+- **Security scanners**:
+  - ZAP
+  - Nikto
+  - Acunetix
+
+## References
+
+- [OWASP Clickjacking](https://owasp.org/www-community/attacks/Clickjacking)
+- [Clickjacking Defense Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Clickjacking_Defense_Cheat_Sheet.html)
+- [MDN: X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+- [MDN: CSP frame-ancestors](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-ancestors)
+- [PortSwigger – Clickjacking](https://portswigger.net/web-security/clickjacking)
+***
 
 
