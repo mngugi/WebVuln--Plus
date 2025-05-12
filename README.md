@@ -7004,6 +7004,93 @@ Access-Control-Allow-Credentials: true
 - [OWASP postMessage Security](https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html#postmessage)
 - [SameSite Cookies Explained](https://web.dev/samesite-cookies-explained/)
 ***
+# WEBVULN-062: Browser Cache Poisoning
 
+## Category  
+Client-Side Caching / Web Application Misconfiguration
+
+## Vulnerability  
+**Browser Cache Poisoning**
+
+## Description  
+Browser Cache Poisoning occurs when an attacker is able to manipulate the contents of a user's browser cache to store malicious or unintended responses. This can lead to the delivery of outdated, tampered, or attacker-controlled content, especially when the application uses improper cache-control headers. The vulnerability is particularly dangerous when malicious scripts, modified resources, or altered HTML are cached and subsequently served to users.
+
+Scenarios that enable cache poisoning:
+- Using static cacheable URLs for dynamic responses
+- Cacheable responses containing user-specific or unvalidated content
+- Lack of appropriate `Cache-Control`, `ETag`, or `Vary` headers
+
+Consequences include:
+- Persistent Cross-Site Scripting (XSS)
+- Defacement or injection of fake UI elements
+- Forced logouts or content substitution
+
+## Demo / Proof of Concept
+
+### Scenario: Poisoning a JavaScript file
+
+1. Web server responds to requests for a JavaScript file with:
+    ```http
+    Cache-Control: public, max-age=31536000
+    ```
+
+2. An attacker exploits a reflected XSS vulnerability in a query parameter:
+    ```
+    https://example.com/script.js?q=<script>alert('Poison')</script>
+    ```
+
+3. Due to improper cache controls, the browser caches the tainted response.
+
+4. Future visits load the poisoned script from the browser cache—even on legitimate pages.
+
+## Mitigation
+
+- **Set strict cache control headers** for dynamic or user-specific content:
+    ```http
+    Cache-Control: no-store, no-cache, must-revalidate
+    Pragma: no-cache
+    ```
+
+- **Avoid caching responses that include query parameters unless content is static and safe to share**
+
+- **Use unique versioned URLs for static content**:
+    ```
+    /static/js/app.v3.4.2.js
+    ```
+
+- **Add `Vary` headers where applicable**:
+    ```http
+    Vary: Accept-Encoding, User-Agent
+    ```
+
+- **Validate and sanitize all user input, especially inputs reflected in cached responses**
+
+- **Do not serve sensitive information from shared cache endpoints**
+
+- **Use Content Security Policy (CSP)** to reduce impact of injected scripts
+
+## Testing Tools / Techniques
+
+- **Manual testing**:
+  - Inject payloads in query strings and observe if they're cached
+  - Reload affected pages to see if malicious content persists
+
+- **Browser DevTools** – Inspect cached items in the network tab
+
+- **Burp Suite** – Use Repeater and Intruder to manipulate cacheable headers and payloads
+
+- **Cache Poisoning Tools**:
+  - ParamMiner (Burp Extension)
+  - Cache Poisoning Scanner
+
+- **Content Scanners** – Identify improperly cached user-generated content
+
+## References
+
+- [PortSwigger – Browser Cache Poisoning](https://portswigger.net/research/practical-web-cache-poisoning)
+- [OWASP Caching Guidance](https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html#cache-control)
+- [MDN: Cache-Control](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control)
+- [Google Web Fundamentals – Caching Best Practices](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching)
+***
 
 
