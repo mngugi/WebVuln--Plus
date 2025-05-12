@@ -7291,5 +7291,100 @@ window.addEventListener("message", function(event) {
 - [Google Web Fundamentals – Security](https://developers.google.com/web/fundamentals/security)
 - [PortSwigger – HTML5 Security Issues](https://portswigger.net/web-security/html5)
 ***
+# WEBVULN-065: Insecure Use of HTML5 Features
+
+## Category  
+Client-Side Security / HTML5 Feature Misconfiguration
+
+## Vulnerability  
+**Insecure Use of HTML5 Features**
+
+## Description  
+HTML5 introduced a broad set of APIs and features—such as localStorage, sessionStorage, WebSockets, Web Workers, Geolocation, and cross-origin messaging—that, if improperly implemented, open up new attack vectors. This vulnerability encompasses a class of issues resulting from insecure usage patterns of these features.
+
+Examples include:
+- Storing sensitive data (e.g., tokens) in browser storage where JavaScript (and thus XSS) has access
+- Failing to validate message origins in `postMessage` communication
+- Using insecure WebSocket connections (`ws://` instead of `wss://`)
+- Allowing form autofill on hidden or malicious input fields
+- Leaking location or sensitive user data via Geolocation API without explicit consent
+
+These vulnerabilities are often compounded when combined with Cross-Site Scripting (XSS), Cross-Origin Resource Sharing (CORS) misconfigurations, or poor input/output handling.
+
+## Demo / Proof of Concept
+
+### 1. Token Theft via XSS and localStorage
+
+```javascript
+// Application stores token
+localStorage.setItem("authToken", "secret-token");
+
+// Attacker injects script via XSS
+alert(localStorage.getItem("authToken"));
+```
+
+### 2. Unsafe postMessage Implementation
+
+```javascript
+// Receiver does not validate sender
+window.addEventListener("message", function(event) {
+  if (typeof event.data === 'string') {
+    eval(event.data); // Dangerous
+  }
+});
+```
+
+### 3. Autofill Hijacking
+
+```html
+<form>
+  <input type="email" name="email" autocomplete="email">
+  <input type="password" name="password" autocomplete="current-password">
+  <iframe src="https://attacker.com/steal" style="opacity:0;position:absolute;"></iframe>
+</form>
+```
+
+## Mitigation
+
+- **Do not store sensitive data in localStorage/sessionStorage.**
+  - Use HttpOnly, Secure cookies instead.
+
+- **Use `postMessage` securely**:
+  - Always verify `event.origin` against a known, trusted domain.
+  ```javascript
+  if (event.origin !== "https://yourdomain.com") return;
+  ```
+
+- **Use `wss://` (secure WebSocket) and ensure proper authentication and origin checking.**
+
+- **Restrict usage of Geolocation and request explicit user consent.**
+
+- **Disable autocomplete on sensitive fields**:
+  ```html
+  <input type="password" autocomplete="off">
+  ```
+
+- **Enforce CSP (Content Security Policy)** to restrict inline scripts and mitigate XSS.
+
+- **Limit Service Worker scope and register only on secure, trusted paths.**
+
+- **Sanitize and validate any data processed or stored using client-side storage.**
+
+## Testing Tools / Techniques
+
+- **Manual Code Review** – Look for risky use of `localStorage`, `eval`, unvalidated `postMessage`, etc.
+- **Browser DevTools** – Inspect application storage, Service Worker registration, WebSocket usage.
+- **Burp Suite / OWASP ZAP** – Intercept and fuzz HTML5-related APIs.
+- **DOM Invader (Burp Extension)** – Inspect DOM-based usage and HTML5 features abuse.
+- **Static/Dynamic Analysis Tools** – Detect insecure API calls and data flows in JavaScript.
+
+## References
+
+- [OWASP HTML5 Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/HTML5_Security_Cheat_Sheet.html)
+- [MDN Web Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+- [MDN postMessage Security](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- [Google Web Fundamentals – Security](https://developers.google.com/web/fundamentals/security)
+- [PortSwigger – HTML5 Attacks](https://portswigger.net/web-security/html5)
+---
 
 
