@@ -7568,3 +7568,43 @@ Browser interprets the response as a downloadable `.bat` file, which may be exec
 
 - [OWASP RFD Attack](https://owasp.org/www-community/attacks/Reflected_File_Download)
 - [RFD Whitepaper – Trustwave](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/reflected-file-download-a-new-web-attack-vector/)
+---
+# WEBVULN-069: Sensitive Data Exposure via URL
+
+## Category  
+Information Disclosure
+
+## Vulnerability  
+**Sensitive Data Exposure via URL**
+
+## Description  
+Sensitive information (tokens, session IDs, passwords) transmitted via URLs can be stored in browser history, logs, and referrer headers, exposing them to attackers.
+
+## Demo / Proof of Concept
+
+```
+https://example.com/reset?token=abc123securetoken
+```
+
+Token visible in:
+- Browser history
+- Server logs
+- Referrer header if redirected
+
+## Mitigation
+
+- **Use POST requests** instead of GET for sensitive operations.
+
+- **Never place tokens in URL query parameters**.
+
+- **Invalidate tokens quickly and log misuse**.
+
+## Testing Tools / Techniques
+
+- Inspect browser history and logs for token exposure.
+- Use proxy tools to monitor outgoing requests.
+
+## References
+
+- [OWASP – Sensitive Data Exposure](https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure)
+---
