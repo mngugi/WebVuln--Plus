@@ -7688,3 +7688,38 @@ Attacker browses directly to those paths.
 
 - [OWASP – Info Disclosure](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/09-Testing_for_Error_Handling/README.html)
 ---
+# WEBVULN-072: Exposed .git Repository
+
+## Category  
+Information Disclosure / Source Code Exposure
+
+## Vulnerability  
+**Publicly Accessible .git Directory**
+
+## Description  
+If a `.git` directory is exposed on a web server, attackers can retrieve the full source code, including credentials, internal logic, and configuration files.
+
+## Demo / Proof of Concept
+
+```
+https://example.com/.git/config
+```
+
+## Mitigation
+
+- **Block access to `.git` directories via server configuration**.
+
+- **Deploy from built code, not directly from VCS**.
+
+- **Use `.htaccess` or server rules to deny directory access**.
+
+## Testing Tools / Techniques
+
+- Manual probing for `.git/` endpoints.
+
+- Tools like `git-dumper` or `DVCS-Pillage`.
+
+## References
+
+- [SANS - Git Exposure](https://isc.sans.edu/forums/diary/Exposed+git+repositories+are+becoming+more+common/24967/)
+---
