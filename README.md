@@ -7608,3 +7608,39 @@ Token visible in:
 
 - [OWASP – Sensitive Data Exposure](https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure)
 ---
+# WEBVULN-070: User-Agent Based Access Control
+
+## Category  
+Access Control
+
+## Vulnerability  
+**User-Agent Based Access Control**
+
+## Description  
+Some applications grant or deny access based solely on the `User-Agent` string, which is easily spoofed. Attackers can bypass restrictions by mimicking browser or bot user agents.
+
+## Demo / Proof of Concept
+
+Set User-Agent:
+```
+User-Agent: Googlebot
+```
+
+Access pages intended for bots only.
+
+## Mitigation
+
+- **Do not rely on User-Agent headers for access control**.
+
+- **Use proper authentication and authorization checks**.
+
+- **Verify bot access using reverse DNS or signed tokens**.
+
+## Testing Tools / Techniques
+
+- Modify User-Agent header via browser or tools like curl/Burp.
+
+## References
+
+- [OWASP Access Control](https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control)
+---
