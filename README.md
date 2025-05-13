@@ -7760,3 +7760,43 @@ Some apps may process the first value, others the last.
 
 - [OWASP HPP](https://owasp.org/www-community/attacks/HTTP_Parameter_Pollution)
 ---
+# WEBVULN-074: Information Disclosure via Stack Traces
+
+## Category  
+Information Disclosure
+
+## Vulnerability  
+**Verbose Stack Traces in Error Pages**
+
+## Description  
+Detailed stack traces exposed to users can reveal application internals like file paths, framework details, libraries, or business logic.
+
+## Demo / Proof of Concept
+
+Trigger:
+```
+https://example.com/api?id='
+```
+
+Response:
+```
+java.lang.NullPointerException at com.example.user.UserService.get(UserService.java:42)
+```
+
+## Mitigation
+
+- **Disable detailed error messages in production**.
+
+- **Log errors server-side only**.
+
+- **Show generic error messages to users**.
+
+## Testing Tools / Techniques
+
+- Input fuzzing.
+- Observe HTTP 500 or 400 errors.
+
+## References
+
+- [OWASP Testing for Error Handling](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/09-Testing_for_Error_Handling/)
+---
