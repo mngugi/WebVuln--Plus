@@ -7530,3 +7530,41 @@ Upon visiting the link, the user is redirected to the attacker’s site, which m
 - [PortSwigger – Open Redirect](https://portswigger.net/web-security/open-redirect)
 - [Google Security Blog – Avoiding Open Redirects](https://security.googleblog.com/2011/08/open-redirects-considered-harmful.html)
 ***
+# WEBVULN-068: Reflected File Download (RFD)
+
+## Category  
+Client-Side / Insecure Downloads
+
+## Vulnerability  
+**Reflected File Download (RFD)**
+
+## Description  
+RFD occurs when a web application reflects user input directly into a downloadable file without proper sanitization. This can lead to the creation of files that, when opened by the user, execute malicious scripts, especially on Windows systems.
+
+## Demo / Proof of Concept
+
+```
+https://example.com/download?filename=evil.bat&content=@echo off&&shutdown -s
+```
+
+Browser interprets the response as a downloadable `.bat` file, which may be executed by the victim.
+
+## Mitigation
+
+- **Always sanitize user input** in filenames and content.
+
+- **Set proper Content-Disposition headers** with safe filenames.
+
+- **Avoid echoing user input in downloadable files**.
+
+- **Use content-type headers strictly**.
+
+## Testing Tools / Techniques
+
+- Manual inspection of download endpoints.
+- Burp Suite or curl for testing file downloads with payloads.
+
+## References
+
+- [OWASP RFD Attack](https://owasp.org/www-community/attacks/Reflected_File_Download)
+- [RFD Whitepaper – Trustwave](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/reflected-file-download-a-new-web-attack-vector/)
