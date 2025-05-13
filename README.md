@@ -7475,4 +7475,58 @@ If the app trusts the `Host` header in backend logic (e.g., image fetching or in
 - [Detecting and Exploiting Host Header Vulnerabilities](https://blog.securelayer7.net/host-header-injection-vulnerability/)
 ---
 
+# WEBVULN-067: Open Redirect
 
+## Category  
+Access Control / URL Redirection
+
+## Vulnerability  
+**Open Redirect**
+
+## Description  
+An open redirect occurs when a web application accepts untrusted input that specifies a link to an external site and redirects the user to that URL without proper validation. Attackers can exploit this to redirect victims to malicious websites, conduct phishing attacks, or bypass security controls such as SSO or authorization flows.
+
+This flaw is common in login/logout workflows, password reset links, and SSO integrations.
+
+## Demo / Proof of Concept
+
+### Example vulnerable endpoint:
+
+```
+https://example.com/logout?redirect=https://attacker.com
+```
+
+### Browser behavior:
+
+Upon visiting the link, the user is redirected to the attacker’s site, which may imitate the real one and collect credentials or personal data.
+
+## Mitigation
+
+- **Use allow-lists for redirects**, permitting only pre-approved domains or paths.
+
+- **Reject full URLs** in redirect parameters unless absolutely necessary.
+
+- **Encode and validate redirect destinations**:
+  ```python
+  # Flask example
+  allowed_paths = ['/dashboard', '/home']
+  if next_path in allowed_paths:
+      return redirect(next_path)
+  else:
+      abort(400)
+  ```
+
+- **Avoid accepting user-controlled URLs in redirect parameters**.
+
+## Testing Tools / Techniques
+
+- **Manual testing** with modified redirect URLs.
+- **Burp Suite** – Use Repeater to manipulate the `redirect` parameter.
+- **Static code analysis** – Check for use of `redirect(url)` or similar functions without validation.
+
+## References
+
+- [OWASP Open Redirect](https://owasp.org/www-community/attacks/Unvalidated_Redirects_and_Forwards_Cheat_Sheet)
+- [PortSwigger – Open Redirect](https://portswigger.net/web-security/open-redirect)
+- [Google Security Blog – Avoiding Open Redirects](https://security.googleblog.com/2011/08/open-redirects-considered-harmful.html)
+***
