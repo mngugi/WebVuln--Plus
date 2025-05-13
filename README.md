@@ -7723,3 +7723,40 @@ https://example.com/.git/config
 
 - [SANS - Git Exposure](https://isc.sans.edu/forums/diary/Exposed+git+repositories+are+becoming+more+common/24967/)
 ---
+# WEBVULN-073: HTTP Parameter Pollution (HPP)
+
+## Category  
+Input Manipulation
+
+## Vulnerability  
+**HTTP Parameter Pollution**
+
+## Description  
+HPP occurs when the same parameter appears multiple times in the query string, potentially altering application behavior or bypassing filters.
+
+## Demo / Proof of Concept
+
+```
+https://example.com/login?user=admin&user=attacker
+```
+
+Some apps may process the first value, others the last.
+
+## Mitigation
+
+- **Normalize parameter handling on the server side**.
+
+- **Reject duplicated parameters if unnecessary**.
+
+- **Apply input validation on all received values**.
+
+## Testing Tools / Techniques
+
+- Manually craft multiple parameter variations.
+
+- Burp Intruder with payload lists for HPP.
+
+## References
+
+- [OWASP HPP](https://owasp.org/www-community/attacks/HTTP_Parameter_Pollution)
+---
