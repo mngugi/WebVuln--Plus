@@ -1,5 +1,15 @@
 # 🌐 Welcome to the WebVuln- Wiki!
 # WebVuln-
+## 🔹 Injection Exploits
+- [WEBVULN-001: SQL Injection](#webvuln-001-sql-injection)
+- [WEBVULN-002: Cross-Site Scripting (XSS)](#webvuln-002-cross-site-scripting)
+
+## 🔐 Broken Authentication
+- [WEBVULN-020: Session Hijacking](#webvuln-020-session-hijacking)
+
+## 🔐 Sensitive Data Exposure
+- [WEBVULN-025: Inadequate Encryption](#webvuln-025-inadequate-encryption)
+
 
 **WebVuln-** is a structured and practical documentation project focused on common web vulnerabilities. It includes detailed explanations, proof-of-concept demos, mitigations, testing tools, and references — making it a valuable resource for security researchers, developers, and learners.
 
