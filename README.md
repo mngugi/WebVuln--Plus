@@ -7644,3 +7644,47 @@ Access pages intended for bots only.
 
 - [OWASP Access Control](https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control)
 ---
+# WEBVULN-071: Information Disclosure via Robots.txt
+
+## Category  
+Information Disclosure
+
+## Vulnerability  
+**Exposed Sensitive Directories in robots.txt**
+
+## Description  
+If sensitive directories or files are listed in `robots.txt`, attackers can read the file and directly access those locations.
+
+## Demo / Proof of Concept
+
+Access:
+```
+https://example.com/robots.txt
+```
+
+Contains:
+```
+Disallow: /admin/
+Disallow: /internal-api/
+```
+
+Attacker browses directly to those paths.
+
+## Mitigation
+
+- **Do not list sensitive resources in robots.txt**.
+
+- **Enforce proper access control on sensitive endpoints**.
+
+- **Use robots.txt only for public crawler guidance, not security**.
+
+## Testing Tools / Techniques
+
+- Manual inspection of `robots.txt`.
+
+- Search engines often cache these entries.
+
+## References
+
+- [OWASP – Info Disclosure](https://owasp.org/www-project-web-security-testing-guide/stable/4-Web_Application_Security_Testing/09-Testing_for_Error_Handling/README.html)
+---
