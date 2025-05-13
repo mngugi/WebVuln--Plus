@@ -7800,3 +7800,40 @@ java.lang.NullPointerException at com.example.user.UserService.get(UserService.j
 
 - [OWASP Testing for Error Handling](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/09-Testing_for_Error_Handling/)
 ---
+# WEBVULN-075: JavaScript Prototype Pollution
+
+## Category  
+Client-Side Code / Object Injection
+
+## Vulnerability  
+**Prototype Pollution**
+
+## Description  
+Prototype pollution is a vulnerability that allows attackers to inject properties into JavaScript object prototypes, potentially modifying application behavior or causing denial of service.
+
+## Demo / Proof of Concept
+
+```js
+JSON.parse('{ "__proto__": { "admin": true } }')
+```
+
+If merged with app logic, `anyObj.admin` may return `true`.
+
+## Mitigation
+
+- **Avoid using `Object.assign` or `merge` without validation**.
+
+- **Use safe deep merge libraries**.
+
+- **Block `__proto__`, `constructor`, and `prototype` in user input**.
+
+## Testing Tools / Techniques
+
+- JavaScript input fuzzing.
+
+- Use tools like Snyk or npm audit.
+
+## References
+
+- [OWASP Prototype Pollution](https://owasp.org/www-community/attacks/Prototype_Pollution)
+---
