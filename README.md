@@ -7837,3 +7837,44 @@ If merged with app logic, `anyObj.admin` may return `true`.
 
 - [OWASP Prototype Pollution](https://owasp.org/www-community/attacks/Prototype_Pollution)
 ---
+# WEBVULN-076: Cookie Without Secure or HttpOnly Flag
+
+## Category  
+Session Management
+
+## Vulnerability  
+**Insecure Cookie Attributes**
+
+## Description  
+Cookies without `Secure` or `HttpOnly` flags can be accessed via JavaScript or transmitted over insecure channels, increasing risk of theft via XSS or sniffing.
+
+## Demo / Proof of Concept
+
+```http
+Set-Cookie: session=abcd1234;
+```
+
+Accessible via:
+```js
+document.cookie
+```
+
+## Mitigation
+
+- **Always set `Secure`, `HttpOnly`, and `SameSite` attributes**.
+
+- Example:
+  ```
+  Set-Cookie: session=abcd1234; Secure; HttpOnly; SameSite=Strict
+  ```
+
+## Testing Tools / Techniques
+
+- Inspect response headers via DevTools.
+
+- Use Burp or OWASP ZAP.
+
+## References
+
+- [OWASP Session Management](https://owasp.org/www-project-cheat-sheets/cheatsheets/Session_Management_Cheat_Sheet.html)
+---
