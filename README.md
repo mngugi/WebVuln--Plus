@@ -7386,5 +7386,93 @@ window.addEventListener("message", function(event) {
 - [Google Web Fundamentals – Security](https://developers.google.com/web/fundamentals/security)
 - [PortSwigger – HTML5 Attacks](https://portswigger.net/web-security/html5)
 ---
+# WEBVULN-066: Host Header Injection
+
+## Category  
+Server-Side Security / HTTP Header Manipulation
+
+## Vulnerability  
+**Host Header Injection**
+
+## Description  
+Host header injection occurs when a web application uses the value of the `Host` HTTP header in an unsafe way, such as generating links, redirects, password reset URLs, or performing internal logic, without properly validating or sanitizing it. Attackers can manipulate this header to poison caches, perform web cache deception, trigger SSRF (Server-Side Request Forgery), or carry out phishing-style attacks via malicious password reset links.
+
+This vulnerability is especially dangerous in applications that:
+- Reflect the `Host` header in email communications or responses
+- Use the `Host` header to construct absolute URLs for redirects
+- Trust the `Host` value in reverse proxy setups
+
+## Demo / Proof of Concept
+
+### 1. Password Reset Link Manipulation
+
+If the application constructs a password reset link like:
+
+```http
+POST /forgot-password HTTP/1.1
+Host: evil.example.com
+```
+
+And sends:
+
+```html
+Click here to reset your password: http://evil.example.com/reset?token=abc123
+```
+
+Then the attacker can receive the reset token via a malicious link, leading to account compromise.
+
+### 2. Cache Poisoning
+
+```http
+GET /article?id=123 HTTP/1.1
+Host: attacker.com
+```
+
+If response is cached using `Host`, legitimate users may later receive attacker-controlled content.
+
+### 3. SSRF (with flawed internal logic)
+
+If the app trusts the `Host` header in backend logic (e.g., image fetching or internal routing), attackers can trick it into sending requests to internal services.
+
+## Mitigation
+
+- **Whitelist allowed Host headers** (e.g., `yourdomain.com`, `www.yourdomain.com`) on the server.
+
+- **Avoid using the `Host` header to construct URLs**—prefer server-side configuration or trusted metadata.
+
+- **Use the `X-Forwarded-Host` header carefully** and sanitize it when behind proxies or load balancers.
+
+- **Set a canonical `Host` and reject all unexpected values**:
+  ```python
+  # Flask example
+  @app.before_request
+  def block_invalid_host():
+      if request.host not in ['yourdomain.com', 'www.yourdomain.com']:
+          abort(400)
+  ```
+
+- **Review email templates** and ensure reset links or absolute URLs are not based on unvalidated `Host`.
+
+- **Ensure reverse proxies and load balancers strip or validate incoming `Host` headers**.
+
+## Testing Tools / Techniques
+
+- **Manual Testing** – Modify the `Host` header in requests and observe behavior.
+
+- **Burp Suite Intruder/Repeater** – Send requests with altered `Host` headers.
+
+- **OWASP ZAP** – Use fuzzing rules to test for Host header abuse.
+
+- **Check email links** or password reset mechanisms for trust in user-controlled `Host`.
+
+- **Security scanners** – Nikto, Acunetix, and others may detect this.
+
+## References
+
+- [OWASP Host Header Injection](https://owasp.org/www-community/attacks/Host_header_injection)
+- [PortSwigger – Host Header Attacks](https://portswigger.net/web-security/host-header)
+- [RFC 7230 – HTTP/1.1 Header Fields](https://datatracker.ietf.org/doc/html/rfc7230#section-5.4)
+- [Detecting and Exploiting Host Header Vulnerabilities](https://blog.securelayer7.net/host-header-injection-vulnerability/)
+---
 
 
