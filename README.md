@@ -8042,5 +8042,57 @@ echo "Hello " . $_GET['name'];
 - https://owasp.org/www-community/Input_Validation
 - https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html
 
+---
+# WEBVULN-080: Cross-Origin Resource Sharing (CORS) Misconfiguration
 
+## Category  
+Access Control / Cross-Origin
+
+## Vulnerability  
+**CORS Misconfiguration**
+
+## Description  
+CORS is a mechanism that controls which domains are allowed to access resources on another origin. Misconfiguring CORS (e.g., using `Access-Control-Allow-Origin: *` with `credentials: true`, or reflecting arbitrary origins) can allow malicious sites to read sensitive data from APIs or perform authenticated requests on a user’s behalf.
+
+Common misconfigurations:
+- Wildcard origin with `Access-Control-Allow-Credentials: true`
+- Reflecting `Origin` header without validation
+- Allowing all methods and headers indiscriminately
+
+## Demo / Proof of Concept
+
+### Malicious JavaScript on attacker.com
+```javascript
+fetch("https://victim.com/api/userinfo", {
+  credentials: "include"
+})
+.then(res => res.text())
+.then(data => alert(data));
+```
+
+If `victim.com` misconfigures CORS, attacker can exfiltrate data cross-origin.
+
+## Mitigation
+
+- Avoid `Access-Control-Allow-Origin: *` if using credentials.
+- Whitelist specific trusted origins.
+- Never reflect arbitrary Origin values.
+- Restrict allowed methods and headers.
+- Disable CORS unless needed.
+
+## Testing Tools / Techniques
+
+- curl with custom `Origin` header:
+  ```bash
+  curl -H "Origin: https://attacker.com" -I https://victim.com/api
+  ```
+- Burp Suite / ZAP CORS plugins
+- CORScanner, CORSy tools
+
+## References
+
+- https://owasp.org/www-community/attacks/CORS_OriginHeaderScrutiny
+- https://portswigger.net/web-security/cors
+- https://github.com/chenjj/CORScanner
+---
 
