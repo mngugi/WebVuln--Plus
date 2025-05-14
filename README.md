@@ -7992,4 +7992,55 @@ If the backend fails to validate the signature, attacker gains admin access.
 - https://portswigger.net/web-security/jwt
 - https://github.com/ticarpi/jwt_tool
 ---
+# WEBVULN-079: Improper Input Sanitization
+
+## Category  
+Input Validation
+
+## Vulnerability  
+**Improper Input Sanitization**
+
+## Description  
+Improper sanitization occurs when user-supplied input is not adequately filtered or cleansed before being processed by the server or client. This vulnerability can lead to various attacks such as XSS, SQL Injection, Command Injection, and more. It’s often a root cause vulnerability that facilitates others.
+
+Common flaws:
+- Directly reflecting input into HTML/JS
+- Passing unfiltered data to system commands or queries
+- Failing to encode output in the appropriate context (HTML, URL, JS, SQL)
+
+## Demo / Proof of Concept
+
+### Scenario: XSS via unsanitized input
+```
+https://example.com/profile?name=<script>alert(1)</script>
+```
+
+### Vulnerable Code (PHP)
+```php
+echo "Hello " . $_GET['name'];
+```
+
+## Mitigation
+
+- Use strict input validation (whitelisting) wherever possible.
+- Contextually encode output:
+  - HTML → `htmlspecialchars()`
+  - URL → `urlencode()`
+  - JS → escape with encoding libraries
+- Sanitize input on both client and server side.
+- Use frameworks or libraries that enforce automatic output encoding.
+
+## Testing Tools / Techniques
+
+- Manual input fuzzing
+- Burp Suite Intruder
+- OWASP ZAP
+- FuzzDB payloads
+
+## References
+
+- https://owasp.org/www-community/Input_Validation
+- https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html
+
+
 
