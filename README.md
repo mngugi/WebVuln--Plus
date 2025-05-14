@@ -7936,3 +7936,60 @@ print(resp.text if resp.status_code == 200 else "Blocked")
 - https://portswigger.net/web-security/ssrf
 - https://github.com/swisskyrepo/SSRFmap
 ---
+# WEBVULN-078: JSON Web Token (JWT) Misconfiguration
+
+## Category  
+Authentication / Token Handling
+
+## Vulnerability  
+**JWT Misconfiguration**
+
+## Description  
+JWTs are often used for stateless authentication. If poorly configured, they may lead to serious vulnerabilities such as accepting unsigned tokens, using weak keys, or failing to verify signature algorithms properly. Attackers can forge or tamper tokens to gain unauthorized access.
+
+Common issues:
+- `alg: none` attack (no signature verification)
+- Symmetric key reuse with asymmetric algorithms (e.g., using `HS256` with a public RSA key)
+- Expired tokens not being validated
+- Weak or hardcoded secret keys
+
+## Demo / Proof of Concept
+
+### Example Token Header
+```json
+{
+  "alg": "none",
+  "typ": "JWT"
+}
+```
+
+### Forged Token
+```
+eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJ1c2VyIjoiYWRtaW4ifQ.
+```
+
+If the backend fails to validate the signature, attacker gains admin access.
+
+## Mitigation
+
+- Always validate the signature using the correct algorithm.
+- Disallow `alg=none` in production.
+- Use strong, randomized secret keys.
+- Rotate keys regularly and support token revocation.
+- Validate token claims (e.g., expiration, issuer, audience).
+- Implement token blacklisting if needed.
+
+## Testing Tools / Techniques
+
+- jwt.io debugger
+- Burp Suite + JWT Editor extension
+- jwt_tool (by ticarpi)
+- Postman or curl with crafted JWTs
+
+## References
+
+- https://owasp.org/www-project-json-web-tokens/
+- https://portswigger.net/web-security/jwt
+- https://github.com/ticarpi/jwt_tool
+---
+
