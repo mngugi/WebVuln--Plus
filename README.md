@@ -1,5 +1,5 @@
-# 🌐 Welcome to the WebVuln-
-# WebVuln-
+# 🌐 Welcome to the WebVuln
+# WebVuln
 
 **WebVuln-** is a structured and practical documentation project focused on common web vulnerabilities. It includes detailed explanations, proof-of-concept demos, mitigations, testing tools, and references — making it a valuable resource for security researchers, developers, and learners.
 
