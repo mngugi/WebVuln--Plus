@@ -26,8 +26,6 @@ Each vulnerability is documented in a consistent format:
 - ...
 - WEBVULN-030: Insecure File Handling
 
-
-
 ---
 
 ## 📚 Goals
