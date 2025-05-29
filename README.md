@@ -228,7 +228,6 @@ An attacker can embed this into an image or hidden form on a malicious website:
 ```
 ### Result:
 
-
 If a logged-in user visits the attacker’s page, the browser sends the request with session cookies — and funds get transferred without the user’s knowledge.
 
 ***
@@ -291,7 +290,6 @@ echo shell_exec("ping -c 1 " . $host);
 ```
 ---
 **Malicious Input:**
-
 
 `127.0.0.1; whoami`
 
@@ -814,8 +812,6 @@ If the site blindly redirects to `url`, the user is taken to a malicious destina
 
 ---
 
----
-
 ### 📚 References
 
 - [OWASP: Open Redirect](https://owasp.org/www-community/attacks/Unvalidated_Redirects_and_Forwards)
@@ -857,7 +853,6 @@ XXE occurs when an XML input containing a reference to an external entity is pro
 - [OWASP: XXE Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
 - [PortSwigger: XXE Injection](https://portswigger.net/web-security/xxe)
 
----
 ***
 
 
@@ -907,7 +902,7 @@ Injecting SSI code into a vulnerable field:
 - [OWASP: SSI Injection](https://owasp.org/www-community/attacks/Server-Side_Includes_(SSI)_Injection)  
 - [PortSwigger: SSI Injection](https://portswigger.net/web-security/ssrf)  
 - [Apache SSI Guide](https://httpd.apache.org/docs/current/howto/ssi.html)
----
+  
 ***
 ## WEBVULN-014: HTTP Response Splitting
 
@@ -979,7 +974,7 @@ user_input = input("Enter filename: ")
 os.system(f"ls {user_input}")
 
 ```
-Exploit:
+**Exploit:**
 
 
 `Input: ; whoami`
