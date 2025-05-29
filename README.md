@@ -106,8 +106,7 @@ A login form vulnerable to SQL Injection uses the following query:
 SELECT * FROM users WHERE username = '$username' AND password = '$password';
 ```
 
-
-Password can be anything.
+- Password can be anything.
 
 ✅ **Effect:**  
 Bypasses authentication by always evaluating the WHERE clause as true.
@@ -143,7 +142,6 @@ You can simulate this vulnerability using:
 - OWASP SQL Injection  
 - PortSwigger: SQL Injection  
 - OWASP Cheat Sheet: SQL Injection Prevention
-
 
 
 ***
