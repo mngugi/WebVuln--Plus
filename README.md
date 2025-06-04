@@ -8589,3 +8589,71 @@ Security headers should evolve with application changes and emerging threats.
 - Regularly scan and audit headers after updates  
 - Educate developers on header importance and risks
 ---
+# 🛡️ Web Vulnerability #87: Clickjacking
+
+Clickjacking is a UI redress attack that tricks users into clicking on something different from what they perceive, potentially revealing confidential information or taking control actions unknowingly.
+
+**🧠 Impact**
+- Unauthorized Actions: Users may unknowingly perform actions like changing settings or making purchases.
+- Credential Theft: Attackers may capture sensitive input via disguised forms.
+- Reputation Damage: Users lose trust if your site enables clickjacking.
+
+**🛠️ Prevention & Mitigation**
+**✅ 1. Use X-Frame-Options Header ** 
+Prevents your site from being framed by other domains.
+- X-Frame-Options: DENY
+`or`
+
+X-Frame-Options: SAMEORIGIN
+
+
+✅ 2. Use Content Security Policy (CSP) Frame Ancestors Directive  
+More flexible and modern approach to control framing.
+
+Content-Security-Policy: frame-ancestors 'self' https://trustedpartner.com/;
+
+
+✅ 3. Frame Busting Scripts (Not Recommended)  
+JavaScript to prevent framing, but can be bypassed and is discouraged.
+
+
+```
+if (window.top !== window.self) {
+window.top.location = window.self.location;
+}
+
+```
+
+🔍 Detection
+- Manual Testing: Try framing the target site in an iframe on a different domain.
+- Automated Scanners: Tools like OWASP ZAP, Burp Suite detect missing frame options.
+
+🧰 Tools
+- OWASP ZAP
+- Burp Suite
+- SecurityHeaders.io (to check headers)
+
+📚 References
+- OWASP Clickjacking  
+- MDN Web Docs: X-Frame-Options  
+- RFC 7034
+
+🧾 Summary
+| Category           | Details                          |
+|--------------------|---------------------------------|
+| Risk               | Medium (Unauthorized UI actions)|
+| Ease of Exploitation| Easy                            |
+| Prevention         | Use X-Frame-Options or CSP      |
+| Testing            | Manual, automated scanners      |
+
+✅ Best Practices Checklist
+- Set X-Frame-Options header to DENY or SAMEORIGIN
+- Use Content-Security-Policy frame-ancestors directive
+- Avoid relying solely on frame-busting scripts
+- Test regularly for framing vulnerabilities
+---
+
+
+
+
+
