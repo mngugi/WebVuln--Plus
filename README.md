@@ -8324,108 +8324,105 @@ Track redirect patterns for abuse detection.
 - [x] Validate hostnames if external redirects are allowed  
 - [x] Log and monitor all redirect usage  
 ---
-# 🛡️ Web Vulnerability #84: Unrestricted File Upload
+
+### # 🛡️ Web Vulnerability #84: Unrestricted File Upload
 
 Uploaded shell is then accessed via:
-
-http
-Copy
-Edit
+```http
 http://vulnerable.example.com/uploads/shell.php?cmd=id
+```
+**🧠 Impact**
+* Remote Code Execution (RCE): Uploading executable code leads to full system compromise.
 
-🧠 Impact
-Remote Code Execution (RCE): Uploading executable code leads to full system compromise.
+* Website Defacement: Attackers replace pages or insert malicious scripts.
 
-Website Defacement: Attackers replace pages or insert malicious scripts.
+* Data Exfiltration: Access or steal sensitive files via uploaded scripts.
 
-Data Exfiltration: Access or steal sensitive files via uploaded scripts.
+* Privilege Escalation: Combined with other vulnerabilities to gain admin access.
 
-Privilege Escalation: Combined with other vulnerabilities to gain admin access.
-
-🛠️ Prevention & Mitigation
+**🛠️ Prevention & Mitigation**
 ✅ 1. Restrict File Types
 Allow only specific, non-executable MIME types and extensions (e.g. .jpg, .png, .pdf).
 
-python
-Copy
-Edit
+```python
+
 ALLOWED_EXTENSIONS = ['jpg', 'png', 'pdf']
 def is_allowed(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+```
+**✅ 2. Use File Content Inspection**
+- Validate file content matches the expected format using tools like magic or image processing libraries.
 
-✅ 2. Use File Content Inspection
-Validate file content matches the expected format using tools like magic or image processing libraries.
+**✅ 3. Store Outside Web Root**
+- Save uploaded files in directories not accessible by the web server.
 
-✅ 3. Store Outside Web Root
-Save uploaded files in directories not accessible by the web server.
+**✅ 4. Rename Uploaded Files**
+- Avoid using original filenames. Rename with random UUIDs to prevent path traversal or script execution.
 
-✅ 4. Rename Uploaded Files
-Avoid using original filenames. Rename with random UUIDs to prevent path traversal or script execution.
+**✅ 5. Apply Server-Side Validation**
+- Don't rely on client-side checks. Enforce size limits, file scans, and extension checks on the server.
 
-✅ 5. Apply Server-Side Validation
-Don't rely on client-side checks. Enforce size limits, file scans, and extension checks on the server.
+**✅ 6. Disable Script Execution**
+- Configure the web server to not execute uploaded files:
 
-✅ 6. Disable Script Execution
-Configure the web server to not execute uploaded files:
+`Apache (.htaccess)`
 
-Apache (.htaccess)
+```apacheconf
 
-apacheconf
-Copy
-Edit
 <Directory "/var/www/uploads">
     php_admin_flag engine off
 </Directory>
+```
+`Nginx`
 
-Nginx
+```nginx
 
-nginx
-Copy
-Edit
 location /uploads/ {
     default_type text/plain;
     autoindex off;
 }
+```
+**🔍 Detection**
+* Code Review: Look for file upload functions without validation.
 
-🔍 Detection
-Code Review: Look for file upload functions without validation.
+* Dynamic Testing: Upload files like .php, .jsp, .aspx and try to access them.
 
-Dynamic Testing: Upload files like .php, .jsp, .aspx and try to access them.
+* Fuzzing: Attempt uploading various payloads and content types.
 
-Fuzzing: Attempt uploading various payloads and content types.
+**🧰 Tools**
+* Burp Suite: Modify and intercept file upload requests.
 
-🧰 Tools
-Burp Suite: Modify and intercept file upload requests.
+* OWASP ZAP: Automated scanning.
 
-OWASP ZAP: Automated scanning.
+* ClamAV / VirusTotal API: Scan uploaded files.
 
-ClamAV / VirusTotal API: Scan uploaded files.
+* MagicBytes Checkers: To validate file headers.
 
-MagicBytes Checkers: To validate file headers.
+**📚 References**
+* OWASP: Unrestricted File Upload
 
-📚 References
-OWASP: Unrestricted File Upload
+* CWE-434: Unrestricted Upload of File with Dangerous Type
 
-CWE-434: Unrestricted Upload of File with Dangerous Type
+* OWASP Testing Guide - File Upload Testing
 
-OWASP Testing Guide - File Upload Testing
+**🧾 Summary**
+| Category          | Details                          |
+|-------------------|---------------------------------|
+| Risk              | Critical (Remote Code Execution)|
+| Ease of Exploitation | Moderate                      |
+| Prevention        | Strong validation and storage rules |
+| Testing           | Static, dynamic, manual         |
 
-🧾 Summary
-Category	Details
-Risk	Critical (Remote Code Execution)
-Ease of Exploitation	Moderate
-Prevention	Strong validation and storage rules
-Testing	Static, dynamic, manual
 
-✅ Best Practices Checklist
- Only allow safe file types and extensions
+**✅ Best Practices Checklist**
+ * Only allow safe file types and extensions
 
- Inspect file content (magic bytes, MIME)
+*  Inspect file content (magic bytes, MIME)
 
- Rename uploaded files to random names
+*  Rename uploaded files to random names
 
- Store uploads outside the web root
+*  Store uploads outside the web root
 
- Disable script execution in upload directories
+*  Disable script execution in upload directories
 
- Enforce server-side validation and file size limits
+*  Enforce server-side validation and file size limits
