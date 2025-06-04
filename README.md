@@ -8505,4 +8505,87 @@ Ensure web server and application have minimum permissions needed to operate.
 - Disable remote file inclusion features  
 - Sanitize and normalize file paths  
 - Limit file system permissions
+
+---
+# 🛡️ Web Vulnerability #86: Security Header Bypass
+
+Security headers are HTTP response headers that protect web applications from a variety of attacks by instructing browsers how to behave. A security header bypass occurs when these headers are missing, misconfigured, or overridden, allowing attackers to bypass protections like Content Security Policy (CSP), X-Frame-Options, and others.
+
+---
+
+## 🧠 Impact
+- **Cross-Site Scripting (XSS):** Without proper CSP, malicious scripts can execute.
+- **Clickjacking:** Missing or improper X-Frame-Options allows attackers to embed the site in frames.
+- **Man-in-the-Middle (MITM):** Lack of Strict-Transport-Security (HSTS) can lead to HTTPS stripping.
+- **Information Disclosure:** Missing headers like X-Content-Type-Options can enable MIME-sniffing attacks.
+
+---
+
+## 🛠️ Prevention & Mitigation
+
+✅ **1. Implement Essential Security Headers**
+
+| Header                 | Purpose                                               | Example                                  |
+|------------------------|-------------------------------------------------------|------------------------------------------|
+| Content-Security-Policy | Restrict resources/scripts the browser can load       | `Content-Security-Policy: default-src 'self'` |
+| X-Frame-Options         | Prevent clickjacking by controlling framing           | `X-Frame-Options: DENY`                   |
+| Strict-Transport-Security | Force HTTPS connections                               | `Strict-Transport-Security: max-age=31536000; includeSubDomains` |
+| X-Content-Type-Options  | Prevent MIME sniffing                                  | `X-Content-Type-Options: nosniff`        |
+| Referrer-Policy         | Control the Referer header                             | `Referrer-Policy: no-referrer-when-downgrade` |
+| Permissions-Policy      | Control browser features (e.g., geolocation, camera) | `Permissions-Policy: geolocation=()`     |
+
+✅ **2. Avoid Overriding Headers via JavaScript or Proxies**  
+Headers should be set server-side. Avoid client-side manipulation that may weaken security policies.
+
+✅ **3. Use CSP in Report-Only Mode for Testing**  
+Deploy CSP in `report-only` mode first to identify policy violations without blocking legitimate content.
+
+✅ **4. Regularly Review and Update Headers**  
+Security headers should evolve with application changes and emerging threats.
+
+---
+
+## 🔍 Detection
+
+- **Automated Scanners:** Tools like OWASP ZAP, Qualys SSL Labs, or securityheaders.com can identify missing or weak headers.
+- **Manual Testing:** Inspect HTTP response headers using browser developer tools or `curl -I https://example.com`.
+- **Penetration Testing:** Attempt attacks like clickjacking or XSS to check if headers effectively mitigate risks.
+
+---
+
+## 🧰 Tools
+
+- [SecurityHeaders.com](https://securityheaders.com/) — Quick header assessment  
+- OWASP ZAP — Automated security testing  
+- Burp Suite — Manual and automated web security testing  
+- Qualys SSL Labs — Tests HTTPS and related headers
+
+---
+
+## 📚 References
+
+- [OWASP Secure Headers Project](https://owasp.org/www-project-secure-headers/)  
+- [MDN Web Docs - HTTP Headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)  
+- [Mozilla Observatory](https://observatory.mozilla.org/)  
+
+---
+
+## 🧾 Summary
+
+| Category            | Details                                                  |
+|---------------------|----------------------------------------------------------|
+| Risk                | Medium to High (XSS, Clickjacking, MITM)                 |
+| Ease of Exploitation | Easy to Moderate                                         |
+| Prevention          | Properly configure and maintain security headers          |
+| Testing             | Static header checks, automated scanning, manual testing |
+
+---
+
+✅ **Best Practices Checklist**
+
+- Implement all essential security headers with strong policies  
+- Set headers server-side, avoid client-side overrides  
+- Use CSP report-only mode before enforcement  
+- Regularly scan and audit headers after updates  
+- Educate developers on header importance and risks
 ---
