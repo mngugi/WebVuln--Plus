@@ -8426,3 +8426,83 @@ location /uploads/ {
 *  Disable script execution in upload directories
 
 *  Enforce server-side validation and file size limits
+---
+# 🛡️ Web Vulnerability #85: File Inclusion Vulnerabilities
+
+File inclusion vulnerabilities occur when an application dynamically includes files without properly validating the input, allowing attackers to include unintended files. These can lead to remote code execution, data leakage, or full server compromise.
+
+---
+
+## 🧠 Impact
+- Remote Code Execution (RCE): Attackers can execute arbitrary code by including malicious files.
+- Information Disclosure: Access sensitive files like /etc/passwd or application config files.
+- Denial of Service: Including large or recursive files can crash the server.
+
+---
+
+## 🛠️ Prevention & Mitigation
+✅ 1. Validate Input Strictly  
+Allow only predefined filenames or whitelist specific files for inclusion.
+
+```python
+ALLOWED_FILES = ['header.php', 'footer.php', 'config.php']
+
+filename = request.args.get('page')
+if filename in ALLOWED_FILES:
+    include(filename)
+else:
+    abort(400)
+```
+✅ 2. Avoid User-Controlled Input in File Paths  
+Never directly use user input to build file paths for includes.
+
+✅ 3. Use Absolute Paths  
+Use absolute paths and sanitize input to prevent directory traversal attacks.
+
+✅ 4. Disable Remote File Includes  
+Configure the server or runtime environment to disallow remote file includes (e.g., PHP’s allow_url_include=Off).
+
+✅ 5. Implement Least Privilege  
+Ensure web server and application have minimum permissions needed to operate.
+
+---
+
+🔍 Detection  
+- Code Review: Look for include, require, or similar functions using user input.  
+- Dynamic Testing: Attempt to include local files (e.g., ../../etc/passwd) or remote URLs.  
+- Fuzzing: Test various input payloads that might trigger inclusion.
+
+---
+
+🧰 Tools  
+- Burp Suite / OWASP ZAP: To manipulate file include parameters.  
+- Static Analyzers: Checkmarx, RIPS, SonarQube.  
+- Web Application Firewalls (WAF): Can detect and block suspicious file path patterns.
+
+---
+
+📚 References  
+- OWASP: File Inclusion  
+- CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program  
+- CWE-23: Relative Path Traversal
+
+---
+
+🧾 Summary  
+
+| Category            | Details                          |
+|---------------------|---------------------------------|
+| Risk                | Critical (RCE, Data Disclosure) |
+| Ease of Exploitation | Moderate to Easy                |
+| Prevention          | Strict validation, disable remote includes |
+| Testing             | Static, dynamic, manual          |
+
+---
+
+✅ Best Practices Checklist  
+- Use whitelists for allowable files  
+- Never use user input directly in file paths  
+- Disable remote file inclusion features  
+- Sanitize and normalize file paths  
+- Limit file system permissions
+---
