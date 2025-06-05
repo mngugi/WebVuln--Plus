@@ -8624,21 +8624,21 @@ window.top.location = window.self.location;
 
 ```
 
-🔍 Detection
+**🔍 Detection**
 - Manual Testing: Try framing the target site in an iframe on a different domain.
 - Automated Scanners: Tools like OWASP ZAP, Burp Suite detect missing frame options.
 
-🧰 Tools
+**🧰 Tools**
 - OWASP ZAP
 - Burp Suite
 - SecurityHeaders.io (to check headers)
 
-📚 References
+**📚 References**
 - OWASP Clickjacking  
 - MDN Web Docs: X-Frame-Options  
 - RFC 7034
 
-🧾 Summary
+**🧾 Summary**
 | Category           | Details                          |
 |--------------------|---------------------------------|
 | Risk               | Medium (Unauthorized UI actions)|
@@ -8646,7 +8646,7 @@ window.top.location = window.self.location;
 | Prevention         | Use X-Frame-Options or CSP      |
 | Testing            | Manual, automated scanners      |
 
-✅ Best Practices Checklist
+**✅ Best Practices Checklist**
 - Set X-Frame-Options header to DENY or SAMEORIGIN
 - Use Content-Security-Policy frame-ancestors directive
 - Avoid relying solely on frame-busting scripts
