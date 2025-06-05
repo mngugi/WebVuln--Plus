@@ -7507,6 +7507,8 @@ Upon visiting the link, the user is redirected to the attacker’s site, which m
 - **Reject full URLs** in redirect parameters unless absolutely necessary.
 
 - **Encode and validate redirect destinations**:
+
+  
   ```python
   # Flask example
   allowed_paths = ['/dashboard', '/home']
@@ -7520,7 +7522,7 @@ Upon visiting the link, the user is redirected to the attacker’s site, which m
 
 ## Testing Tools / Techniques
 
-- **Manual testing** with modified redirect URLs.
+- **Manual testing** -  with modified redirect URLs.
 - **Burp Suite** – Use Repeater to manipulate the `redirect` parameter.
 - **Static code analysis** – Check for use of `redirect(url)` or similar functions without validation.
 
@@ -8647,6 +8649,7 @@ window.top.location = window.self.location;
 | Testing            | Manual, automated scanners      |
 
 **✅ Best Practices Checklist**
+
 - Set X-Frame-Options header to DENY or SAMEORIGIN
 - Use Content-Security-Policy frame-ancestors directive
 - Avoid relying solely on frame-busting scripts
