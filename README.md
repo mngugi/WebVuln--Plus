@@ -8601,7 +8601,9 @@ Clickjacking is a UI redress attack that tricks users into clicking on something
 - Reputation Damage: Users lose trust if your site enables clickjacking.
 
 **🛠️ Prevention & Mitigation**
-**✅ 1. Use X-Frame-Options Header ** 
+
+**✅ 1. Use X-Frame-Options Header** 
+
 Prevents your site from being framed by other domains.
 - X-Frame-Options: DENY
 `or`
