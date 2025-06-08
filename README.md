@@ -90,7 +90,7 @@ This project is licensed under the MIT License.
 ---
 
 ### 🔹 WebVuln-001: SQL Injection
-
+---
 **Category:**  
 Injection
 
@@ -144,7 +144,6 @@ You can simulate this vulnerability using:
 - OWASP SQL Injection  
 - PortSwigger: SQL Injection  
 - OWASP Cheat Sheet: SQL Injection Prevention
-
 
 
 ***
