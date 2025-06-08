@@ -108,7 +108,6 @@ A login form vulnerable to SQL Injection uses the following query:
 SELECT * FROM users WHERE username = '$username' AND password = '$password';
 ```
 
-
 Password can be anything.
 
 ✅ **Effect:**  
