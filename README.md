@@ -8826,3 +8826,53 @@ API abuse occurs when attackers exploit the intended functionality of an API in 
 - 📘 NIST SP 800-204: Security Strategies for Microservices-Based Application Systems  
 
 ---
+## Authentication Bypass
+
+***
+# Web Vulnerability #92: 🧠 Insecure "Remember Me" Functionality
+
+**Description:**  
+The "Remember Me" feature is commonly used to keep users logged in across sessions without requiring them to re-enter their credentials. However, if implemented insecurely, this functionality can expose users to significant security risks such as session hijacking, credential theft, or unauthorized access.
+
+🚨 Insecure "Remember Me" implementations often rely on poorly protected tokens, predictable identifiers, or long-lived cookies that are not adequately bound to the user or device.
+
+**Risk:**  
+⚠️ Medium to High (depending on implementation)
+
+**Impact:**  
+- 🔓 Unauthorized account access  
+- 🕵️ Session hijacking via stolen tokens  
+- 🐾 Device impersonation  
+- 📂 Exposure of sensitive data without re-authentication  
+
+**Affected Components:**  
+- 🍪 Authentication cookies or tokens  
+- 🔐 Token storage and validation mechanisms  
+- 🧩 Session handling logic  
+
+**Steps to Reproduce:**  
+1. ✅ Log into the application and enable the "Remember Me" checkbox.  
+2. 🕵️ Extract the authentication cookie or token from browser storage.  
+3. 💻 Replay the token on another browser or device.  
+4. 🔐 Observe if access is granted without re-authentication, even on unauthorized devices.  
+
+**Common Weaknesses:**  
+- 📅 Tokens with extremely long or no expiration dates  
+- 🔁 Reusable tokens without rotation  
+- 📦 Tokens stored insecurely in localStorage or cookies without the HttpOnly/secure flags  
+- ❌ No device/user binding (e.g., IP, device fingerprint, user agent)  
+
+**Mitigation:**  
+- 🛡️ Use short-lived, rotating tokens tied to specific devices  
+- 🔒 Store tokens securely with `HttpOnly` and `Secure` flags  
+- 📵 Invalidate tokens on logout or unusual activity (e.g., IP change)  
+- 🧠 Re-authenticate users for sensitive actions, even if remembered  
+- 📊 Monitor for abuse patterns involving persistent login tokens  
+
+**References:**  
+- 📘 OWASP Authentication Cheat Sheet  
+- 📘 OWASP Session Management Cheat Sheet  
+- 📘 OWASP Top 10: A2 – Broken Authentication  
+---
+
+
