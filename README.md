@@ -8778,4 +8778,51 @@ Business logic vulnerabilities arise when an attacker exploits flaws in the inte
 - OWASP Business Logic Security  
 - CWE-840: Business Logic Errors  
 
+---
+# Web Vulnerability #91: 🔌 API Abuse
 
+**Description:**  
+API abuse occurs when attackers exploit the intended functionality of an API in unintended ways to gain unauthorized access, extract excessive data, disrupt services, or bypass business logic. APIs are often under-secured, making them prime targets for automation, scraping, fuzzing, or logic abuse.
+
+🔓 Unlike traditional exploits, API abuse typically involves using valid requests at an abnormal scale or sequence to break intended use flows or overwhelm the system.
+
+**Risk:**  
+🚨 High
+
+**Impact:**  
+- 📤 Mass data extraction (data scraping or leakage)  
+- 🔁 Abuse of paid features or rate-limited endpoints  
+- 📉 Service degradation or denial of service (DoS)  
+- 👮 Bypass of authentication or authorization mechanisms  
+
+**Affected Components:**  
+- 🌐 Public and internal APIs  
+- 🔐 Authentication and authorization layers  
+- 💰 Billing and quota systems  
+- 🧠 Business logic workflows  
+
+**Steps to Reproduce:**  
+1. 🔍 Analyze API documentation or capture traffic using tools like Postman or Burp Suite.  
+2. 🧪 Identify endpoints that return sensitive data, lack rate limits, or behave inconsistently.  
+3. 🤖 Automate requests or modify parameters to exceed normal usage.  
+4. 🧾 Observe whether the application responds with unintended data, behavior, or allows abuse of business logic.  
+
+**Example Attack Scenarios:**  
+- 📑 Scraping large volumes of user or product data  
+- 💸 Repeatedly triggering promotional or discount codes via API  
+- 🚪 Circumventing mobile-only features using direct API calls  
+- 📶 Sending high volumes of API calls to exhaust system resources  
+
+**Mitigation:**  
+- 🔐 Implement strong authentication and authorization checks for every API request  
+- 📈 Apply strict rate limiting and quotas per user/IP/app  
+- 🧱 Use Web Application Firewalls (WAFs) and API Gateways to detect and block abuse patterns  
+- 🚨 Log and monitor API traffic for unusual behavior and anomalies  
+- 🛠️ Obfuscate or restrict public API documentation where possible  
+
+**References:**  
+- 📘 OWASP API Security Top 10  
+- 📘 OWASP API Security Cheat Sheet  
+- 📘 NIST SP 800-204: Security Strategies for Microservices-Based Application Systems  
+
+---
