@@ -8654,81 +8654,128 @@ window.top.location = window.self.location;
 - Test regularly for framing vulnerabilities
 ---
 
-# Web Vulnerability #88: Inadequate Session Timeout
+# Web Vulnerability #88: ⏳ Inadequate Session Timeout
 
 **Description:**  
-Inadequate session timeout refers to the failure of a web application to properly invalidate user sessions after a period of inactivity. This allows an attacker to potentially hijack a valid session if it remains active beyond a reasonable time limit. Sessions that never expire or that last excessively long increase the risk of unauthorized access, especially on shared or public devices.
+Inadequate session timeout refers to the failure of a web application to properly invalidate user sessions after a period of inactivity. This allows an attacker to potentially hijack a valid session if it remains active beyond a reasonable time limit. 🕵️‍♂️ Sessions that never expire or that last excessively long increase the risk of unauthorized access, especially on shared or public devices.
 
 **Risk:**  
-High
+🚨 High
 
 **Impact:**  
-- Unauthorized access to user accounts  
-- Data theft or manipulation  
-- Session hijacking attacks  
-- Prolonged exposure of user credentials or session tokens  
+- 🔓 Unauthorized access to user accounts  
+- 🛑 Data theft or manipulation  
+- 🎭 Session hijacking attacks  
+- 🧾 Prolonged exposure of user credentials or session tokens  
 
 **Affected Components:**  
-- Session management module  
-- Authentication mechanism  
-- Application timeout settings  
+- 🧩 Session management module  
+- 🔐 Authentication mechanism  
+- 🕰️ Application timeout settings  
 
 **Steps to Reproduce:**  
-1. Log into the application with valid credentials.  
-2. Remain inactive for an extended period (e.g., 30 minutes to several hours).  
-3. Attempt to use the session again without re-authenticating.  
-4. Observe that the session is still valid and the application has not logged the user out.  
+1. 🔑 Log into the application with valid credentials.  
+2. ⌛ Remain inactive for an extended period (e.g., 30 minutes to several hours).  
+3. 🔄 Attempt to use the session again without re-authenticating.  
+4. 🚪 Observe that the session is still valid and the application has not logged the user out.  
 
 **Mitigation:**  
-- Implement strict session timeout policies (e.g., auto logout after 15–30 minutes of inactivity).  
-- Revalidate sessions on critical actions such as payments, settings changes, or data exports.  
-- Use server-side session expiration controls, not just client-side JavaScript timers.  
-- Clearly inform users when a session is about to expire and allow secure reauthentication if needed.  
+- 🕵️ Implement strict session timeout policies (e.g., auto logout after 15–30 minutes of inactivity).  
+- 🔁 Revalidate sessions on critical actions such as payments, settings changes, or data exports.  
+- 🖥️ Use server-side session expiration controls, not just client-side JavaScript timers.  
+- ⚠️ Clearly inform users when a session is about to expire and allow secure reauthentication if needed.  
 
 **References:**  
-- OWASP Session Management Cheat Sheet  
-- OWASP Top 10: A2 – Broken Authentication  
-- NIST SP 800-63B Digital Identity Guidelines – Session Management  
+- 📘 OWASP Session Management Cheat Sheet  
+- 📘 OWASP Top 10: A2 – Broken Authentication  
+- 📘 NIST SP 800-63B Digital Identity Guidelines – Session Management  
 
 ---
-# Web Vulnerability #89: Insufficient Logging and Monitoring
+
+# Web Vulnerability #89: 📉 Insufficient Logging and Monitoring
 
 **Description:**  
-Insufficient logging and monitoring occurs when a web application fails to properly log security-relevant events or does not monitor those logs for suspicious activity. This limits the ability of system administrators to detect, investigate, and respond to attacks in a timely manner. Without adequate logs, intrusion attempts and successful breaches may go unnoticed.
+Insufficient logging and monitoring occurs when a web application fails to properly log security-relevant events or does not monitor those logs for suspicious activity. This limits the ability of system administrators to detect, investigate, and respond to attacks in a timely manner. 🕶️ Without adequate logs, intrusion attempts and successful breaches may go unnoticed.
 
 **Risk:**  
-High
+🚨 High
 
 **Impact:**  
-- Delayed detection of breaches  
-- Inability to perform forensic analysis  
-- Failure to comply with auditing and regulatory requirements  
-- Increased damage due to undetected malicious activity  
+- 🕑 Delayed detection of breaches  
+- 🧪 Inability to perform forensic analysis  
+- 📋 Failure to comply with auditing and regulatory requirements  
+- 🔍 Increased damage due to undetected malicious activity  
 
 **Affected Components:**  
-- Server-side logging mechanisms  
-- Security event monitoring systems  
-- Intrusion detection systems (IDS)  
-- Administrative dashboards and alerts  
+- 📂 Server-side logging mechanisms  
+- 📡 Security event monitoring systems  
+- 🛡️ Intrusion detection systems (IDS)  
+- 🖥️ Administrative dashboards and alerts  
 
 **Steps to Reproduce:**  
-1. Attempt a common attack (e.g., SQL injection, brute-force login).  
-2. Check server logs and administrative interfaces.  
-3. Observe that the event was not logged or no alert was generated.  
-4. Verify that no real-time monitoring or alerting mechanisms responded to the suspicious activity.  
+1. ⚔️ Attempt a common attack (e.g., SQL injection, brute-force login).  
+2. 📁 Check server logs and administrative interfaces.  
+3. 🚫 Observe that the event was not logged or no alert was generated.  
+4. ❌ Verify that no real-time monitoring or alerting mechanisms responded to the suspicious activity.  
 
 **Mitigation:**  
-- Implement detailed logging for authentication attempts, permission changes, input validation failures, and access to sensitive data.  
-- Store logs in a secure, tamper-proof location.  
-- Set up real-time monitoring and alerting systems to detect anomalies.  
-- Regularly review and analyze logs for signs of compromise.  
-- Ensure logging covers all tiers of the application, including APIs, backend services, and databases.  
+- 📝 Implement detailed logging for authentication attempts, permission changes, input validation failures, and access to sensitive data.  
+- 🔒 Store logs in a secure, tamper-proof location.  
+- ⏰ Set up real-time monitoring and alerting systems to detect anomalies.  
+- 📊 Regularly review and analyze logs for signs of compromise.  
+- 🧱 Ensure logging covers all application tiers: APIs, backend services, and databases.  
 
 **References:**  
-- OWASP Logging Cheat Sheet  
-- OWASP Top 10: A10 – Insufficient Logging & Monitoring  
-- NIST SP 800-92: Guide to Computer Security Log Management  
----
+- 📘 OWASP Logging Cheat Sheet  
+- 📘 OWASP Top 10: A10 – Insufficient Logging & Monitoring  
+- 📘 NIST SP 800-92: Guide to Computer Security Log Management  
 
+***
+# Web Vulnerability #90: 🧠 Business Logic Vulnerabilities
+
+**Description:**  
+Business logic vulnerabilities arise when an attacker exploits flaws in the intended workflow or process rules of a web application. These are not traditional security bugs like XSS or SQL injection, but logical loopholes that allow actions the system was not intended to permit.
+
+🛠️ These issues often stem from improper enforcement of rules such as pricing, authentication flow, authorization, or transactional limits.
+
+**Risk:**  
+🚨 High
+
+**Impact:**  
+- 🛒 Unauthorized discounts or free products  
+- 💸 Financial fraud or bypass of payment  
+- 🔐 Unauthorized access to restricted features  
+- 📉 Reputational damage due to broken trust  
+
+**Affected Components:**  
+- 🧾 Payment workflows  
+- 🔁 Order processing  
+- 📦 Inventory systems  
+- 🔐 Access control logic  
+- 📝 User account and subscription handling  
+
+**Steps to Reproduce:**  
+1. Analyze the business workflow (e.g., shopping cart, registration process).  
+2. Identify assumptions or rules (e.g., "discount applies only once").  
+3. Try to bypass or abuse those rules (e.g., apply the discount multiple times).  
+4. Observe if the application allows actions that violate intended logic.  
+
+**Example Attack Scenarios:**  
+- 🔁 Repeated use of one-time coupons  
+- 💳 Skipping payment step via crafted HTTP requests  
+- 🧮 Manipulating product quantities or prices client-side  
+- 📧 Registering with unverified emails to access premium features  
+
+**Mitigation:**  
+- 🔍 Perform threat modeling to identify abuse cases  
+- 🛡️ Enforce business rules strictly on the server side  
+- 📊 Implement logging and alerts for unusual patterns  
+- 🔄 Regularly audit workflows and permission boundaries  
+- 👥 Include product managers in security reviews to validate logic assumptions  
+
+**References:**  
+- OWASP Top 10: A05 – Security Misconfiguration  
+- OWASP Business Logic Security  
+- CWE-840: Business Logic Errors  
 
 
