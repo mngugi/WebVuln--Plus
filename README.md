@@ -8875,4 +8875,50 @@ The "Remember Me" feature is commonly used to keep users logged in across sessio
 - 📘 OWASP Top 10: A2 – Broken Authentication  
 ---
 
+# Web Vulnerability #93: 🤖 CAPTCHA Bypass
 
+**Description:**  
+CAPTCHAs are designed to distinguish between human users and bots to prevent automated abuse. However, weak or poorly implemented CAPTCHA mechanisms can be bypassed, rendering them ineffective against spam, brute-force attacks, or account enumeration.
+
+🧠 CAPTCHA bypass vulnerabilities typically occur due to predictable logic, flawed validation, or the ability to skip CAPTCHA altogether through direct API access or replayed tokens.
+
+**Risk:**  
+⚠️ Medium to High
+
+**Impact:**  
+- 🧪 Automated brute-force or credential stuffing attacks  
+- 🗑️ Spam submissions on forms, comments, or signups  
+- 🕵️ User enumeration and scraping  
+- 🪫 Decreased security and system overload due to bot traffic  
+
+**Affected Components:**  
+- 🧩 CAPTCHA challenge and validation system  
+- 🔗 Frontend forms (login, registration, contact)  
+- 🔐 API endpoints relying on CAPTCHA  
+- 🔁 Session and token handling  
+
+**Steps to Reproduce:**  
+1. 🔍 Identify a form protected by CAPTCHA (e.g., login or registration).  
+2. 🧪 Attempt to submit the form without solving or interacting with the CAPTCHA.  
+3. 📡 Observe if the backend still processes the request.  
+4. 🔁 Try using automated tools or scripts to repeat the action.  
+5. 🤖 Confirm whether the CAPTCHA can be bypassed or solved by bots.  
+
+**Common Bypass Techniques:**  
+- ⛔ Disabling or skipping client-side validation  
+- 🧱 Direct API access that doesn't enforce CAPTCHA  
+- 🧾 Reusing previously solved CAPTCHA tokens  
+- 🔄 Using OCR or AI services to solve visual CAPTCHAs automatically  
+
+**Mitigation:**  
+- 🔐 Validate CAPTCHA server-side, not just in JavaScript  
+- 📉 Apply rate limiting and IP throttling even when CAPTCHA is used  
+- 🔁 Rotate and expire CAPTCHA tokens quickly  
+- 📊 Use behavior analysis or device fingerprinting in addition to CAPTCHA  
+- 💡 Implement stronger CAPTCHAs (e.g., reCAPTCHA v3 with score-based decisions)  
+
+**References:**  
+- 📘 OWASP Automated Threats to Web Applications  
+- 📘 OWASP Cheat Sheet: Blocking Automated Web Application Attacks  
+- 📘 Google reCAPTCHA Documentation  
+---
