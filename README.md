@@ -8656,6 +8656,41 @@ window.top.location = window.self.location;
 - Test regularly for framing vulnerabilities
 ---
 
+# Web Vulnerability #88: Inadequate Session Timeout
+
+**Description:**  
+Inadequate session timeout refers to the failure of a web application to properly invalidate user sessions after a period of inactivity. This allows an attacker to potentially hijack a valid session if it remains active beyond a reasonable time limit. Sessions that never expire or that last excessively long increase the risk of unauthorized access, especially on shared or public devices.
+
+**Risk:**  
+High
+
+**Impact:**  
+- Unauthorized access to user accounts  
+- Data theft or manipulation  
+- Session hijacking attacks  
+- Prolonged exposure of user credentials or session tokens  
+
+**Affected Components:**  
+- Session management module  
+- Authentication mechanism  
+- Application timeout settings  
+
+**Steps to Reproduce:**  
+1. Log into the application with valid credentials.  
+2. Remain inactive for an extended period (e.g., 30 minutes to several hours).  
+3. Attempt to use the session again without re-authenticating.  
+4. Observe that the session is still valid and the application has not logged the user out.  
+
+**Mitigation:**  
+- Implement strict session timeout policies (e.g., auto logout after 15–30 minutes of inactivity).  
+- Revalidate sessions on critical actions such as payments, settings changes, or data exports.  
+- Use server-side session expiration controls, not just client-side JavaScript timers.  
+- Clearly inform users when a session is about to expire and allow secure reauthentication if needed.  
+
+**References:**  
+- OWASP Session Management Cheat Sheet  
+- OWASP Top 10: A2 – Broken Authentication  
+- NIST SP 800-63B Digital Identity Guidelines – Session Management  
 
 
 
