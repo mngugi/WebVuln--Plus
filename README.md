@@ -26,8 +26,6 @@ Each vulnerability is documented in a consistent format:
 - ...
 - WEBVULN-030: Insecure File Handling
 
-
-
 ---
 
 ## 📚 Goals
@@ -8692,6 +8690,45 @@ High
 - OWASP Top 10: A2 – Broken Authentication  
 - NIST SP 800-63B Digital Identity Guidelines – Session Management  
 
+---
+# Web Vulnerability #89: Insufficient Logging and Monitoring
+
+**Description:**  
+Insufficient logging and monitoring occurs when a web application fails to properly log security-relevant events or does not monitor those logs for suspicious activity. This limits the ability of system administrators to detect, investigate, and respond to attacks in a timely manner. Without adequate logs, intrusion attempts and successful breaches may go unnoticed.
+
+**Risk:**  
+High
+
+**Impact:**  
+- Delayed detection of breaches  
+- Inability to perform forensic analysis  
+- Failure to comply with auditing and regulatory requirements  
+- Increased damage due to undetected malicious activity  
+
+**Affected Components:**  
+- Server-side logging mechanisms  
+- Security event monitoring systems  
+- Intrusion detection systems (IDS)  
+- Administrative dashboards and alerts  
+
+**Steps to Reproduce:**  
+1. Attempt a common attack (e.g., SQL injection, brute-force login).  
+2. Check server logs and administrative interfaces.  
+3. Observe that the event was not logged or no alert was generated.  
+4. Verify that no real-time monitoring or alerting mechanisms responded to the suspicious activity.  
+
+**Mitigation:**  
+- Implement detailed logging for authentication attempts, permission changes, input validation failures, and access to sensitive data.  
+- Store logs in a secure, tamper-proof location.  
+- Set up real-time monitoring and alerting systems to detect anomalies.  
+- Regularly review and analyze logs for signs of compromise.  
+- Ensure logging covers all tiers of the application, including APIs, backend services, and databases.  
+
+**References:**  
+- OWASP Logging Cheat Sheet  
+- OWASP Top 10: A10 – Insufficient Logging & Monitoring  
+- NIST SP 800-92: Guide to Computer Security Log Management  
+---
 
 
 
