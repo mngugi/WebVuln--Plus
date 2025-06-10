@@ -8976,7 +8976,75 @@ Blind SSRF occurs when an attacker is able to make the server perform HTTP reque
 - 📘 OWASP Top 10: A10 – Server-Side Request Forgery  
 - 📘 PortSwigger Guide to SSRF  
 - 📘 AWS Security Best Practices: Metadata Protection  
+
 ---
+
+# Web Vulnerability #94: ⏱️ Time-Based Blind SSRF
+
+**Description:**  
+Time-based Blind SSRF is a special class of Server-Side Request Forgery where the attacker cannot see the server’s response but infers behavior based on response **timing delays**. By forcing the server to make a request to a URL that takes a long time to respond, an attacker can confirm the presence of a blind SSRF vulnerability through **measurable latency**.
+
+🔍 This technique is useful when no direct response is returned and no out-of-band channels (like DNS logs) are available. Timing is the only clue!
+
+**Risk:**  
+🚨 High
+
+**Impact:**  
+- 🔓 Internal network scanning  
+- ☁️ Access to cloud metadata endpoints  
+- ⌛ Enumeration of internal services via port probing  
+- 🕵️ Covert exfiltration or discovery without detection  
+
+**Affected Components:**  
+- 🌐 HTTP clients used in backend (e.g., file import, link preview)  
+- 📦 SSRF-prone services (e.g., URL fetchers, SSRF-vulnerable APIs)  
+- 🛠️ Microservices making internal HTTP calls  
+- 📡 Cloud environments with exposed metadata endpoints  
+
+**Steps to Reproduce (with delay-based PoC):**  
+1. 🎯 Locate an endpoint that makes a backend HTTP request using user input.
+2. 🔗 Inject a URL that connects to an internal or attacker-controlled address that **intentionally delays** the response.
+3. ⏱️ Measure the response time of the vulnerable endpoint.
+4. ✅ Confirm SSRF if a noticeable delay matches the timing of your test URL.
+
+**Example Payload (using a delay service):**
+`http://vulnerable-site.com/preview?url=http://internal-ip-or-slow-server.com:80/`
+
+
+🧪 Or using a delay endpoint:
+
+`http://vulnerable-site.com/preview?url=http://attacker.com/delay?time=10`
+---
+```csharp
+
+
+**Sample Attacker-Side Delay Server (Node.js):**
+```js
+const http = require('http');
+
+http.createServer((req, res) => {
+  setTimeout(() => {
+    res.end('Delayed Response');
+  }, 10000); // 10 seconds
+}).listen(80);
+
+```
+🕵️ When the server waits exactly 10 seconds before returning a response, the attacker confirms the SSRF.
+
+**Mitigation:**
+
+📋 Whitelist allowed domains and schemes (e.g., only HTTPS)  
+🔐 Block requests to internal IP ranges (127.0.0.1, 169.254.169.254, 10.0.0.0/8)  
+🚫 Deny access to cloud metadata endpoints  
+🧱 Use SSRF-aware libraries with built-in protections  
+📡 Monitor outbound traffic and alert on unusual destinations or long response times
+
+**References:**
+
+📘 OWASP SSRF Prevention Cheat Sheet  
+📘 PortSwigger SSRF Labs  
+📘 Cloud Security Alliance – Metadata Service Attacks  
+
 
 
 
