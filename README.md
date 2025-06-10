@@ -9014,7 +9014,9 @@ Time-based Blind SSRF is a special class of Server-Side Request Forgery where th
 🧪 Or using a delay endpoint:
 
 `http://vulnerable-site.com/preview?url=http://attacker.com/delay?time=10`
+
 ---
+
 ```csharp
 
 
@@ -9045,7 +9047,7 @@ http.createServer((req, res) => {
 📘 PortSwigger SSRF Labs  
 📘 Cloud Security Alliance – Metadata Service Attacks  
 
-
+---
 
 
 
