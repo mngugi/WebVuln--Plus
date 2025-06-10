@@ -8826,7 +8826,9 @@ API abuse occurs when attackers exploit the intended functionality of an API in 
 - 📘 NIST SP 800-204: Security Strategies for Microservices-Based Application Systems  
 
 ---
-## Authentication Bypass
+PART XII 
+---
+# Authentication Bypass
 
 ***
 # Web Vulnerability #92: 🧠 Insecure "Remember Me" Functionality
@@ -8922,3 +8924,5 @@ CAPTCHAs are designed to distinguish between human users and bots to prevent aut
 - 📘 OWASP Cheat Sheet: Blocking Automated Web Application Attacks  
 - 📘 Google reCAPTCHA Documentation  
 ---
+
+
