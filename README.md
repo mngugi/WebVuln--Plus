@@ -8924,5 +8924,61 @@ CAPTCHAs are designed to distinguish between human users and bots to prevent aut
 - 📘 OWASP Cheat Sheet: Blocking Automated Web Application Attacks  
 - 📘 Google reCAPTCHA Documentation  
 ---
+# PART XIII
+
+## Server - Side  Request Forgery (SSRF) Types
+
+---
+
+# Web Vulnerability #94: 👁️‍🗨️ Blind Server-Side Request Forgery (SSRF)
+
+**Description:**  
+Blind SSRF occurs when an attacker is able to make the server perform HTTP requests to internal or external resources without seeing the response. Unlike standard SSRF, the attacker doesn't directly observe the server's response but can infer behavior through side effects such as time delays, DNS lookups, or error codes.
+
+🎯 This makes Blind SSRF more difficult to detect and exploit but just as dangerous, especially in cloud-native environments where internal metadata endpoints can be targeted.
+
+**Risk:**  
+🚨 High
+
+**Impact:**  
+- 🔐 Access to internal systems/services not exposed publicly  
+- 🧾 Exfiltration of internal data via DNS or third-party services  
+- ☁️ Access to cloud metadata services (e.g., AWS, GCP, Azure)  
+- 📡 Port scanning or pivoting to restricted internal networks  
+
+**Affected Components:**  
+- 🌐 URL-fetching services (PDF generators, image fetchers, link previewers)  
+- 🔗 Third-party integrations  
+- 🔒 Internal-only resources reachable by backend servers  
+- ☁️ Cloud metadata endpoints (e.g., `http://169.254.169.254`)  
+
+**Steps to Reproduce (Blind):**  
+1. 🌍 Identify an input that results in server-side URL fetching (e.g., webhook, file import, image load).  
+2. 🧪 Provide a URL pointing to an attacker-controlled domain (e.g., `http://attacker.com`).  
+3. 🔍 Monitor DNS logs, out-of-band systems, or server timing (e.g., time delays for `http://10.0.0.1`).  
+4. 👁️ Confirm server-side interaction even without seeing the direct response.  
+
+**Blind SSRF Indicators:**  
+- 📉 Long response delays from internal network probing  
+- 📬 DNS queries to attacker-controlled domain  
+- ⛔ Outbound requests seen on firewall logs  
+- 📊 Behavioral side effects (e.g., unexpected backend errors or logs)  
+
+**Mitigation:**  
+- 🧱 Use strict allowlists for outbound requests  
+- 🔍 Validate and sanitize all user-supplied URLs server-side  
+- 🛡️ Block access to internal IP ranges and sensitive metadata endpoints  
+- 📡 Log all outbound requests and alert on suspicious destinations  
+- ☁️ Configure cloud platforms to disable metadata access where not needed  
+
+**References:**  
+- 📘 OWASP SSRF Prevention Cheat Sheet  
+- 📘 OWASP Top 10: A10 – Server-Side Request Forgery  
+- 📘 PortSwigger Guide to SSRF  
+- 📘 AWS Security Best Practices: Metadata Protection  
+---
+
+
+
 
 
