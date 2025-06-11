@@ -9287,6 +9287,107 @@ Content-Disposition: attachment; filename="safe.txt"
 
 ---
 
+# Web Vulnerability #99: Content Security Policy (CSP) Bypass
+
+**Vulnerability Type:** Web Application Misconfiguration / Client-Side Defense Bypass
+
+**Discovery Date:** [Insert Date]
+
+**Location:** HTTP response headers or `<meta>` CSP directives
+
+---
+
+## Description
+
+Content Security Policy (CSP) is a browser feature used to prevent certain types of attacks like Cross-Site Scripting (XSS), clickjacking, and data injection. It works by restricting which sources of content (scripts, styles, images, etc.) are permitted to load and execute.
+
+A **CSP Bypass** occurs when the policy is misconfigured, overly permissive, or when attackers find ways to circumvent it via clever payloads or fallback behavior.
+
+---
+
+## Common Bypass Techniques
+
+### 1. Wildcard Domains
+
+Permitting wide access like:
+
+script-src *;
+
+Allows JavaScript from any domain — effectively nullifying CSP.
+
+### 2. `unsafe-inline` or `unsafe-eval`
+
+Allowing inline scripts or `eval()` in a policy:
+
+script-src 'self' 'unsafe-inline' 'unsafe-eval';
+
+
+Negates most XSS protections.
+
+### 3. JSONP or Open Redirects
+
+Using trusted third-party scripts that return attacker-controlled JavaScript:
+
+Example CSP:
+`script-src 'self' https://api.trusted.com;`
+
+
+Exploit via:
+`https://api.trusted.com/jsonp?callback=alert(1)`
+
+
+### 4. CSP via Meta Tags (not enforced early)
+
+Defining CSP via `<meta http-equiv="Content-Security-Policy">` instead of HTTP headers can delay enforcement, allowing initial script execution.
+
+---
+
+## Proof of Concept (PoC)
+
+### Scenario: CSP with JSONP trusted domain
+
+**CSP header:**
+
+Content-Security-Policy: script-src 'self' https://trusted.com/;
+
+**Attacker payload:**
+
+```html
+<script src="https://trusted.com/jsonp?callback=alert"></script>
+```
+If trusted.com reflects callback as JavaScript, CSP is bypassed.
+
+## Impact
+
+- **XSS despite CSP**: Attackers can execute malicious JavaScript.
+- **Data theft**: Sensitive information like tokens or credentials can be stolen.
+- **Session hijacking**: Cookies or session data can be accessed.
+- **Clickjacking and UI Redress**: If CSP does not include `frame-ancestors` restriction.
+
+## Mitigation
+
+- Avoid using wildcards (`*`) in `script-src`, `style-src`, or `connect-src`.
+- Remove `unsafe-inline` and `unsafe-eval` wherever possible.
+- Serve a strict CSP via HTTP headers, not just `<meta>` tags.
+- Use Subresource Integrity (SRI) for third-party scripts.
+- Define fallback directives (`default-src 'none'`) and add:
+
+base-uri 'none';
+object-src 'none';
+frame-ancestors 'none';
+
+- Test CSP using browser developer tools and security scanners.
+
+## References
+
+- OWASP CSP Bypass Cheatsheet: https://owasp.org/www-community/attacks/Content_Security_Policy_CSP_Bypass
+- Mozilla Developer Network (MDN): https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
+- Google CSP Evaluator: https://csp-evaluator.withgoogle.com/
+- PortSwigger: https://portswigger.net/research/bypassing-csp-using-polyglot-payloads
+
+
+
+
 
 
 
