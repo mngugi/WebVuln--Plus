@@ -9049,6 +9049,80 @@ http.createServer((req, res) => {
 
 ---
 
+# Web Vulnerability #96: Content Spoofing
+
+**Vulnerability Type:** Content Spoofing (a.k.a. Content Injection)
+
+**Discovery Date:** [Insert Date]
+
+**Location:** Public-facing web page that reflects user input (e.g., `https://example.com/news?article=latest`)
+
+---
+
+## Description
+
+Content Spoofing occurs when a web application improperly reflects user-supplied input in such a way that it appears to be legitimate site content. This can trick users into believing fake messages, links, or interface elements are trustworthy and originate from the actual website, enabling phishing or social engineering attacks.
+
+This vulnerability typically exploits reflected parameters in the URL or improperly sanitized query strings that alter page content.
+
+---
+
+## Proof of Concept (PoC)
+
+**Target URL:**
+
+`https://victimsite.com/info?msg=Welcome+to+our+new+secure+platform`
+
+
+**Vulnerable Parameter:**
+
+`msg`
+
+**Malicious Payload Example:**
+```html
+
+https://victimsite.com/info?msg=<h1>Security+Update:+Please+enter+your+credentials</h1><form><input+type='text'+placeholder='Username'><br><input+type='password'+placeholder='Password'></form>
+
+```
+
+
+**Resulting Spoofed Page:**
+
+If the page reflects the `msg` parameter directly into the DOM without sanitization:
+
+```html
+<!-- Example of vulnerable server-side rendering -->
+<html>
+  <body>
+    <div id="message">
+      <!-- Reflected input -->
+      <h1>Security Update: Please enter your credentials</h1>
+      <form>
+        <input type='text' placeholder='Username'><br>
+        <input type='password' placeholder='Password'>
+      </form>
+    </div>
+  </body>
+</html>
+```
+
+## Impact
+
+- **Phishing**: Users might enter passwords or personal data into fake forms.
+- **Brand damage**: Makes the site appear insecure or compromised.
+- **Social engineering**: Attackers can trick users into performing actions based on misleading content.
+
+## Mitigation
+
+- Always **sanitize user input** before reflecting it in the response.
+- Use **context-aware output encoding** (HTML encoding for HTML context).
+- Apply **Content Security Policy (CSP)** to restrict inline scripts and reduce XSS exploitation potential.
+- Where possible, avoid reflecting unsanitized user input directly into visible content.
+
+## References
+
+- OWASP: https://owasp.org/www-community/attacks/Content_Spoofing
+- CWE-451: https://cwe.mitre.org/data/definitions/451.html
 
 
 
