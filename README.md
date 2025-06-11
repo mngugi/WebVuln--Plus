@@ -9124,5 +9124,79 @@ If the page reflects the `msg` parameter directly into the DOM without sanitizat
 - OWASP: https://owasp.org/www-community/attacks/Content_Spoofing
 - CWE-451: https://cwe.mitre.org/data/definitions/451.html
 
+---
+# Web Vulnerability #97: MIME Spoofing
+
+**Vulnerability Type:** MIME Type Spoofing
+
+**Discovery Date:** [Insert Date]
+
+**Location:** File download endpoint (e.g., `https://example.com/download.php?file=report.pdf`)
+
+---
+
+## Description
+
+MIME Spoofing occurs when a web application serves user-uploaded or user-supplied files without properly setting or validating the `Content-Type` (MIME type) header. Attackers can exploit this by uploading files with misleading extensions (like `.jpg` or `.pdf`) that actually contain executable content (e.g., HTML, JavaScript).
+
+If the browser trusts the file extension over the actual MIME type, or if the server sends incorrect or no `Content-Type`, this may allow attackers to execute scripts or present spoofed content, leading to Cross-Site Scripting (XSS) or phishing attacks.
+
+---
+
+## Proof of Concept (PoC)
+
+### Malicious Upload Example:
+
+An attacker uploads a file named `invoice.pdf` with the following content:
+
+```html
+<!-- invoice.pdf (actually HTML) -->
+<html>
+  <body>
+    <h1>Company Payment Notice</h1>
+    <script>alert("Your session has expired. Please login again.");</script>
+  </body>
+</html>
+```
+Despite being named invoice.pdf, the file is actually HTML/JavaScript.
+
+Vulnerable File Download Endpoint:
+```arduino
+
+https://vulnerablesite.com/download.php?file=invoice.pdf
+```
+The server responds with headers like:
+
+```pgsql
+
+HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+Content-Disposition: inline; filename="invoice.pdf"
+
+```
+Or worse, no Content-Type header at all, letting the browser guess.
+
+
+## Spoofed Execution in Browser
+
+If the browser performs MIME sniffing and determines the file is HTML, it might render and execute it, especially if:
+
+- The site is using HTTP (not HTTPS)
+- `X-Content-Type-Options: nosniff` is not set
+- `Content-Disposition` is `inline` instead of `attachment`
+
+## Impact
+
+- **XSS**: Executable script in an uploaded file can hijack user sessions or perform malicious actions.
+- **Phishing**: Fake PDF or image files may be rendered as interactive HTML pages.
+- **Bypass of file-type restrictions**: Misleading file extensions can evade file upload validations.
+
+## Mitigation
+
+- Always serve uploaded files with strict `Content-Type` headers based on actual content, not file extension.
+- Set the HTTP header `X-Content-Type-Options: nosniff` to prevent MIME sniffing:
+
+---
+
 
 
