@@ -9385,6 +9385,117 @@ frame-ancestors 'none';
 - Google CSP Evaluator: https://csp-evaluator.withgoogle.com/
 - PortSwigger: https://portswigger.net/research/bypassing-csp-using-polyglot-payloads
 
+---
+# Web Vulnerability #100: Zero-Day Exploit
+
+**Vulnerability Type:** Zero-Day / Unknown Vulnerability in the Wild  
+**Severity:** Critical  
+**Disclosure Status:** Unpatched / Undisclosed to vendor  
+**CVE Status:** Not assigned at time of writing
+
+---
+
+## Description
+
+A Zero-Day (0day) vulnerability refers to an unknown security flaw that is actively exploited before the vendor or community is aware of it. These types of vulnerabilities pose extreme risk because:
+
+- No official patch exists at time of exploitation.
+- Detection is difficult due to novel or obfuscated methods.
+- Attackers often use 0days to achieve persistence, privilege escalation, or bypass security controls.
+
+This report documents a generic zero-day pattern affecting a modern web framework that allows **server-side template injection (SSTI)** through a rarely validated user input field.
+
+---
+
+## Proof of Concept (PoC)
+
+### Vulnerable Web Application Scenario
+
+A web application includes a feedback form that accepts `{{ userInput }}` values and renders them in a server-side template engine such as Jinja2 or Twig.
+
+### Attacker Input:
+`{{ 7*7 }}`
+
+
+### Server-Side Result:
+
+`49`
+
+This reveals the input is rendered in a server-side context. An attacker may escalate this to arbitrary code execution:
+
+#### Malicious Payload (Jinja2 Example):
+
+`{{ self._TemplateReference__context.cycler.init.globals.os.popen('id').read() }}`
+
+
+---
+
+## Impact
+
+- **Remote Code Execution (RCE)**: Attackers can execute system-level commands on the server.
+- **Data Exfiltration**: Sensitive environment variables, database credentials, and source code can be accessed.
+- **Lateral Movement**: Compromised servers may be used to attack internal systems.
+- **Zero-Day Weaponization**: Exploits may be sold or integrated into malware kits.
+
+---
+
+## Mitigation
+
+- Sanitize all user inputs that are used in templates. Never trust user input in template rendering logic.
+- Use logic-less templates like Mustache where possible to avoid executable contexts.
+- Apply strict Content Security Policies (CSP) to reduce XSS-based escalation.
+- Implement web application firewalls (WAF) that monitor for templating keywords.
+- Monitor system logs for unusual output or server-side errors.
+
+---
+
+## References
+
+- OWASP SSTI Guide: https://owasp.org/www-community/Server-Side_Template_Injection
+- PortSwigger Research: https://portswigger.net/web-security/server-side-template-injection
+- NIST Zero-Day Definition: https://csrc.nist.gov/glossary/term/zero_day_vulnerability
+
+---
+
+## Note
+
+This example simulates a zero-day pattern for documentation purposes. In real-world cases, details of 0day vulnerabilities should be responsibly disclosed to the affected vendor or security community.
+
+
+---
+
+## Impact
+
+- **Remote Code Execution (RCE)**: Attackers can execute system-level commands on the server.
+- **Data Exfiltration**: Sensitive environment variables, database credentials, and source code can be accessed.
+- **Lateral Movement**: Compromised servers may be used to attack internal systems.
+- **Zero-Day Weaponization**: Exploits may be sold or integrated into malware kits.
+
+---
+
+## Mitigation
+
+- Sanitize all user inputs that are used in templates. Never trust user input in template rendering logic.
+- Use logic-less templates like Mustache where possible to avoid executable contexts.
+- Apply strict Content Security Policies (CSP) to reduce XSS-based escalation.
+- Implement web application firewalls (WAF) that monitor for templating keywords.
+- Monitor system logs for unusual output or server-side errors.
+
+---
+
+## References
+
+- OWASP SSTI Guide: https://owasp.org/www-community/Server-Side_Template_Injection
+- PortSwigger Research: https://portswigger.net/web-security/server-side-template-injection
+- NIST Zero-Day Definition: https://csrc.nist.gov/glossary/term/zero_day_vulnerability
+
+---
+
+## Note
+
+This example simulates a zero-day pattern for documentation purposes. In real-world cases, details of 0day vulnerabilities should be responsibly disclosed to the affected vendor or security community.
+
+
 
 
 
