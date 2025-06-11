@@ -8979,7 +8979,7 @@ Blind SSRF occurs when an attacker is able to make the server perform HTTP reque
 
 ---
 
-# Web Vulnerability #94: ⏱️ Time-Based Blind SSRF
+# Web Vulnerability #95: ⏱️ Time-Based Blind SSRF
 
 **Description:**  
 Time-based Blind SSRF is a special class of Server-Side Request Forgery where the attacker cannot see the server’s response but infers behavior based on response **timing delays**. By forcing the server to make a request to a URL that takes a long time to respond, an attacker can confirm the presence of a blind SSRF vulnerability through **measurable latency**.
