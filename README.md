@@ -9198,5 +9198,97 @@ If the browser performs MIME sniffing and determines the file is HTML, it might 
 
 ---
 
+# Web Vulnerability #98: X-Content-Type-Options Bypass
+
+**Vulnerability Type:** HTTP Response Header Misconfiguration / MIME Sniffing Bypass
+
+**Discovery Date:** [Insert Date]
+
+**Location:** HTTP Response headers for downloadable or embedded user-controlled content
+
+---
+
+## Description
+
+The `X-Content-Type-Options` header is a security control used to instruct browsers not to perform MIME sniffing. When set to `nosniff`, it tells browsers to trust the declared `Content-Type` of a resource and not guess based on content.
+
+If this header is **absent**, **malformed**, or **bypassed**, browsers may perform MIME sniffing, allowing them to render content (e.g., JavaScript or HTML) that was expected to be treated as inert (e.g., plain text or application/octet-stream). This can enable cross-site scripting (XSS), content spoofing, and other browser-based attacks.
+
+---
+
+## Proof of Concept (PoC)
+
+### Malicious File Upload
+
+An attacker uploads a file named `safe.txt` with the following content:
+
+```html
+<!-- safe.txt (actually JavaScript) -->
+<script>alert('XSS');</script>
+```
+The server responds with the following HTTP headers:
+
+```pgsql
+
+HTTP/1.1 200 OK
+Content-Type: text/plain
+Content-Disposition: inline; filename="safe.txt"
+
+```
+## Missing or Bypassable Header
+
+If the server does not send:
+X-Content-Type-Options: nosniff
+
+
+The browser may sniff the content as HTML/JS and execute it, especially if:
+
+- The file is served inline
+- The content resembles HTML/JavaScript
+- The user is tricked into clicking the link
+
+## Bypass Variants
+
+Some misconfigurations that can bypass protection:
+
+X-Content-Type-Options: None
+X-Content-Type-Options: no-sniff
+X-Content-Type-Options: nosniff;
+X-Content-Type-Options: "nosniff"
+
+These are **invalid** and ignored by browsers.
+
+## Impact
+
+- **Cross-Site Scripting (XSS)**: Executable content in user-uploaded files may be rendered and executed.
+- **Content Spoofing**: Malicious content appears to be legitimate due to MIME confusion.
+- **Policy Bypass**: Upload restrictions and content policies become ineffective.
+
+## Mitigation
+
+- Set the correct header on all user-controlled content:
+X-Content-Type-Options: nosniff
+
+
+- Validate header syntax precisely. It must match `nosniff` exactly, case-insensitive, no quotes or punctuation.
+- Force downloads with `Content-Disposition: attachment`:
+
+Content-Disposition: attachment; filename="safe.txt"
+
+
+- Do not allow user-uploaded content to be served from the same domain as trusted scripts/pages.
+- Use separate subdomains or storage domains (e.g., `cdn.example.com`) for user uploads.
+
+## References
+
+- MDN Web Docs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
+- OWASP Secure Headers Project: https://owasp.org/www-project-secure-headers/
+- Microsoft MIME Sniffing Specification: https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/compatibility/gg622941(v=vs.85)
+
+---
+
+
+
+
 
 
