@@ -8678,7 +8678,28 @@ Inadequate session timeout refers to the failure of a web application to properl
 2. ⌛ Remain inactive for an extended period (e.g., 30 minutes to several hours).  
 3. 🔄 Attempt to use the session again without re-authenticating.  
 4. 🚪 Observe that the session is still valid and the application has not logged the user out.  
+```php
+const session = require('express-session');
 
+app.use(session({
+  secret: 's3cr3t_k3y',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 15 * 60 * 1000  // 15 minutes
+  }
+}));
+
+```
+**Example (Revalidation on Sensitive Action):**
+
+
+```pgsql
+if (Date.now() - req.session.lastAction > SENSITIVE_ACTION_TIMEOUT) {
+  return res.status(403).send("Session expired. Please re-authenticate.");
+}
+
+```
 **Mitigation:**  
 - 🕵️ Implement strict session timeout policies (e.g., auto logout after 15–30 minutes of inactivity).  
 - 🔁 Revalidate sessions on critical actions such as payments, settings changes, or data exports.  
