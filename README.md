@@ -8424,7 +8424,9 @@ location /uploads/ {
 *  Disable script execution in upload directories
 
 *  Enforce server-side validation and file size limits
+
 ---
+
 # 🛡️ Web Vulnerability #85: File Inclusion Vulnerabilities
 
 File inclusion vulnerabilities occur when an application dynamically includes files without properly validating the input, allowing attackers to include unintended files. These can lead to remote code execution, data leakage, or full server compromise.
@@ -8589,7 +8591,7 @@ Security headers should evolve with application changes and emerging threats.
 ---
 # 🛡️ Web Vulnerability #87: Clickjacking
 
-Clickjacking is a UI redress attack that tricks users into clicking on something different from what they perceive, potentially revealing confidential information or taking control actions unknowingly.
+**Clickjacking** is a UI redress attack that tricks users into clicking on something different from what they perceive, potentially revealing confidential information or taking control actions unknowingly.
 
 **🧠 Impact**
 - Unauthorized Actions: Users may unknowingly perform actions like changing settings or making purchases.
@@ -8697,6 +8699,61 @@ app.use(session({
 ```pgsql
 if (Date.now() - req.session.lastAction > SENSITIVE_ACTION_TIMEOUT) {
   return res.status(403).send("Session expired. Please re-authenticate.");
+}
+
+```
+**🔐 JWT Session Timeout Logic (Node.js Example)**
+**Set Expiration When Creating Token:**
+```phph
+const jwt = require('jsonwebtoken');
+
+const payload = { userId: 123 };
+const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '15m' }); // 15 minutes
+
+```
+---
+```kotlin
+**Verify Token with Expiry Handling:**
+try {
+  const decoded = jwt.verify(token, 'your-secret-key');
+  // proceed if valid
+} catch (err) {
+  if (err.name === 'TokenExpiredError') {
+    return res.status(401).send('Session expired. Please log in again.');
+  }
+}
+```
+**🧾 PHP Session Expiration**
+**Set Session Lifetime in php.ini:**
+
+```ini
+session.gc_maxlifetime = 900  ; 15 minutes
+
+```
+**Or Configure in Code:**
+
+```perl
+ini_set('session.gc_maxlifetime', 900); // 15 mins
+session_start();
+
+if (!isset($_SESSION['LAST_ACTIVITY'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
+} elseif (time() - $_SESSION['LAST_ACTIVITY'] > 900) {
+    session_unset();
+    session_destroy();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
+
+```
+**🛡️ Spring Security Session Timeout**
+**Set in application.properties:**
+```java
+@WebListener
+public class SessionListener implements HttpSessionListener {
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+        se.getSession().setMaxInactiveInterval(900); // 900 seconds = 15 mins
+    }
 }
 
 ```
@@ -9515,7 +9572,7 @@ This example simulates a zero-day pattern for documentation purposes. In real-wo
 ## Note
 
 This example simulates a zero-day pattern for documentation purposes. In real-world cases, details of 0day vulnerabilities should be responsibly disclosed to the affected vendor or security community.
-
+***
 
 
 
