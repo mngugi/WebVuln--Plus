@@ -8757,6 +8757,89 @@ public class SessionListener implements HttpSessionListener {
 }
 
 ```
+---
+**🐍 Django Session Timeout**
+**Set session expiry in settings.py:**
+
+```ini
+
+SESSION_COOKIE_AGE = 900  # 15 minutes in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+Optional middleware to expire on inactivity:
+```
+```python
+
+from datetime import datetime
+from django.conf import settings
+
+class SessionIdleTimeout:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        now = datetime.utcnow().timestamp()
+        last_activity = request.session.get('last_activity')
+
+        if last_activity and now - last_activity > settings.SESSION_COOKIE_AGE:
+            from django.contrib.auth import logout
+            logout(request)
+
+        request.session['last_activity'] = now
+        return self.get_response(request)
+```
+**⚛️ React Inactivity Logout (Client-side Only)**
+* Basic inactivity detection (15-minute timeout):
+
+```javascript
+
+import { useEffect } from 'react';
+
+export default function useAutoLogout(onLogout) {
+  useEffect(() => {
+    const timeout = 15 * 60 * 1000; // 15 minutes
+    let timer;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(onLogout, timeout);
+    };
+
+    window.addEventListener('mousemove', resetTimer);
+    window.addEventListener('keydown', resetTimer);
+
+    resetTimer();
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('mousemove', resetTimer);
+      window.removeEventListener('keydown', resetTimer);
+    };
+  }, [onLogout]);
+}
+Use it in a component:
+```
+```pgsql
+
+useAutoLogout(() => {
+  alert("Session expired due to inactivity.");
+  // perform logout action
+});
+```
+**🍶 Flask Session Timeout**
+Configure in app.config:
+
+```python
+
+from datetime import timedelta
+from flask import Flask, session
+
+app = Flask(__name__)
+app.secret_key = 'your_secret'
+app.permanent_session_lifetime = timedelta(minutes=15)
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+```
 **Mitigation:**  
 - 🕵️ Implement strict session timeout policies (e.g., auto logout after 15–30 minutes of inactivity).  
 - 🔁 Revalidate sessions on critical actions such as payments, settings changes, or data exports.  
