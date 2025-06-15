@@ -8878,6 +8878,41 @@ Insufficient logging and monitoring occurs when a web application fails to prope
 2. 📁 Check server logs and administrative interfaces.  
 3. 🚫 Observe that the event was not logged or no alert was generated.  
 4. ❌ Verify that no real-time monitoring or alerting mechanisms responded to the suspicious activity.  
+---
+POST /login HTTP/1.1
+Host: vulnerable-app.com
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=wrongpassword
+
+```bash
+
+2. 📁 Check the application log file:
+$ cat /var/log/app/auth.log
+```
+**No entries related to the failed login attempt**
+```pgsl
+
+3. 🚫 Notice no alert is generated and no logging entry is made for repeated failures.  
+4. ❌ Confirm absence of real-time monitoring (e.g., no IDS, SIEM, or alert emails).
+
+**Vulnerable Code Example (Python Flask):**
+
+```python
+@app.route("/login", methods=["POST"])
+def login():
+    username = request.form["username"]
+    password = request.form["password"]
+    user = db.get_user(username)
+    if user and user.check_password(password):
+        return "Welcome!"
+    return "Invalid credentials"
+
+```
+_Issue: No logging of failed login attempts._
+
+**Mitigated Code Example (With Logging):**
+
 
 **Mitigation:**  
 - 📝 Implement detailed logging for authentication attempts, permission changes, input validation failures, and access to sensitive data.  
