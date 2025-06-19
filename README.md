@@ -60,7 +60,6 @@ Each vulnerability is documented in a consistent format:
    ```bash
    less vulnerabilities/WEBVULN-001.md
    ```
-
 ---
 
 ## 🤝 Contributing
