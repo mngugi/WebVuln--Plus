@@ -89,7 +89,7 @@ This project is licensed under the MIT License.
 ### 🔹 WebVuln-001: SQL Injection
 ---
 **Category:**  
-Injection
+**Injection**   
 
 **Vulnerability ID:**  
 `WEBVULN-001`
