@@ -39,7 +39,7 @@ Each vulnerability is documented in a consistent format:
 
 ## 🧪 Tools & Techniques Covered
 
-- `burpsuite`, `zap`, `ffuf`, `dirsearch`, `sqlmap`, `xsstrike`
+-`burpsuite`, `zap`, `ffuf`, `dirsearch`, `sqlmap`, `xsstrike`
 - Manual testing techniques
 - Secure coding and configuration patterns
 - Source code review tips
