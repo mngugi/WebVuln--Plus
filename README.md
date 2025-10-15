@@ -133,14 +133,12 @@ You can simulate this vulnerability using:
 - Burp Suite (Community / Pro)  
 - OWASP ZAP  
 - Manual testing using known payloads
-
 ---
 
 📚 **References**  
 - OWASP SQL Injection  
 - PortSwigger: SQL Injection  
 - OWASP Cheat Sheet: SQL Injection Prevention
-
 
 ***
 
