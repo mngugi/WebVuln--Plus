@@ -202,7 +202,7 @@ The script executes in the user's browser, demonstrating a reflected XSS.
 Broken Authentication / Session Management
 
 ### ⚠️ Vulnerability Overview
-Cross-Site Request Forgery (CSRF) tricks a logged-in user into executing unwanted actions on a web application where they’re authenticated. Exploits rely on the user's browser automatically including session cookies.
+Cross-Site Request Forgery (CSRF) tricks a logged-in user into executing unwanted actions on a web application where they’re authenticated. Exploits rely on the user's browser automatically, including session cookies.
 
 ---
 
