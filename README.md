@@ -104,7 +104,7 @@ A login form vulnerable to SQL Injection uses the following query:
 ```sql
 SELECT * FROM users WHERE username = '$username' AND password = '$password';
 ```
-Password can be anything.
+A password can be anything.
 
 ✅ **Effect:**  
 Bypasses authentication by always evaluating the WHERE clause as true.
