@@ -524,7 +524,7 @@ Other Payloads:
 
 ```
 - Insert additional nodes
-- Modify structure of parsed XML
+- Modify the structure of parsed XML
 - Exploit backend processing logic
 
 ---
@@ -539,9 +539,9 @@ Other Payloads:
 
 ### 🔒 Mitigation
 
-- Always sanitize and encode user input before inserting into XML
+- Always sanitize and encode user input before inserting it into XML
 - Use secure XML parsers with entity resolution disabled
-- Apply schema validation (XSD) for expected structure
+- Apply schema validation (XSD) for the expected structure
 - Avoid string concatenation when building XML
 - Enable logging and anomaly detection for malformed XML inputs
 
@@ -774,7 +774,7 @@ echo "<p>Welcome, $name!</p>";
 
 ### 🔍 Description
 
-**Open Redirect** occurs when a web application allows untrusted input to control the URL to which a user is redirected after clicking a link or submitting a form. This can be exploited by attackers to redirect victims to malicious sites — often used in phishing or malware distribution.
+**Open Redirect** occurs when a web application allows untrusted input to control the URL to which a user is redirected after clicking a link or submitting a form. This can be exploited by attackers to redirect victims to malicious sites, often used in phishing or malware distribution.
 
 ---
 
@@ -924,7 +924,7 @@ Injected input:
 
 `When reflected in a vulnerable header (e.g., `Location`, `Set-Cookie`), this can split the response: `
 
-`HTTP/1.1 302 Found Location: /somepath Set-Cookie: session=attacker `
+`HTTP/1.1 302 Found Location: /somepath Set-Cookie: session=attacker.`
 
 ---
 
