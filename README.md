@@ -216,7 +216,7 @@ A vulnerable banking app allows fund transfers via a simple GET request:
 If the user is authenticated, this request will succeed.
 
 **Attack Example:**  
-An attacker can embed this into an image or hidden form on a malicious website:
+An attacker can embed this into an image or a hidden form on a malicious website:
 
 ```html
 <img src="http://vulnerable-bank.com/transfer?amount=1000&to=attacker_account">
@@ -225,7 +225,7 @@ An attacker can embed this into an image or hidden form on a malicious website:
 ### Result:
 
 
-If a logged-in user visits the attacker’s page, the browser sends the request with session cookies — and funds get transferred without the user’s knowledge.
+If a logged-in user visits the attacker’s page, the browser sends the request with session cookies, and funds get transferred without the user’s knowledge.
 
 ***
 
