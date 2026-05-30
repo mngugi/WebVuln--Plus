@@ -715,7 +715,7 @@ Password: ' or '1'='1
 
 ### 🔍 Description
 
-**HTML Injection** is a type of injection attack where malicious HTML code is inserted into a web page. If the application improperly handles or sanitizes user input, an attacker can manipulate the content or structure of the page — potentially leading to content spoofing, redirection, or even client-side script execution in some cases.
+**HTML Injection** is a type of injection attack where malicious HTML code is inserted into a web page. If the application improperly handles or sanitizes user input, an attacker can manipulate the content or structure of the page, potentially leading to content spoofing, redirection, or even client-side script execution in some cases.
 
 While similar to Cross-Site Scripting (XSS), **HTML Injection** focuses on injecting HTML **without JavaScript execution**, often for defacement, phishing, or UI redressing.
 
